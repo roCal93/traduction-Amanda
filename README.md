@@ -48,7 +48,7 @@ hakuna-mataweb-starter/
 
 ### 1. Cloner le repo
 ```bash
-git clone https://github.com/hakuna-mataweb/starter.git my-new-project
+git clone https://github.com/roCal93/hakuna-mataweb-starter.git my-new-project
 cd my-new-project
 ```
 
