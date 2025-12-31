@@ -1,4 +1,26 @@
+## 📋 Checklist d'installation
+
+- [ ] Projet créé avec `create-hakuna-app`
+- [ ] Dépendances installées (frontend & backend)
+- [ ] Variables d'environnement configurées
+- [ ] Strapi lancé et accessible en local
+- [ ] Next.js lancé et accessible en local
+- [ ] Git initialisé dans le dossier du projet
+- [ ] Dépôt GitHub connecté (remote ajouté)
+- [ ] Premier commit effectué et push sur GitHub
+- [ ] Token API Strapi (full access) généré et copié dans `nextjs-base/.env.local`
+- [ ] Pages et sections créées dans Strapi
+- [ ] Langues FR/EN configurées dans Strapi (Settings > Internationalization)
+- [ ] Images uploadées
+- [ ] Tests fonctionnels réalisés (SEO, navigation, contenu)
+
 # 🏗️ Hakuna Mataweb Starter
+
+⚡️ Désormais, l'installation du starter se fait en une seule commande grâce à [create-hakuna-app](../create-hakuna-app) !
+
+**Utilisez create-hakuna-app pour générer un nouveau projet basé sur ce starter, avec configuration automatique du frontend (Next.js) et du backend (Strapi).**
+
+---
 
 Starter officiel pour créer des sites multilingues performants avec Next.js App Router + Strapi v5.
 
@@ -44,75 +66,31 @@ hakuna-mataweb-starter/
 └── LICENSE                # Licence MIT
 ```
 
-## 🚀 Démarrage rapide (5 minutes)
 
-### 1. Cloner le repo
+## 🚀 Démarrage rapide
+
+### 1. Créez votre projet avec create-hakuna-app
+
 ```bash
-git clone https://github.com/roCal93/hakuna-mataweb-starter.git my-new-project
-cd my-new-project
+npx create-hakuna-app@latest mon-nouveau-projet
 ```
 
-### 2. Configurer les variables d'environnement
+Suivez les instructions interactives pour configurer automatiquement le frontend (Next.js) et le backend (Strapi).
 
-#### Next.js (Frontend)
-Copiez et configurez les variables dans `nextjs-base/.env.example` :
+### 2. (Optionnel) Initialisez git et connectez à GitHub
+
 ```bash
-cd nextjs-base
-cp .env.example .env.local
+cd mon-nouveau-projet
+git init
+git remote add origin https://github.com/votre-utilisateur/votre-repo.git
+git add .
+git commit -m "Initial commit"
+git push -u origin main
 ```
 
-Variables principales :
-- `NEXT_PUBLIC_SITE_URL` : URL de votre site (localhost en dev)
-- `NEXT_PUBLIC_STRAPI_URL` : URL de votre instance Strapi
-- `STRAPI_API_TOKEN` : Token API de Strapi
-- `PREVIEW_SECRET` : Secret pour le mode preview
+---
 
-#### Strapi (Backend)
-Copiez et configurez les variables dans `strapi-base/.env.example` :
-```bash
-cd strapi-base
-cp .env.example .env
-```
-
-Variables principales :
-- `DATABASE_HOST`, `DATABASE_PORT`, etc. : Configuration base de données
-- `PREVIEW_SECRET` : Même valeur que dans Next.js pour le preview
-
-### 3. Installer les dépendances
-```bash
-# Frontend
-cd nextjs-base
-pnpm install
-
-# Backend
-cd ../strapi-base
-pnpm install
-```
-
-### 4. Lancer Strapi
-```bash
-cd strapi-base
-pnpm develop
-# Accéder à http://localhost:1337/admin
-# Créer un admin et configurer les content types
-```
-
-### 5. Lancer Next.js
-```bash
-cd nextjs-base
-pnpm dev
-# Accéder à http://localhost:3000
-```
-
-### 6. Créer du contenu dans Strapi
-- Ajouter des pages avec sections
-- Configurer les langues FR/EN
-- Uploader des images
-
-### 7. Vérifier et déployer
-- Tester SEO et langues (/fr & /en)
-- Build : `pnpm build`
-- Déployer sur Vercel (frontend) et Railway (backend)
+Pour une installation manuelle ou des cas avancés, reportez-vous à la documentation ci-dessous.
 
 ## 📋 Checklist déploiement
 

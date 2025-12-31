@@ -136,8 +136,9 @@ export default async function Page({ params, searchParams }: { params: Promise<{
     notFound()
   }
 
+  // Redirige /[locale]/home vers /[locale]
   if (slug === 'home') {
-    notFound()
+    redirect(`/${locale}`)
   }
 
   const sparams = searchParams ? await Promise.resolve(searchParams) : undefined
