@@ -1,5 +1,5 @@
 import React from 'react'
-import { LangSetter, LanguageSwitcher } from '@/components/locale'
+import { LangSetter } from '@/components/locale'
 import { PageTransition } from '@/components/animations/PageTransition'
 
 export const dynamic = 'force-dynamic'
@@ -20,9 +20,6 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
   return (
     <PageTransition>
       <LangSetter lang={locale} />
-      <header style={{ padding: 20 }}>
-        <LanguageSwitcher />
-      </header>
       {children}
     </PageTransition>
   )

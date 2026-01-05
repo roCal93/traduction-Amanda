@@ -13,9 +13,9 @@ export function LanguageSwitcher() {
   const newPath = '/' + [otherLocale, ...segments.slice(2)].filter(Boolean).join('/')
 
   return (
-    <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
-      <span style={{ fontWeight: 'bold' }}>{currentLocale.toUpperCase()}</span>
-      <Link href={newPath} aria-label={`Passer en ${otherLocale}`} style={{ marginLeft: 8 }} prefetch>
+    <div className="flex items-center gap-3">
+      <span className="font-bold underline">{currentLocale.toUpperCase()}</span>
+      <Link href={newPath} aria-label={`Passer en ${otherLocale}`} className="ml-2 hover:underline" prefetch>
         {otherLocale.toUpperCase()}
       </Link>
     </div>

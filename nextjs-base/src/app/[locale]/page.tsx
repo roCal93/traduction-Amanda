@@ -84,7 +84,7 @@ export async function generateMetadata({ params }: { params: { locale: string } 
   const { locale } = await Promise.resolve(params)
   
   // Fetch home data to get the first image for preload
-  const res = await getHomePageData(locale, false)
+  const res = await getHomePageData(locale)
   const page = res?.data?.[0]
   const firstImage = page?.sections?.[0]?.image
   
