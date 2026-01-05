@@ -67,41 +67,37 @@ export const SectionGeneric = ({ title, content, image, reverse = false, priorit
   }
 
   return (
-    <section className="py-12">
-      {title && <h2 className="text-3xl font-bold mb-8 text-center">{title}</h2>}
-      
-      {cards && cards.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {cards.map((card) => (
-            <CardComponent
-              key={card.id}
-              title={card.title}
-              description={card.description ? card.description.map(block => 
-                block.children?.map(child => child.text || '').join('') || ''
-              ).join('\n') : ''}
-              image={card.image?.url}
-            />
-          ))}
+    <section className={`my-8`}>
+      <div className={`max-w-6xl mx-auto flex flex-col ${reverse ? 'flex-col-reverse' : ''} items-center`}>
+        {finalImageSrc && (
+          <Image 
+            src={finalImageSrc} 
+            alt={imageData?.alternativeText || title || 'Image'} 
+            width={imageData?.width || 800} 
+            height={imageData?.height || 600} 
+            className="w-full h-auto object-cover"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            priority={priority}
+            unoptimized={true}
+          />
+        )}
+        <div className="w-full p-4 text-center">
+          {title && <h2 className="text-2xl font-bold mb-2">{title}</h2>}
+          {renderBlocks(content)}
         </div>
-      ) : (
-        <div className={`flex flex-col md:flex-row ${reverse ? 'md:flex-row-reverse' : ''} items-center my-8`}>
-          {finalImageSrc && (
-            <Image 
-              src={finalImageSrc} 
-              alt={imageData?.alternativeText || title || 'Image'} 
-              width={imageData?.width || 800} 
-              height={imageData?.height || 600} 
-              className="w-full md:w-1/2 h-auto object-cover"
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-              priority={priority}
-              unoptimized={true}
-            />
-          )}
-          <div className="md:w-1/2 p-4">
-            {renderBlocks(content)}
+        {cards && (
+          <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
+            {cards.map(card => (
+              <CardComponent 
+                key={card.id} 
+                title={card.title} 
+                description={card.description || []} 
+                image={card.image?.url} 
+              />
+            ))}
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </section>
   )
 }
