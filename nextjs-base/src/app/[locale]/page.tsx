@@ -64,8 +64,7 @@ const fetchHomePageData = async (locale: string, isDraft: boolean) => {
         noIndex: false,
         locale: locale,
         sections: [],
-        seoImage: undefined,
-        localizations: []
+        seoImage: undefined
       }],
       meta: { pagination: { page: 1, pageSize: 1, pageCount: 1, total: 1 } }
     } as PageCollectionResponse
@@ -129,7 +128,7 @@ export default async function HomeLocale({ params, searchParams }: { params: Pro
 
   if (!page) {
     return (
-      <Layout>
+      <Layout locale={locale}>
         <div style={{ color: 'red', padding: 32, textAlign: 'center' }}>
           Erreur : page &quot;home&quot; introuvable dans Strapi pour la locale {locale}.
         </div>
@@ -144,7 +143,7 @@ export default async function HomeLocale({ params, searchParams }: { params: Pro
       : ((value as RichTextValue)?.[0]?.children?.[0]?.text ?? '')
 
   return (
-    <Layout>
+    <Layout locale={locale}>
       <Hero
         title={getText(page.title)}
         subtitle={getText(page.heroContent)}

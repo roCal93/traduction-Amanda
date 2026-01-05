@@ -168,9 +168,10 @@ function generateContentTypeInterface(contentType) {
         interfaceStr += `  ${attrName}${optional}: ${tsType};\n`;
     }
 
-    // Ajouter locale pour les content-types localisés
+    // Ajouter locale et localizations pour les content-types localisés
     if (schema.pluginOptions?.i18n?.localized) {
         interfaceStr += `  locale?: string;\n`;
+        interfaceStr += `  localizations?: (${typeName} & StrapiEntity)[];\n`;
     }
 
     interfaceStr += `}\n`;

@@ -4,7 +4,7 @@
  * ⚠️  FICHIER AUTO-GÉNÉRÉ - NE PAS MODIFIER
  * 
  * Pour régénérer: npm run generate:types
- * Généré le: 2025-12-27T08:45:41.410Z
+ * Généré le: 2026-01-05T12:13:14.436Z
  */
 
 // ============================================================================
@@ -88,6 +88,26 @@ export interface StrapiErrorResponse {
 }
 
 // ============================================================================
+// COMPONENTS
+// ============================================================================
+
+/**
+ * Component: shared.navigation-link
+ */
+export interface NavigationLink {
+  label: string;
+  href: string;
+}
+
+/**
+ * Component: shared.page-link
+ */
+export interface PageLink {
+  page?: (Page & StrapiEntity);
+  customLabel?: string;
+}
+
+// ============================================================================
 // CONTENT TYPES
 // ============================================================================
 
@@ -99,9 +119,23 @@ export interface Card {
   description?: StrapiBlock[];
   image?: StrapiMedia;
   locale?: string;
+  localizations?: (Card & StrapiEntity)[];
 }
 export type CardResponse = StrapiResponse<Card>;
 export type CardCollectionResponse = StrapiCollectionResponse<Card>;
+
+/**
+ * header
+ */
+export interface Header {
+  logo?: StrapiMedia;
+  title?: string;
+  navigation?: PageLink[];
+  locale?: string;
+  localizations?: (Header & StrapiEntity)[];
+}
+export type HeaderResponse = StrapiResponse<Header>;
+export type HeaderCollectionResponse = StrapiCollectionResponse<Header>;
 
 /**
  * page
@@ -115,6 +149,8 @@ export interface Page {
   seoDescription?: StrapiBlock[];
   seoImage?: StrapiMedia;
   noIndex?: boolean;
+  locale?: string;
+  localizations?: (Page & StrapiEntity)[];
 }
 export type PageResponse = StrapiResponse<Page>;
 export type PageCollectionResponse = StrapiCollectionResponse<Page>;
@@ -129,6 +165,7 @@ export interface Section {
   order: number;
   reverse?: boolean;
   locale?: string;
+  localizations?: (Section & StrapiEntity)[];
 }
 export type SectionResponse = StrapiResponse<Section>;
 export type SectionCollectionResponse = StrapiCollectionResponse<Section>;

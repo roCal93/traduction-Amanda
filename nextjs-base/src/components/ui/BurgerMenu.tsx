@@ -6,22 +6,37 @@ import { usePathname } from 'next/navigation'
 import { Button } from '@/components/ui/Button'
 import { LanguageSwitcher } from '@/components/locale/LanguageSwitcher'
 
-export const BurgerMenu = () => {
+interface ProcessedLink {
+  slug: string
+  label: string
+  isHome: boolean
+}
+
+interface BurgerMenuProps {
+  links?: ProcessedLink[]
+  currentLocale: string
+}
+
+export const BurgerMenu = ({ links = [], currentLocale }: BurgerMenuProps) => {
   const [isOpen, setIsOpen] = useState(false)
   const pathname = usePathname() ?? '/'
-  const segments = pathname.split('/')
-  const currentLocale = segments[1] === 'fr' || segments[1] === 'en' ? segments[1] : 'fr'
 
-  const getLocalizedHref = (path: string) => `/${currentLocale}${path}`
+  const getLocalizedHref = (slug: string, isHome: boolean) => 
+    isHome ? `/${currentLocale}` : `/${currentLocale}/${slug}`
+  
+  const isActive = (slug: string, isHome: boolean) => {
+    const fullHref = getLocalizedHref(slug, isHome)
+    return pathname === fullHref
+  }
 
   const toggleMenu = () => setIsOpen(!isOpen)
 
   return (
-    <>
+    <div className="relative md:hidden">
       {/* Burger Button */}
       <button
         onClick={toggleMenu}
-        className="md:hidden flex flex-col justify-center items-center w-8 h-8 space-y-1"
+        className="flex flex-col justify-center items-center w-8 h-8 space-y-1"
         aria-label="Toggle menu"
       >
         <span className={`block w-6 h-0.5 bg-gray-800 transition-transform ${isOpen ? 'rotate-45 translate-y-1.5' : ''}`}></span>
@@ -29,36 +44,29 @@ export const BurgerMenu = () => {
         <span className={`block w-6 h-0.5 bg-gray-800 transition-transform ${isOpen ? '-rotate-45 -translate-y-1.5' : ''}`}></span>
       </button>
 
-      {/* Mobile Menu Overlay */}
+      {/* Dropdown Menu */}
       {isOpen && (
-        <div className="fixed inset-0 z-50 md:hidden">
-          <div className="absolute inset-0 bg-black bg-opacity-50" onClick={toggleMenu}></div>
-          <div className="absolute top-0 left-0 w-64 h-full bg-white shadow-lg transform transition-transform">
-            <div className="p-6">
-              <button onClick={toggleMenu} className="mb-4 text-gray-800">
-                ✕
-              </button>
-              <nav className="flex flex-col space-y-4">
-                <Link href={getLocalizedHref('/')} prefetch onClick={toggleMenu}>
-                  <Button variant="secondary" className="w-full">Accueil</Button>
+        <>
+          <div className="fixed inset-0 z-40" onClick={toggleMenu}></div>
+          <div className="absolute right-0 top-12 w-64 bg-white shadow-lg rounded-lg z-50 border border-gray-200">
+            <nav className="flex flex-col p-4 space-y-2">
+              {links.map((link, index) => (
+                <Link key={link.slug || index} href={getLocalizedHref(link.slug, link.isHome)} prefetch onClick={toggleMenu}>
+                  <Button 
+                    variant={isActive(link.slug, link.isHome) ? 'primary' : 'secondary'} 
+                    className={`w-full ${isActive(link.slug, link.isHome) ? 'font-semibold' : ''}`}
+                  >
+                    {link.label}
+                  </Button>
                 </Link>
-                <Link href={getLocalizedHref('/a-propos')} prefetch onClick={toggleMenu}>
-                  <Button variant="secondary" className="w-full">À propos</Button>
-                </Link>
-                <Link href={getLocalizedHref('/services')} prefetch onClick={toggleMenu}>
-                  <Button variant="secondary" className="w-full">Services</Button>
-                </Link>
-                <Link href={getLocalizedHref('/contact')} prefetch onClick={toggleMenu}>
-                  <Button variant="secondary" className="w-full">Contact</Button>
-                </Link>
-                <div className="pt-4 border-t border-gray-200 flex justify-center">
-                  <LanguageSwitcher />
-                </div>
-              </nav>
-            </div>
+              ))}
+              <div className="pt-2 border-t border-gray-200 flex justify-center">
+                <LanguageSwitcher />
+              </div>
+            </nav>
           </div>
-        </div>
+        </>
       )}
-    </>
+    </div>
   )
 }

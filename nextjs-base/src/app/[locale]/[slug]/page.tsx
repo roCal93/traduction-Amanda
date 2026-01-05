@@ -195,7 +195,7 @@ export default async function Page({ params, searchParams }: { params: Promise<{
   }
 
   return (
-    <Layout>
+    <Layout locale={locale}>
       <Hero
         title={page.title}
         subtitle={page.heroContent ? extractTextFromBlocks(page.heroContent) : undefined}
