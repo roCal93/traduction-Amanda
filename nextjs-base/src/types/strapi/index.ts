@@ -145,7 +145,7 @@ export type HeaderCollectionResponse = StrapiCollectionResponse<Header>;
  * page
  */
 export interface Page {
-  title: string;
+  title?: string;
   slug: string;
   heroContent?: StrapiBlock[];
   sections?: (Section & StrapiEntity)[];
@@ -163,7 +163,7 @@ export type PageCollectionResponse = StrapiCollectionResponse<Page>;
  * section
  */
 export interface Section {
-  title: string;
+  title?: string;
   content: StrapiBlock[];
   image?: StrapiMedia;
   order: number;

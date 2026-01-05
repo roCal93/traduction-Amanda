@@ -573,7 +573,6 @@ export interface ApiPagePage extends Struct.CollectionTypeSchema {
       }>;
     slug: Schema.Attribute.UID<'title'> & Schema.Attribute.Required;
     title: Schema.Attribute.String &
-      Schema.Attribute.Required &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
           localized: true;
@@ -637,7 +636,6 @@ export interface ApiSectionSection extends Struct.CollectionTypeSchema {
         };
       }>;
     title: Schema.Attribute.String &
-      Schema.Attribute.Required &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
           localized: true;

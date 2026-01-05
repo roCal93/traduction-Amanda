@@ -29,7 +29,7 @@ export const Header = ({
     .filter(link => link.page?.slug) // Only keep links with valid pages
     .map(link => ({
       slug: link.page!.slug,
-      label: link.customLabel || link.page!.title,
+      label: link.customLabel || link.page!.title || '',
       isHome: link.page!.slug === 'home'
     }))
 
