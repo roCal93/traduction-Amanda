@@ -22,10 +22,10 @@ const fetchPageData = async (slug: string, locale: string, isDraft: boolean) => 
 
   const pageRes: PageCollectionResponse = await client.findMany('pages', {
     filters: { slug: { $eq: slug } },
-    fields: ['title', 'slug', 'heroContent', 'seoTitle', 'seoDescription', 'noIndex', 'locale'],
-    populate: { 
-      sections: { 
-        fields: ['title', 'content', 'order', 'reverse'],
+    fields: ['title', 'hideTitle', 'slug', 'heroContent', 'seoTitle', 'seoDescription', 'noIndex', 'locale'],
+    populate: {
+      sections: {
+        fields: ['title', 'hideTitle', 'content', 'order', 'reverse'],
         populate: { 
           image: { 
             fields: ['url', 'alternativeText', 'width', 'height', 'formats'] 
@@ -55,10 +55,10 @@ const fetchPageDataFallback = async (slug: string, isDraft: boolean) => {
 
   const fallbackRes: PageCollectionResponse = await client.findMany('pages', {
     filters: { slug: { $eq: slug } },
-    fields: ['title', 'slug', 'heroContent', 'seoTitle', 'seoDescription', 'noIndex', 'locale'],
-    populate: { 
-      sections: { 
-        fields: ['title', 'content', 'order', 'reverse'],
+    fields: ['title', 'hideTitle', 'slug', 'heroContent', 'seoTitle', 'seoDescription', 'noIndex', 'locale'],
+    populate: {
+      sections: {
+        fields: ['title', 'hideTitle', 'content', 'order', 'reverse'],
         populate: { 
           image: { 
             fields: ['url', 'alternativeText', 'width', 'height', 'formats'] 

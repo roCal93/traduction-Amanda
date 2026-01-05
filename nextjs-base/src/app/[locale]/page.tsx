@@ -19,7 +19,7 @@ const fetchHomePageData = async (locale: string, isDraft: boolean) => {
 
   let res: PageCollectionResponse = await client.findMany('pages', {
     filters: { slug: { $eq: 'home' } },
-    fields: ['title', 'slug', 'heroContent', 'seoTitle', 'seoDescription', 'noIndex', 'locale'],
+    fields: ['title', 'hideTitle', 'slug', 'heroContent', 'seoTitle', 'seoDescription', 'noIndex', 'locale'],
     populate: { 
       sections: { 
         populate: '*' 
@@ -39,7 +39,7 @@ const fetchHomePageData = async (locale: string, isDraft: boolean) => {
   if (!res.data || res.data.length === 0) {
     res = await client.findMany('pages', {
       filters: { slug: { $eq: 'home' } },
-      fields: ['title', 'slug', 'heroContent', 'seoTitle', 'seoDescription', 'noIndex', 'locale'],
+      fields: ['title', 'hideTitle', 'slug', 'heroContent', 'seoTitle', 'seoDescription', 'noIndex', 'locale'],
       populate: { 
         sections: { 
           populate: '*' 
