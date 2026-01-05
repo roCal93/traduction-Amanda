@@ -207,7 +207,7 @@ export default async function Page({ params, searchParams }: { params: Promise<{
         <SectionGeneric
           key={section.id}
           title={section.hideTitle ? undefined : section.title}
-          content={extractTextFromBlocks(section.content)}
+          content={section.content}
           image={section.image?.url}
           reverse={section.reverse}
           priority={index === 0}

@@ -4,7 +4,7 @@ import { cleanImageUrl } from '@/lib/strapi'
 import { Layout } from '@/components/layout'
 import { Hero } from '@/components/sections/Hero'
 import { SectionGeneric } from '@/components/sections/SectionGeneric'
-import { PageCollectionResponse } from '@/types/strapi'
+import { PageCollectionResponse, StrapiBlock } from '@/types/strapi'
 import { draftMode } from 'next/headers'
 import { unstable_cache } from 'next/cache'
 
@@ -140,7 +140,9 @@ export default async function HomeLocale({ params, searchParams }: { params: Pro
   const getText = (value: unknown) =>
     typeof value === 'string'
       ? value
-      : ((value as RichTextValue)?.[0]?.children?.[0]?.text ?? '')
+      : ((value as StrapiBlock[])?.map(block =>
+          block.children?.map(child => child.text || '').join('') || ''
+        ).join('\n') || '')
 
   return (
     <Layout locale={locale}>
@@ -155,7 +157,7 @@ export default async function HomeLocale({ params, searchParams }: { params: Pro
         <SectionGeneric
           key={section.id}
           title={section.hideTitle ? undefined : section.title}
-          content={getText(section.content)}
+          content={section.content}
           image={section.image}
           reverse={section.reverse}
           priority={index === 0}

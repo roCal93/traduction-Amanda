@@ -1,11 +1,11 @@
 import React from 'react'
 import Image from 'next/image'
 import { cleanImageUrl } from '@/lib/strapi'
-import { StrapiMedia } from '@/types/strapi'
+import { StrapiMedia, StrapiBlock } from '@/types/strapi'
 
 type SectionGenericProps = {
   title?: string
-  content: string
+  content: StrapiBlock[]
   image?: StrapiMedia | string
   reverse?: boolean
   priority?: boolean
@@ -28,6 +28,42 @@ export const SectionGeneric = ({ title, content, image, reverse = false, priorit
     ? `${process.env.NEXT_PUBLIC_STRAPI_URL}${imageSrc}` 
     : imageSrc
 
+  // Fonction pour rendre les blocs Strapi
+  const renderBlocks = (blocks: StrapiBlock[]) => {
+    return blocks.map((block, index) => {
+      switch (block.type) {
+        case 'paragraph':
+          return (
+            <p key={index} className="text-gray-700 mb-4">
+              {block.children?.map((child, childIndex) => {
+                if (child.type === 'text') {
+                  return <span key={childIndex}>{child.text}</span>
+                }
+                // Gérer d'autres types d'enfants si nécessaire (bold, italic, etc.)
+                return null
+              })}
+            </p>
+          )
+        case 'heading':
+          const level = block.level || 2
+          const HeadingTag = `h${level}` as keyof React.JSX.IntrinsicElements
+          return (
+            <HeadingTag key={index} className="text-gray-700 mb-4">
+              {block.children?.map((child, childIndex) => {
+                if (child.type === 'text') {
+                  return <span key={childIndex}>{child.text}</span>
+                }
+                return null
+              })}
+            </HeadingTag>
+          )
+        // Ajouter d'autres types de blocs si nécessaire
+        default:
+          return null
+      }
+    })
+  }
+
   return (
     <section className={`flex flex-col md:flex-row ${reverse ? 'md:flex-row-reverse' : ''} items-center my-8`}>
       {finalImageSrc && (
@@ -44,7 +80,7 @@ export const SectionGeneric = ({ title, content, image, reverse = false, priorit
       )}
       <div className="md:w-1/2 p-4">
         {title && <h2 className="text-2xl font-bold mb-2">{title}</h2>}
-        <p className="text-gray-700">{content}</p>
+        {renderBlocks(content)}
       </div>
     </section>
   )
