@@ -4,7 +4,7 @@
  * ⚠️  FICHIER AUTO-GÉNÉRÉ - NE PAS MODIFIER
  * 
  * Pour régénérer: npm run generate:types
- * Généré le: 2026-01-06T06:24:52.204Z
+ * Généré le: 2026-01-06T07:42:53.964Z
  */
 
 // ============================================================================
@@ -105,6 +105,7 @@ export interface ButtonBlock {
 export interface CardsBlock {
   cards: (Card & StrapiEntity)[];
   columns: string;
+  alignment: string;
 }
 
 /**
@@ -122,6 +123,7 @@ export interface ImageBlock {
  */
 export interface TextBlock {
   content: StrapiBlock[];
+  textAlignment: string;
 }
 
 /**
@@ -133,6 +135,7 @@ export interface TextImageBlock {
   imagePosition: string;
   imageSize: string;
   verticalAlignment: string;
+  textAlignment: string;
 }
 
 /**

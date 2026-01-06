@@ -109,6 +109,7 @@ export interface ButtonBlock {
 export interface CardsBlock {
   cards: (Card & StrapiEntity)[];
   columns: string;
+  alignment: string;
 }
 
 /**
@@ -126,6 +127,7 @@ export interface ImageBlock {
  */
 export interface TextBlock {
   content: StrapiBlock[];
+  textAlignment: string;
 }
 
 /**
@@ -137,6 +139,7 @@ export interface TextImageBlock {
   imagePosition: string;
   imageSize: string;
   verticalAlignment: string;
+  textAlignment: string;
 }
 
 /**

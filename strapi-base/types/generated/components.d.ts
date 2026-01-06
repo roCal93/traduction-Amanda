@@ -30,6 +30,9 @@ export interface BlocksCardsBlock extends Struct.ComponentSchema {
     displayName: 'Cards Block';
   };
   attributes: {
+    alignment: Schema.Attribute.Enumeration<['left', 'center', 'right']> &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<'center'>;
     cards: Schema.Attribute.Relation<'oneToMany', 'api::card.card'> &
       Schema.Attribute.Required;
     columns: Schema.Attribute.Enumeration<['1', '2', '3', '4']> &
@@ -66,6 +69,11 @@ export interface BlocksTextBlock extends Struct.ComponentSchema {
   };
   attributes: {
     content: Schema.Attribute.Blocks & Schema.Attribute.Required;
+    textAlignment: Schema.Attribute.Enumeration<
+      ['left', 'center', 'right', 'justify']
+    > &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<'left'>;
   };
 }
 
@@ -84,6 +92,11 @@ export interface BlocksTextImageBlock extends Struct.ComponentSchema {
     imageSize: Schema.Attribute.Enumeration<['small', 'medium', 'large']> &
       Schema.Attribute.Required &
       Schema.Attribute.DefaultTo<'medium'>;
+    textAlignment: Schema.Attribute.Enumeration<
+      ['left', 'center', 'right', 'justify']
+    > &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<'left'>;
     verticalAlignment: Schema.Attribute.Enumeration<
       ['top', 'center', 'bottom']
     > &

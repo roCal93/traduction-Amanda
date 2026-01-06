@@ -9,6 +9,7 @@ type TextImageBlockProps = {
   imagePosition: 'left' | 'right'
   imageSize: 'small' | 'medium' | 'large'
   verticalAlignment: 'top' | 'center' | 'bottom'
+  textAlignment?: 'left' | 'center' | 'right' | 'justify'
 }
 
 export const TextImageBlock = ({ 
@@ -16,7 +17,8 @@ export const TextImageBlock = ({
   image, 
   imagePosition, 
   imageSize,
-  verticalAlignment 
+  verticalAlignment,
+  textAlignment = 'left'
 }: TextImageBlockProps) => {
   const imageSrc = cleanImageUrl(image.url)
   const finalImageSrc = imageSrc && imageSrc.startsWith('/') 
@@ -35,12 +37,19 @@ export const TextImageBlock = ({
     bottom: 'items-end',
   }
 
+  const textAlignmentClasses = {
+    left: 'text-left',
+    center: 'text-center',
+    right: 'text-right',
+    justify: 'text-justify',
+  }
+
   const renderBlocks = (blocks: StrapiBlock[]) => {
     return blocks.map((block, index) => {
       switch (block.type) {
         case 'paragraph':
           return (
-            <p key={index} className="text-gray-700 mb-4">
+            <p key={index} className={`text-gray-700 mb-4 ${textAlignmentClasses[textAlignment]}`}>
               {block.children?.map((child, childIndex) => {
                 if (child.type === 'text') {
                   let text = <span key={childIndex}>{child.text}</span>
@@ -65,7 +74,7 @@ export const TextImageBlock = ({
             6: 'text-base font-bold mb-2',
           }
           return (
-            <HeadingTag key={index} className={headingClasses[level as keyof typeof headingClasses]}>
+            <HeadingTag key={index} className={`${headingClasses[level as keyof typeof headingClasses]} ${textAlignmentClasses[textAlignment]}`}>
               {block.children?.map((child, childIndex) => {
                 if (child.type === 'text') {
                   return <span key={childIndex}>{child.text}</span>
@@ -78,7 +87,7 @@ export const TextImageBlock = ({
           const ListTag = block.format === 'ordered' ? 'ol' : 'ul'
           const listClass = block.format === 'ordered' ? 'list-decimal' : 'list-disc'
           return (
-            <ListTag key={index} className={`${listClass} ml-6 mb-4 text-gray-700`}>
+            <ListTag key={index} className={`${listClass} ml-6 mb-4 text-gray-700 ${textAlignmentClasses[textAlignment]}`}>
               {block.children?.map((child, childIndex) => (
                 <li key={childIndex} className="mb-2">
                   {Array.isArray(child.children) && child.children.map((grandChild: { type: string; text?: string }, grandChildIndex: number) => {

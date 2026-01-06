@@ -46,6 +46,17 @@
       ],
       "default": "center",
       "required": true
+    },
+    "textAlignment": {
+      "type": "enumeration",
+      "enum": [
+        "left",
+        "center",
+        "right",
+        "justify"
+      ],
+      "default": "left",
+      "required": true
     }
   },
   "config": {}
