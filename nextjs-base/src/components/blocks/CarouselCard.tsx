@@ -70,26 +70,23 @@ export const CarouselCard = ({ frontTitle, frontContent, backContent, image }: C
       >
         {/* Front */}
         <div 
-          className="absolute w-full h-full backface-hidden rounded-lg shadow-lg overflow-hidden"
+          className="absolute w-full h-full backface-hidden bg-white rounded-lg shadow-lg overflow-hidden"
           style={{ backfaceVisibility: 'hidden' }}
         >
-          {/* Background Image */}
-          {cleanImage && (
-            <div className="absolute inset-0 z-0">
-              <Image 
-                src={cleanImage} 
-                alt={image?.alternativeText || frontTitle} 
-                fill
-                className="object-cover opacity-30"
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-              />
-            </div>
-          )}
-          
-          {/* Content overlay */}
-          <div className="relative z-10 p-6 h-full flex flex-col bg-white/60 backdrop-blur-sm">
-            <h3 className="text-2xl font-bold mb-4 text-gray-900">{frontTitle}</h3>
-            <div className="flex-1 overflow-auto">
+          <div className="p-6 h-full flex flex-col items-center">
+            <h3 className="text-2xl font-bold mb-4 text-center">{frontTitle}</h3>
+            {cleanImage && (
+              <div className="relative w-48 h-48 mb-4 flex-shrink-0">
+                <Image 
+                  src={cleanImage} 
+                  alt={image?.alternativeText || frontTitle} 
+                  fill
+                  className="object-cover rounded-lg"
+                  sizes="192px"
+                />
+              </div>
+            )}
+            <div className="flex-1 overflow-auto text-center">
               {renderBlocks(frontContent)}
             </div>
           </div>
