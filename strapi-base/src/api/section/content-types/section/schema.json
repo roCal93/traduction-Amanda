@@ -41,6 +41,7 @@
         "blocks.image-block",
         "blocks.cards-block",
         "blocks.text-image-block",
+        "blocks.hero-block-simple-text",
         "blocks.carousel-block"
       ],
       "pluginOptions": {
