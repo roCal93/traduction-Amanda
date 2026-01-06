@@ -113,6 +113,17 @@ export interface CardsBlock {
 }
 
 /**
+ * Component: blocks.carousel-block
+ */
+export interface CarouselBlock {
+  cards: CarouselCard[];
+  autoplay?: boolean;
+  autoplayDelay?: number;
+  showControls?: boolean;
+  showIndicators?: boolean;
+}
+
+/**
  * Component: blocks.hero-block-simple-text
  */
 export interface HeroBlockSimpleText {
@@ -163,6 +174,16 @@ export interface Button {
   variant: string;
   isExternal?: boolean;
   icon?: string;
+}
+
+/**
+ * Component: shared.carousel-card
+ */
+export interface CarouselCard {
+  frontTitle: string;
+  frontContent?: StrapiBlock[];
+  backContent?: StrapiBlock[];
+  image?: StrapiMedia;
 }
 
 /**

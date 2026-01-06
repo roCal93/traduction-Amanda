@@ -4,7 +4,8 @@
   "info": {
     "singularName": "header",
     "pluralName": "headers",
-    "displayName": "header"
+    "displayName": "header",
+    "mainField": "title"
   },
   "options": {
     "draftAndPublish": true

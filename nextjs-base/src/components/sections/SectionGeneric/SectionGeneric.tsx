@@ -6,8 +6,9 @@ import {
   CardsBlock as CardsBlockData,
   TextImageBlock as TextImageBlockData,
   HeroBlockSimpleText as HeroBlockSimpleTextData,
+  CarouselBlock as CarouselBlockData,
 } from '@/types/strapi'
-import { TextBlock, ButtonBlock, ImageBlock, CardsBlock, TextImageBlock, HeroBlockSimpleText } from '@/components/blocks'
+import { TextBlock, ButtonBlock, ImageBlock, CardsBlock, TextImageBlock, HeroBlockSimpleText, CarouselBlock } from '@/components/blocks'
 
 type DynamicBlock = 
   | ({ __component: 'blocks.text-block' } & TextBlockData)
@@ -16,6 +17,7 @@ type DynamicBlock =
   | ({ __component: 'blocks.cards-block' } & CardsBlockData)
   | ({ __component: 'blocks.text-image-block' } & TextImageBlockData)
   | ({ __component: 'blocks.hero-block-simple-text' } & HeroBlockSimpleTextData)
+  | ({ __component: 'blocks.carousel-block' } & CarouselBlockData)
 
 type SectionGenericProps = {
   title?: string
@@ -89,6 +91,27 @@ export const SectionGeneric = ({ title, blocks, spacingTop = 'medium', spacingBo
             content={block.content}
             height={block.height as 'medium' | 'large' | 'full'}
             textAlignment={block.textAlignment as 'left' | 'center' | 'right'}
+          />
+        )
+      
+      case 'blocks.carousel-block':
+        return (
+          <CarouselBlock
+            key={index}
+            cards={block.cards.map((card, idx) => ({
+              id: idx,
+              frontTitle: card.frontTitle,
+              frontContent: card.frontContent,
+              backContent: card.backContent,
+              image: card.image ? {
+                url: card.image.url,
+                alternativeText: card.image.alternativeText || undefined
+              } : undefined
+            }))}
+            autoplay={block.autoplay}
+            autoplayDelay={block.autoplayDelay}
+            showControls={block.showControls}
+            showIndicators={block.showIndicators}
           />
         )
       

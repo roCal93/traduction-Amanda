@@ -40,7 +40,8 @@
         "blocks.button-block",
         "blocks.image-block",
         "blocks.cards-block",
-        "blocks.text-image-block"
+        "blocks.text-image-block",
+        "blocks.carousel-block"
       ],
       "pluginOptions": {
         "i18n": {
