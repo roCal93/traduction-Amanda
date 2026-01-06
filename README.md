@@ -117,16 +117,16 @@ Voir `.env.example` pour toutes les variables nécessaires.
 
 ```bash
 # Frontend
-pnpm dev          # Développement
-pnpm build        # Build production
-pnpm start        # Serveur production
-pnpm lint         # Linting
-pnpm test         # Tests
+npm run dev          # Développement
+npm run build        # Build production
+npm run start        # Serveur production
+npm run lint         # Linting
+npm run test         # Tests
 
 # Backend
-pnpm develop      # Développement Strapi
-pnpm build        # Build Strapi
-pnpm start        # Serveur Strapi
+npm run develop      # Développement Strapi
+npm run build        # Build Strapi
+npm run start        # Serveur Strapi
 ```
 
 ### Personnalisation
