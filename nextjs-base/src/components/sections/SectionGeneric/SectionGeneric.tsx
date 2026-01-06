@@ -53,6 +53,8 @@ export const SectionGeneric = ({ title, blocks }: SectionGenericProps) => {
             cards={block.cards} 
             columns={block.columns as '1' | '2' | '3' | '4'} 
           />
+        )
+      
       case 'blocks.text-image-block':
         return (
           <TextImageBlock
@@ -65,10 +67,8 @@ export const SectionGeneric = ({ title, blocks }: SectionGenericProps) => {
           />
         )
       
-        )
-      
       default:
-        console.warn('Unknown block type:', (block as any).__component)
+        console.warn('Unknown block type:', (block as DynamicBlock).__component)
         return null
     }
   }
