@@ -98,21 +98,28 @@ export const SectionGeneric = ({ title, blocks, spacingTop = 'medium', spacingBo
     }
   }
 
-  const getSpacingClass = (spacing: 'none' | 'small' | 'medium' | 'large', direction: 'top' | 'bottom') => {
-    const prefix = direction === 'top' ? 'mt' : 'mb'
+  const getTopSpacingClass = (spacing: 'none' | 'small' | 'medium' | 'large') => {
     switch (spacing) {
       case 'none': return ''
-      case 'small': return `${prefix}-6`
-      case 'medium': return `${prefix}-12`
-      case 'large': return `${prefix}-24`
-      default: return `${prefix}-12`
+      case 'small': return 'mt-6'
+      case 'medium': return 'mt-12'
+      case 'large': return 'mt-24'
+      default: return 'mt-12'
     }
   }
 
-  const spacingClasses = `${getSpacingClass(spacingTop, 'top')} ${getSpacingClass(spacingBottom, 'bottom')}`
+  const getBottomSpacingClass = (spacing: 'none' | 'small' | 'medium' | 'large') => {
+    switch (spacing) {
+      case 'none': return ''
+      case 'small': return 'mb-6'
+      case 'medium': return 'mb-12'
+      case 'large': return 'mb-24'
+      default: return 'mb-12'
+    }
+  }
 
   return (
-    <section className={`${spacingClasses} px-4`}>
+    <section className={`${getTopSpacingClass(spacingTop)} ${getBottomSpacingClass(spacingBottom)} px-4`}>
       <div className="max-w-6xl mx-auto">
         {title && <h2 className="text-3xl font-bold mb-8 text-center">{title}</h2>}
         <div className="space-y-4">
