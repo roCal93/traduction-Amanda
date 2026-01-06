@@ -135,7 +135,7 @@ export const ContactFormBlock = ({
           </div>
 
           {/* Bouton d'envoi */}
-          <div>
+          <div className="text-center">
             <button
               type="submit"
               disabled={isSubmitting}
