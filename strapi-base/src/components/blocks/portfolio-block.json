@@ -1,0 +1,50 @@
+{
+  "collectionName": "components_blocks_portfolio_blocks",
+  "info": {
+    "displayName": "Portfolio Block",
+    "description": "Display portfolio items with filtering by theme"
+  },
+  "options": {},
+  "attributes": {
+    "filterByThemes": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::portfolio-theme.portfolio-theme"
+    },
+    "showAllThemes": {
+      "type": "boolean",
+      "default": true
+    },
+    "showFeaturedOnly": {
+      "type": "boolean",
+      "default": false
+    },
+    "limit": {
+      "type": "integer",
+      "default": 12
+    },
+    "columns": {
+      "type": "enumeration",
+      "enum": [
+        "2",
+        "3",
+        "4"
+      ],
+      "default": "3",
+      "required": true
+    },
+    "showFilters": {
+      "type": "boolean",
+      "default": true
+    },
+    "layout": {
+      "type": "enumeration",
+      "enum": [
+        "grid",
+        "masonry"
+      ],
+      "default": "grid"
+    }
+  },
+  "config": {}
+}

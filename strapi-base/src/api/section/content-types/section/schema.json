@@ -59,7 +59,8 @@
         "blocks.text-image-block",
         "blocks.hero-block-simple-text",
         "blocks.carousel-block",
-        "blocks.contact-form-block"
+        "blocks.contact-form-block",
+        "blocks.portfolio-block"
       ],
       "required": true
     },

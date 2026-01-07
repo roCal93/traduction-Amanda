@@ -8,8 +8,9 @@ import {
   HeroBlockSimpleText as HeroBlockSimpleTextData,
   CarouselBlock as CarouselBlockData,
   ContactFormBlock as ContactFormBlockData,
+  PortfolioBlock as PortfolioBlockData,
 } from '@/types/strapi'
-import { TextBlock, ButtonBlock, ImageBlock, CardsBlock, TextImageBlock, HeroBlockSimpleText, CarouselBlock, ContactFormBlock } from '@/components/blocks'
+import { TextBlock, ButtonBlock, ImageBlock, CardsBlock, TextImageBlock, HeroBlockSimpleText, CarouselBlock, ContactFormBlock, PortfolioBlock } from '@/components/blocks'
 
 type DynamicBlock = 
   | ({ __component: 'blocks.text-block' } & TextBlockData)
@@ -20,6 +21,7 @@ type DynamicBlock =
   | ({ __component: 'blocks.hero-block-simple-text' } & HeroBlockSimpleTextData)
   | ({ __component: 'blocks.carousel-block' } & CarouselBlockData)
   | ({ __component: 'blocks.contact-form-block' } & ContactFormBlockData)
+  | ({ __component: 'blocks.portfolio-block' } & PortfolioBlockData)
 
 type SectionGenericProps = {
   title?: string
@@ -124,6 +126,20 @@ export const SectionGeneric = ({ title, blocks, spacingTop = 'medium', spacingBo
             submitButtonText={block.submitButtonText}
             blockAlignment={block.blockAlignment as 'left' | 'center' | 'right' | 'full'}
             maxWidth={block.maxWidth as 'small' | 'medium' | 'large' | 'full'}
+          />
+        )
+      
+      case 'blocks.portfolio-block':
+        return (
+          <PortfolioBlock
+            key={index}
+            filterByThemes={block.filterByThemes}
+            showAllThemes={block.showAllThemes}
+            showFeaturedOnly={block.showFeaturedOnly}
+            limit={block.limit}
+            columns={block.columns as '2' | '3' | '4'}
+            showFilters={block.showFilters}
+            layout={block.layout as 'grid' | 'masonry'}
           />
         )
       

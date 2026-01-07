@@ -4,7 +4,7 @@
  * ⚠️  FICHIER AUTO-GÉNÉRÉ - NE PAS MODIFIER
  * 
  * Pour régénérer: npm run generate:types
- * Généré le: 2026-01-07T09:58:19.449Z
+ * Généré le: 2026-01-07T10:42:09.232Z
  */
 
 // ============================================================================
@@ -151,6 +151,19 @@ export interface ImageBlock {
 }
 
 /**
+ * Component: blocks.portfolio-block
+ */
+export interface PortfolioBlock {
+  filterByThemes?: (PortfolioTheme & StrapiEntity)[];
+  showAllThemes?: boolean;
+  showFeaturedOnly?: boolean;
+  limit?: number;
+  columns: string;
+  showFilters?: boolean;
+  layout?: string;
+}
+
+/**
  * Component: blocks.text-block
  */
 export interface TextBlock {
@@ -250,6 +263,45 @@ export interface Page {
 }
 export type PageResponse = StrapiResponse<Page>;
 export type PageCollectionResponse = StrapiCollectionResponse<Page>;
+
+/**
+ * Portfolio Item
+ */
+export interface PortfolioItem {
+  title: string;
+  slug: string;
+  description?: StrapiBlock[];
+  shortDescription?: string;
+  image: StrapiMedia;
+  gallery?: StrapiMedia[];
+  themes?: (PortfolioTheme & StrapiEntity)[];
+  link?: string;
+  client?: string;
+  year?: number;
+  technologies?: Record<string, unknown>;
+  featured?: boolean;
+  order?: number;
+  locale?: string;
+  localizations?: (PortfolioItem & StrapiEntity)[];
+}
+export type PortfolioItemResponse = StrapiResponse<PortfolioItem>;
+export type PortfolioItemCollectionResponse = StrapiCollectionResponse<PortfolioItem>;
+
+/**
+ * Portfolio Theme
+ */
+export interface PortfolioTheme {
+  name: string;
+  slug: string;
+  description?: string;
+  color?: string;
+  icon?: StrapiMedia;
+  portfolio_items?: (PortfolioItem & StrapiEntity)[];
+  locale?: string;
+  localizations?: (PortfolioTheme & StrapiEntity)[];
+}
+export type PortfolioThemeResponse = StrapiResponse<PortfolioTheme>;
+export type PortfolioThemeCollectionResponse = StrapiCollectionResponse<PortfolioTheme>;
 
 /**
  * section
