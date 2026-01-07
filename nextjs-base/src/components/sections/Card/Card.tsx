@@ -49,9 +49,9 @@ export const Card = ({ title, description, image }: CardProps) => {
   }
   
   return (
-    <div className="border rounded-lg overflow-hidden shadow p-4 bg-white">
+    <div className="border rounded-lg overflow-hidden shadow p-4 bg-white h-full flex flex-col">
       {cleanImage && (
-        <div className="relative w-full h-40 mb-4">
+        <div className="relative w-full h-40 mb-4 flex-shrink-0">
           <Image 
             src={cleanImage} 
             alt={title} 
@@ -62,7 +62,7 @@ export const Card = ({ title, description, image }: CardProps) => {
         </div>
       )}
       <h3 className="text-xl font-semibold whitespace-pre-line">{title}</h3>
-      <div className="mt-2">{renderBlocks(description)}</div>
+      <div className="mt-2 flex-grow">{renderBlocks(description)}</div>
     </div>
   )
 }
