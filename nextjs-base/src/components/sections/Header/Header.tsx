@@ -7,6 +7,7 @@ import { usePathname } from 'next/navigation'
 import { BurgerMenu } from '@/components/ui/BurgerMenu'
 import { LanguageSwitcher } from '@/components/locale/LanguageSwitcher'
 import type { StrapiMedia, PageLink } from '@/types/strapi'
+import { defaultLocale as STATIC_DEFAULT_LOCALE, locales as STATIC_LOCALES } from '@/lib/locales'
 
 export interface HeaderProps {
   logo?: StrapiMedia
@@ -21,7 +22,10 @@ export const Header = ({
 }: HeaderProps) => {
   const pathname = usePathname() ?? '/'
   const segments = pathname.split('/')
-  const currentLocale = segments[1] === 'fr' || segments[1] === 'en' ? segments[1] : 'fr'
+  const currentSegment = segments[1]
+  const currentLocale = (currentSegment && (STATIC_LOCALES as readonly string[]).includes(currentSegment))
+    ? currentSegment
+    : STATIC_DEFAULT_LOCALE
 
   // Transform PageLink to NavigationLink for easier processing
   const links = navigation

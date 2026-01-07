@@ -2,24 +2,77 @@
 
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
+import { defaultLocale as STATIC_DEFAULT_LOCALE, locales as STATIC_LOCALES } from '@/lib/locales'
+
+type LocalesResponse = {
+  locales: string[]
+  defaultLocale: string
+}
+
+function getCookieLocale(): string | undefined {
+  try {
+    const match = document.cookie.match(/(?:^|; )locale=([^;]+)/)
+    if (!match) return undefined
+    const value = decodeURIComponent(match[1])
+    return value || undefined
+  } catch {
+    return undefined
+  }
+}
 
 export default function NotFound() {
-  const [lang, setLang] = useState<'fr' | 'en' | undefined>(undefined)
+  const [supportedLocales, setSupportedLocales] = useState<string[]>([...(STATIC_LOCALES as readonly string[])])
+  const [defaultLocale, setDefaultLocale] = useState<string>(STATIC_DEFAULT_LOCALE)
+  const [rawLang, setRawLang] = useState<string | undefined>(undefined)
+
+  const lang = rawLang && supportedLocales.includes(rawLang) ? rawLang : defaultLocale
 
   useEffect(() => {
     try {
+      const cookieLocale = getCookieLocale()
+      if (cookieLocale) {
+        queueMicrotask(() => setRawLang(cookieLocale))
+        return
+      }
+
       const docLang = document.documentElement.lang
-      if (docLang === 'en' || docLang === 'fr') {
-        queueMicrotask(() => setLang(docLang as 'en' | 'fr'))
+      if (typeof docLang === 'string' && docLang.length > 0) {
+        queueMicrotask(() => setRawLang(docLang))
         return
       }
 
       const parts = window.location.pathname.split('/').filter(Boolean)
-      if (parts[0] === 'en' || parts[0] === 'fr') {
-        queueMicrotask(() => setLang(parts[0] as 'en' | 'fr'))
+      if (parts[0]) {
+        queueMicrotask(() => setRawLang(parts[0]))
       }
     } catch {
       // noop
+    }
+  }, [])
+
+  useEffect(() => {
+    let isMounted = true
+
+    ;(async () => {
+      try {
+        const res = await fetch('/api/locales')
+        if (!res.ok) return
+        const json = (await res.json()) as Partial<LocalesResponse>
+
+        const locales = Array.isArray(json.locales)
+          ? json.locales.filter((l): l is string => typeof l === 'string' && l.length > 0)
+          : []
+
+        if (!isMounted) return
+        if (locales.length > 0) setSupportedLocales(locales)
+        if (typeof json.defaultLocale === 'string' && json.defaultLocale.length > 0) setDefaultLocale(json.defaultLocale)
+      } catch {
+        // ignore: fallback to static locales
+      }
+    })()
+
+    return () => {
+      isMounted = false
     }
   }, [])
 
@@ -41,12 +94,12 @@ export default function NotFound() {
       </h1>
 
       <p style={{ marginBottom: '1.5rem', color: '#374151' }}>
-        {!lang ? "Cette page n'existe pas. / This page doesn't exist." : lang === 'en' ? "This page doesn't exist." : 'Cette page n\'existe pas.'}
+        {!rawLang ? "Cette page n'existe pas. / This page doesn't exist." : lang === 'en' ? "This page doesn't exist." : 'Cette page n\'existe pas.'}
       </p>
 
       <div style={{ display: 'flex', justifyContent: 'center' }}>
         <Link
-          href={`/${lang || 'fr'}`}
+          href={`/${lang}`}
           style={{
             padding: '12px 24px',
             background: '#000',

@@ -8,6 +8,8 @@ import { PageCollectionResponse, StrapiBlock } from '@/types/strapi'
 import { DynamicBlock } from '@/types/custom'
 import { draftMode } from 'next/headers'
 import { unstable_cache } from 'next/cache'
+import { redirect } from 'next/navigation'
+import { defaultLocale } from '@/lib/locales'
 
 export const revalidate = 3600 // Revalidate every hour as fallback
 
@@ -112,6 +114,12 @@ export default async function HomeLocale({ params, searchParams }: { params: Pro
     : await getHomePageData(locale)
 
   const page = res?.data?.[0]
+
+  // If Strapi doesn't have the home page in this locale, we serve the default locale.
+  // Redirect so the URL matches the served locale.
+  if (page?.locale && page.locale !== locale && page.locale === defaultLocale) {
+    redirect(`/${defaultLocale}`)
+  }
 
   if (!page) {
     return (

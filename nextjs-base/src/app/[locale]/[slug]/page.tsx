@@ -6,11 +6,10 @@ import { SectionGeneric } from '@/components/sections/SectionGeneric'
 import { PageCollectionResponse, StrapiBlock, StrapiEntity, Page as PageType } from '@/types/strapi'
 import { DynamicBlock } from '@/types/custom'
 import { notFound, redirect } from 'next/navigation'
-import { locales as SUPPORTED_LOCALES } from '@/lib/locales'
+import { defaultLocale } from '@/lib/locales'
+import { isSupportedLocale } from '@/lib/supported-locales'
 import { draftMode } from 'next/headers'
 import { unstable_cache } from 'next/cache'
-
-type SupportedLocale = typeof SUPPORTED_LOCALES[number]
 
 export const revalidate = 3600 // Revalidate every hour as fallback
 
@@ -116,7 +115,8 @@ export const dynamicParams = true // Allow dynamic params for pages that might n
 export default async function Page({ params, searchParams }: { params: Promise<{ locale: string; slug: string }>, searchParams?: { draft?: string } | Promise<{ draft?: string }> }) {
   const { locale, slug } = await params
 
-  if (!SUPPORTED_LOCALES.includes(locale as SupportedLocale)) {
+  // Defensive: [locale]/layout.tsx already validates, but keep it here too.
+  if (!(await isSupportedLocale(locale))) {
     notFound()
   }
 
@@ -135,6 +135,17 @@ export default async function Page({ params, searchParams }: { params: Promise<{
     : await getPageData(slug, locale)
 
   if (!pageRes.data.length) {
+    // Prefer redirecting to the default locale when the page doesn't exist in the requested locale.
+    if (locale !== defaultLocale) {
+      const defaultRes = isEnabled || isDraft
+        ? await fetchPageData(slug, defaultLocale, isDraft)
+        : await getPageData(slug, defaultLocale)
+
+      if (defaultRes.data.length) {
+        redirect(`/${defaultLocale}/${slug}`)
+      }
+    }
+
     // Fallback: try without locale (global)
     const fallbackRes = isEnabled || isDraft
       ? await fetchPageDataFallback(slug, isDraft)

@@ -17,8 +17,10 @@ export function middleware(req: NextRequest) {
     const first = segments[0]
     const locale = (first && (locales as readonly string[]).includes(first)) ? first : defaultLocale
 
-    // If the first segment is not a supported locale, redirect to include the default locale
-    if (!first || !(locales as readonly string[]).includes(first)) {
+    // Only redirect when there is NO locale segment at all ("/").
+    // If the first segment exists but is not a supported locale (e.g. "/f"),
+    // we let the request through so the app can render a proper 404.
+    if (!first) {
       const url = req.nextUrl.clone()
       url.pathname = `/${locale}${url.pathname}`
 
@@ -39,6 +41,11 @@ export function middleware(req: NextRequest) {
       }
 
       return redirectRes
+    }
+
+    // If the first segment exists but is not a supported locale, do not rewrite/redirect.
+    if (!(locales as readonly string[]).includes(first)) {
+      return NextResponse.next()
     }
 
     const res = NextResponse.next()
