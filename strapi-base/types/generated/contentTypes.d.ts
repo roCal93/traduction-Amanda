@@ -439,6 +439,7 @@ export interface ApiCardCard extends Struct.CollectionTypeSchema {
   };
   options: {
     draftAndPublish: true;
+    entryTitle: 'title';
   };
   pluginOptions: {
     i18n: {
@@ -459,7 +460,7 @@ export interface ApiCardCard extends Struct.CollectionTypeSchema {
     locale: Schema.Attribute.String;
     localizations: Schema.Attribute.Relation<'oneToMany', 'api::card.card'>;
     publishedAt: Schema.Attribute.DateTime;
-    title: Schema.Attribute.Text &
+    title: Schema.Attribute.String &
       Schema.Attribute.Required &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
