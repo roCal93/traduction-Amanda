@@ -18,7 +18,7 @@ export const Card = ({ title, description, image }: CardProps) => {
       switch (block.type) {
         case 'paragraph':
           return (
-            <p key={index} className="text-gray-600 mb-2">
+            <p key={index} className="text-gray-600 mb-2 whitespace-pre-line">
               {block.children?.map((child, childIndex) => {
                 if (child.type === 'text') {
                   return <span key={childIndex}>{child.text}</span>
