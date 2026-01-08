@@ -7,7 +7,7 @@ type HeroBlockProps = {
   textAlignment?: 'left' | 'center' | 'right'
 }
 
-export const HeroBlockSimpleText = ({
+const HeroBlockSimpleText = ({
   title,
   content,
   height = 'large',
@@ -43,3 +43,5 @@ export const HeroBlockSimpleText = ({
     </section>
   )
 }
+
+export default HeroBlockSimpleText

@@ -50,7 +50,7 @@ const renderRichText = (content: any) => {
   })
 }
 
-export const WorkCard = ({ item, layout = 'grid' }: WorkCardProps) => {
+const WorkCard = ({ item, layout = 'grid' }: WorkCardProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const imageUrl = cleanImageUrl(item.image?.url)
 
@@ -323,3 +323,5 @@ export const WorkCard = ({ item, layout = 'grid' }: WorkCardProps) => {
     </>
   )
 }
+
+export default WorkCard

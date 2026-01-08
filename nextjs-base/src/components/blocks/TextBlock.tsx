@@ -8,7 +8,7 @@ type TextBlockProps = {
   maxWidth?: 'small' | 'medium' | 'large' | 'full'
 }
 
-export const TextBlock = ({ 
+const TextBlock = ({ 
   content, 
   textAlignment = 'left',
   blockAlignment = 'full',
@@ -103,3 +103,5 @@ export const TextBlock = ({
     </div>
   )
 }
+
+export default TextBlock

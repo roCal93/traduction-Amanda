@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import { CarouselCard } from './CarouselCard'
+import CarouselCard from './CarouselCard'
 import { StrapiBlock } from '@/types/strapi'
 
 type CarouselCardData = {
@@ -20,7 +20,7 @@ type CarouselBlockProps = {
   showIndicators?: boolean
 }
 
-export const CarouselBlock = ({ 
+const CarouselBlock = ({ 
   cards, 
   autoplay = false, 
   autoplayDelay = 5000,
@@ -120,3 +120,5 @@ export const CarouselBlock = ({
     </div>
   )
 }
+
+export default CarouselBlock

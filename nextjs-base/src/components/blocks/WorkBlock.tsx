@@ -2,7 +2,7 @@
 
 import React, { useState, useMemo } from 'react'
 import { WorkItem, WorkCategory, StrapiEntity } from '@/types/strapi'
-import { WorkCard } from './WorkCard'
+import WorkCard from './WorkCard'
 
 type WorkBlockProps = {
   filterByCategories?: (WorkCategory & StrapiEntity)[]
@@ -15,7 +15,7 @@ type WorkBlockProps = {
   layout?: 'grid' | 'masonry' | 'list'
 }
 
-export const WorkBlock = ({
+const WorkBlock = ({
   filterByCategories = [],
   showAllCategories = true,
   showFeaturedOnly = false,
@@ -189,3 +189,5 @@ export const WorkBlock = ({
     </div>
   )
 }
+
+export default WorkBlock

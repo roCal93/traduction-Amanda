@@ -13,7 +13,7 @@ type TextImageBlockProps = {
   roundedImage?: boolean
 }
 
-export const TextImageBlock = ({ 
+const TextImageBlock = ({ 
   content, 
   image, 
   imagePosition, 
@@ -150,3 +150,5 @@ export const TextImageBlock = ({
     </div>
   )
 }
+
+export default TextImageBlock

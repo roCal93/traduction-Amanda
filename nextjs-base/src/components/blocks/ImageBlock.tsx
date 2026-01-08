@@ -9,7 +9,7 @@ type ImageBlockProps = {
   size: 'small' | 'medium' | 'large' | 'full'
 }
 
-export const ImageBlock = ({ image, caption, alignment, size }: ImageBlockProps) => {
+const ImageBlock = ({ image, caption, alignment, size }: ImageBlockProps) => {
   const imageSrc = cleanImageUrl(image.url)
   const finalImageSrc = imageSrc && imageSrc.startsWith('/') 
     ? `${process.env.NEXT_PUBLIC_STRAPI_URL}${imageSrc}` 
@@ -48,3 +48,5 @@ export const ImageBlock = ({ image, caption, alignment, size }: ImageBlockProps)
     </figure>
   )
 }
+
+export default ImageBlock

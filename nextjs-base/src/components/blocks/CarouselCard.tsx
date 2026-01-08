@@ -12,7 +12,7 @@ type CarouselCardProps = {
   image?: { url: string; alternativeText?: string }
 }
 
-export const CarouselCard = ({ frontTitle, frontContent, backContent, image }: CarouselCardProps) => {
+const CarouselCard = ({ frontTitle, frontContent, backContent, image }: CarouselCardProps) => {
   const [isFlipped, setIsFlipped] = useState(false)
   const cleanImage = cleanImageUrl(image?.url)
 
@@ -109,3 +109,5 @@ export const CarouselCard = ({ frontTitle, frontContent, backContent, image }: C
     </div>
   )
 }
+
+export default CarouselCard

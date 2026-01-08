@@ -8,7 +8,7 @@ type CardsBlockProps = {
   alignment?: 'left' | 'center' | 'right'
 }
 
-export const CardsBlock = ({ cards, columns, alignment = 'center' }: CardsBlockProps) => {
+const CardsBlock = ({ cards, columns, alignment = 'center' }: CardsBlockProps) => {
   const columnClasses = {
     '1': 'grid-cols-1 max-w-3xl mx-auto',
     '2': 'grid-cols-1 md:grid-cols-2',
@@ -44,3 +44,5 @@ export const CardsBlock = ({ cards, columns, alignment = 'center' }: CardsBlockP
     </div>
   )
 }
+
+export default CardsBlock

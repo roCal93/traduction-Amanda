@@ -11,7 +11,7 @@ type ButtonBlockProps = {
   alignment: 'left' | 'center' | 'right' | 'space-between'
 }
 
-export const ButtonBlock = ({ buttons, alignment }: ButtonBlockProps) => {
+const ButtonBlock = ({ buttons, alignment }: ButtonBlockProps) => {
   const pathname = usePathname()
   const segments = pathname?.split('/').filter(Boolean) || []
   const currentLocale = segments[0] || 'fr'
@@ -60,3 +60,5 @@ export const ButtonBlock = ({ buttons, alignment }: ButtonBlockProps) => {
     </div>
   )
 }
+
+export default ButtonBlock

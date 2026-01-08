@@ -10,7 +10,7 @@ type ContactFormBlockProps = {
   maxWidth?: 'small' | 'medium' | 'large' | 'full'
 }
 
-export const ContactFormBlock = ({ 
+const ContactFormBlock = ({ 
   title = 'Contactez-nous',
   description,
   submitButtonText = 'Envoyer',
@@ -166,3 +166,5 @@ export const ContactFormBlock = ({
     </div>
   )
 }
+
+export default ContactFormBlock
