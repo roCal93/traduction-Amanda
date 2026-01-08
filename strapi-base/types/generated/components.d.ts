@@ -188,44 +188,6 @@ export interface BlocksTextImageBlock extends Struct.ComponentSchema {
   };
 }
 
-export interface BlocksWorkBlock extends Struct.ComponentSchema {
-  collectionName: 'components_blocks_work_blocks';
-  info: {
-    description: 'Display work items (projects, case studies, services, etc.) with filtering by category';
-    displayName: 'Work Block';
-  };
-  attributes: {
-    columns: Schema.Attribute.Enumeration<['2', '3', '4']> &
-      Schema.Attribute.Required &
-      Schema.Attribute.DefaultTo<'3'>;
-    filterByCategories: Schema.Attribute.Relation<
-      'oneToMany',
-      'api::work-category.work-category'
-    >;
-    filterByItemType: Schema.Attribute.Enumeration<
-      [
-        'all',
-        'project',
-        'case-study',
-        'service',
-        'product',
-        'article',
-        'achievement',
-        'custom',
-      ]
-    > &
-      Schema.Attribute.DefaultTo<'all'>;
-    layout: Schema.Attribute.Enumeration<['grid', 'masonry', 'list']> &
-      Schema.Attribute.DefaultTo<'grid'>;
-    limit: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<12>;
-    showAllCategories: Schema.Attribute.Boolean &
-      Schema.Attribute.DefaultTo<true>;
-    showFeaturedOnly: Schema.Attribute.Boolean &
-      Schema.Attribute.DefaultTo<false>;
-    showFilters: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<true>;
-  };
-}
-
 export interface SharedButton extends Struct.ComponentSchema {
   collectionName: 'components_shared_buttons';
   info: {
@@ -233,11 +195,10 @@ export interface SharedButton extends Struct.ComponentSchema {
     displayName: 'Button';
   };
   attributes: {
-    file: Schema.Attribute.Media<'files' | 'images'>;
     icon: Schema.Attribute.String;
     isExternal: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
     label: Schema.Attribute.String & Schema.Attribute.Required;
-    url: Schema.Attribute.String;
+    url: Schema.Attribute.String & Schema.Attribute.Required;
     variant: Schema.Attribute.Enumeration<
       ['primary', 'secondary', 'outline', 'ghost']
     > &
@@ -283,7 +244,6 @@ declare module '@strapi/strapi' {
       'blocks.image-block': BlocksImageBlock;
       'blocks.text-block': BlocksTextBlock;
       'blocks.text-image-block': BlocksTextImageBlock;
-      'blocks.work-block': BlocksWorkBlock;
       'shared.button': SharedButton;
       'shared.carousel-card': SharedCarouselCard;
       'shared.page-link': SharedPageLink;
