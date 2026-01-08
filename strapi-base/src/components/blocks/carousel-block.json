@@ -1,0 +1,34 @@
+{
+  "collectionName": "components_blocks_carousel_blocks",
+  "info": {
+    "displayName": "Carousel Block",
+    "description": "Carousel with flippable cards"
+  },
+  "options": {},
+  "attributes": {
+    "cards": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.carousel-card",
+      "required": true,
+      "min": 1
+    },
+    "autoplay": {
+      "type": "boolean",
+      "default": false
+    },
+    "autoplayDelay": {
+      "type": "integer",
+      "default": 5000,
+      "min": 1000
+    },
+    "showControls": {
+      "type": "boolean",
+      "default": true
+    },
+    "showIndicators": {
+      "type": "boolean",
+      "default": true
+    }
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "collectionName": "components_blocks_contact_form_blocks",
+  "info": {
+    "displayName": "Contact Form Block",
+    "description": "Contact form with name, email and message fields"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "default": "Contactez-nous"
+    },
+    "description": {
+      "type": "text"
+    },
+    "submitButtonText": {
+      "type": "string",
+      "default": "Envoyer"
+    },
+    "blockAlignment": {
+      "type": "enumeration",
+      "enum": [
+        "left",
+        "center",
+        "right",
+        "full"
+      ],
+      "default": "center",
+      "required": true
+    },
+    "maxWidth": {
+      "type": "enumeration",
+      "enum": [
+        "small",
+        "medium",
+        "large",
+        "full"
+      ],
+      "default": "medium",
+      "required": true
+    }
+  },
+  "config": {}
+}
