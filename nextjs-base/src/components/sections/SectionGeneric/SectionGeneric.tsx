@@ -155,12 +155,10 @@ export const SectionGeneric = ({ title, blocks, spacingTop = 'medium', spacingBo
               title: it.title,
               date: it.date,
               description: it.description,
-              images: it.images?.map((ti) => ({
-                url: ti.image.url,
-                width: ti.image.width,
-                height: ti.image.height,
-              })),
-              links: it.images?.map((ti) => ti.link ? { url: ti.link.url } : null).filter(Boolean) as { url: string }[]
+              images: it.images
+                ? (it.images.map((img) => (img.image ? { url: img.image.url, width: img.image.width, height: img.image.height } : null)).filter(Boolean) as any[])
+                : undefined,
+              links: it.images ? (it.images.map((img) => (img.link ? { url: img.link.url } : null)).filter(Boolean) as { url: string }[]) : undefined
             }))}
           />
         )

@@ -23,7 +23,12 @@ export interface TimelineBlockProps {
 }
 
 const TimelineBlock: React.FC<TimelineBlockProps> = ({ items }) => {
-  const renderImages = (images: TimelineImageOrString[] | undefined, links: { url: string }[] | undefined, className: string = "", size: number = 80) => {
+  const renderImages = (
+    images: TimelineImageOrString[] | undefined,
+    links: { url: string }[] | undefined,
+    className: string = "",
+    size: number = 80
+  ) => {
     if (!images || images.length === 0) return null
     const imageSize = images.length > 1 ? Math.min(size, 100) : size // Reduce size for multiple images
     return (
