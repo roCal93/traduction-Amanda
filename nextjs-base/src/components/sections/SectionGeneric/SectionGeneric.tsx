@@ -162,6 +162,7 @@ export const SectionGeneric = ({ title, blocks, spacingTop = 'medium', spacingBo
             }))}
           />
         )
+    
       
       default: {
         // Fallback dynamique : si un composant côté Next.js correspondant existe dans
