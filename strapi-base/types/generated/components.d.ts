@@ -188,6 +188,18 @@ export interface BlocksTextImageBlock extends Struct.ComponentSchema {
   };
 }
 
+export interface BlocksTimelineBlock extends Struct.ComponentSchema {
+  collectionName: 'components_common_timeline_blocks';
+  info: {
+    description: 'A timeline block with steps, images, and descriptions.';
+    displayName: 'Timeline Block';
+    icon: 'calendar-alt';
+  };
+  attributes: {
+    items: Schema.Attribute.Component<'shared.timeline-item', true>;
+  };
+}
+
 export interface BlocksWorkBlock extends Struct.ComponentSchema {
   collectionName: 'components_blocks_work_blocks';
   info: {
@@ -260,6 +272,19 @@ export interface SharedCarouselCard extends Struct.ComponentSchema {
   };
 }
 
+export interface SharedExternalLink extends Struct.ComponentSchema {
+  collectionName: 'components_shared_external_links';
+  info: {
+    description: 'A link to an external URL';
+    displayName: 'External Link';
+    icon: 'external-link-alt';
+  };
+  attributes: {
+    label: Schema.Attribute.String;
+    url: Schema.Attribute.String & Schema.Attribute.Required;
+  };
+}
+
 export interface SharedPageLink extends Struct.ComponentSchema {
   collectionName: 'components_shared_page_links';
   info: {
@@ -269,6 +294,34 @@ export interface SharedPageLink extends Struct.ComponentSchema {
   attributes: {
     customLabel: Schema.Attribute.String;
     page: Schema.Attribute.Relation<'oneToOne', 'api::page.page'>;
+  };
+}
+
+export interface SharedTimelineImage extends Struct.ComponentSchema {
+  collectionName: 'components_shared_timeline_images';
+  info: {
+    description: 'An image for the timeline with an optional external link';
+    displayName: 'Timeline Image';
+    icon: 'image';
+  };
+  attributes: {
+    image: Schema.Attribute.Media & Schema.Attribute.Required;
+    link: Schema.Attribute.Component<'shared.external-link', false>;
+  };
+}
+
+export interface SharedTimelineItem extends Struct.ComponentSchema {
+  collectionName: 'components_common_timeline_items';
+  info: {
+    description: 'A single item/step in the timeline.';
+    displayName: 'Timeline Item';
+    icon: 'dot-circle';
+  };
+  attributes: {
+    date: Schema.Attribute.String;
+    description: Schema.Attribute.Text;
+    images: Schema.Attribute.Component<'shared.timeline-image', true>;
+    title: Schema.Attribute.String & Schema.Attribute.Required;
   };
 }
 
@@ -283,10 +336,14 @@ declare module '@strapi/strapi' {
       'blocks.image-block': BlocksImageBlock;
       'blocks.text-block': BlocksTextBlock;
       'blocks.text-image-block': BlocksTextImageBlock;
+      'blocks.timeline-block': BlocksTimelineBlock;
       'blocks.work-block': BlocksWorkBlock;
       'shared.button': SharedButton;
       'shared.carousel-card': SharedCarouselCard;
+      'shared.external-link': SharedExternalLink;
       'shared.page-link': SharedPageLink;
+      'shared.timeline-image': SharedTimelineImage;
+      'shared.timeline-item': SharedTimelineItem;
     }
   }
 }

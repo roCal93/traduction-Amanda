@@ -16,7 +16,7 @@ const nextConfig: NextConfig = {
       //   pathname: '/uploads/**',
       // },
     ],
-    unoptimized: process.env.NODE_ENV === 'development' || (process.env.NEXT_PUBLIC_STRAPI_URL || '').includes('localhost'), // Toujours non-optimisé pour localhost
+    unoptimized: true, // Désactiver l'optimisation pour éviter les problèmes de domaine
     formats: ['image/webp', 'image/avif'], // Formats modernes pour réduire la taille
   },
 

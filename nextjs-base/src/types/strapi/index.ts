@@ -178,6 +178,13 @@ export interface TextImageBlock {
 }
 
 /**
+ * Component: blocks.timeline-block
+ */
+export interface TimelineBlock {
+  items?: TimelineItem[];
+}
+
+/**
  * Component: blocks.work-block
  */
 export interface WorkBlock {
@@ -214,11 +221,37 @@ export interface CarouselCard {
 }
 
 /**
+ * Component: shared.external-link
+ */
+export interface ExternalLink {
+  url: string;
+  label?: string;
+}
+
+/**
  * Component: shared.page-link
  */
 export interface PageLink {
   page?: (Page & StrapiEntity);
   customLabel?: string;
+}
+
+/**
+ * Component: shared.timeline-image
+ */
+export interface TimelineImage {
+  image: StrapiMedia;
+  link?: ExternalLink;
+}
+
+/**
+ * Component: shared.timeline-item
+ */
+export interface TimelineItem {
+  title: string;
+  date?: string;
+  description?: string;
+  images?: TimelineImage[];
 }
 
 // ============================================================================

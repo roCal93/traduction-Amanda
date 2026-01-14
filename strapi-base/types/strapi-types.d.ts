@@ -4,7 +4,7 @@
  * ⚠️  FICHIER AUTO-GÉNÉRÉ - NE PAS MODIFIER
  * 
  * Pour régénérer: npm run generate:types
- * Généré le: 2026-01-08T12:53:12.428Z
+ * Généré le: 2026-01-13T14:54:51.933Z
  */
 
 // ============================================================================
@@ -174,6 +174,13 @@ export interface TextImageBlock {
 }
 
 /**
+ * Component: blocks.timeline-block
+ */
+export interface TimelineBlock {
+  items?: TimelineItem[];
+}
+
+/**
  * Component: blocks.work-block
  */
 export interface WorkBlock {
@@ -210,11 +217,37 @@ export interface CarouselCard {
 }
 
 /**
+ * Component: shared.external-link
+ */
+export interface ExternalLink {
+  url: string;
+  label?: string;
+}
+
+/**
  * Component: shared.page-link
  */
 export interface PageLink {
   page?: (Page & StrapiEntity);
   customLabel?: string;
+}
+
+/**
+ * Component: shared.timeline-image
+ */
+export interface TimelineImage {
+  image: StrapiMedia;
+  link?: ExternalLink;
+}
+
+/**
+ * Component: shared.timeline-item
+ */
+export interface TimelineItem {
+  title: string;
+  date?: string;
+  description?: string;
+  images?: TimelineImage[];
 }
 
 // ============================================================================

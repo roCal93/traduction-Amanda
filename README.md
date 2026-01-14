@@ -60,6 +60,8 @@ hakuna-mataweb-starter/
 │   │   └── types/         # Types TypeScript générés
 │   ├── public/            # Assets statiques
 │   ├── next.config.ts     # Configuration Next.js
+
+Note: If you use blocks that rely on `next/image`, ensure `images.remotePatterns` in `next.config.ts` includes your Strapi host (example: protocol 'https', hostname 'cms.monsite.com', pathname '/uploads/**'). In development the starter disables optimization for localhost; in production add your Strapi domain and remove `unoptimized` if you want full image optimization.
 │   └── package.json       # Dépendances
 ├── .env.example           # Variables d'environnement
 ├── README.md              # Ce fichier

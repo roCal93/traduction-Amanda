@@ -23,7 +23,7 @@ const fetchPageData = async (slug: string, locale: string, isDraft: boolean) => 
   const pageRes: PageCollectionResponse = await client.findMany('pages', {
     filters: { slug: { $eq: slug } },
     fields: ['title', 'hideTitle', 'slug', 'seoTitle', 'seoDescription', 'noIndex', 'locale'],
-    populate: 'sections.blocks.cards.image,sections.blocks.image,sections.blocks.buttons.file,seoImage,localizations',
+    populate: 'sections.blocks.cards.image,sections.blocks.image,sections.blocks.buttons.file,sections.blocks.items.images.image,sections.blocks.items.images.link,seoImage,localizations',
     locale,
     publicationState: isDraft ? 'preview' : 'live',
   })
@@ -41,24 +41,26 @@ const fetchPageDataFallback = async (slug: string, isDraft: boolean) => {
   const fallbackRes: PageCollectionResponse = await client.findMany('pages', {
     filters: { slug: { $eq: slug } },
     fields: ['title', 'hideTitle', 'slug', 'seoTitle', 'seoDescription', 'noIndex', 'locale'],
-    populate: 'sections.blocks.cards.image,sections.blocks.image,sections.blocks.buttons.file,seoImage,localizations',
+    populate: 'sections.blocks.cards.image,sections.blocks.image,sections.blocks.buttons.file,sections.blocks.items.images.image,sections.blocks.items.images.link,seoImage,localizations',
     publicationState: isDraft ? 'preview' : 'live',
   })
 
   return fallbackRes
 }
 
-const getPageData = unstable_cache(
-  async (slug: string, locale: string) => fetchPageData(slug, locale, false),
-  ['page-data'],
-  { revalidate: 3600, tags: ['strapi-pages'] }
-)
+const getPageData = async (slug: string, locale: string) => fetchPageData(slug, locale, false)
+// unstable_cache(
+//   async (slug: string, locale: string) => fetchPageData(slug, locale, false),
+//   ['page-data'],
+//   { revalidate: 3600, tags: ['strapi-pages'] }
+// )
 
-const getPageDataFallback = unstable_cache(
-  async (slug: string) => fetchPageDataFallback(slug, false),
-  ['page-data-fallback'],
-  { revalidate: 3600, tags: ['strapi-pages'] }
-)
+const getPageDataFallback = async (slug: string) => fetchPageDataFallback(slug, false)
+// unstable_cache(
+//   async (slug: string) => fetchPageDataFallback(slug, false),
+//   ['page-data-fallback'],
+//   { revalidate: 3600, tags: ['strapi-pages'] }
+// )
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string; slug: string }> }) {
   const { slug, locale } = await params
