@@ -155,7 +155,12 @@ export const SectionGeneric = ({ title, blocks, spacingTop = 'medium', spacingBo
               title: it.title,
               date: it.date,
               description: it.description,
-              images: it.images ? (Array.isArray(it.images) ? it.images : [it.images]) : undefined
+              images: it.images?.map((ti) => ({
+                url: ti.image.url,
+                width: ti.image.width,
+                height: ti.image.height,
+              })),
+              links: it.images?.map((ti) => ti.link ? { url: ti.link.url } : null).filter(Boolean) as { url: string }[]
             }))}
           />
         )
