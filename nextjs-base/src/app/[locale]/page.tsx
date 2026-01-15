@@ -7,7 +7,6 @@ import { SectionGeneric } from '@/components/sections/SectionGeneric'
 import { PageCollectionResponse, StrapiBlock } from '@/types/strapi'
 import { DynamicBlock } from '@/types/custom'
 import { draftMode } from 'next/headers'
-import { unstable_cache } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { defaultLocale } from '@/lib/locales'
 
@@ -23,7 +22,7 @@ const fetchHomePageData = async (locale: string, isDraft: boolean) => {
   let res: PageCollectionResponse = await client.findMany('pages', {
     filters: { slug: { $eq: 'home' } },
     fields: ['title', 'hideTitle', 'slug', 'seoTitle', 'seoDescription', 'noIndex', 'locale'],
-    populate: 'sections.blocks.cards.image,sections.blocks.image,sections.blocks.buttons.file,seoImage,localizations',
+    populate: 'sections.blocks.cards.image,sections.blocks.image,sections.blocks.buttons.file,sections.blocks.items.images,seoImage,localizations',
     locale,
     publicationState: isDraft ? 'preview' : 'live',
   })
@@ -33,7 +32,7 @@ const fetchHomePageData = async (locale: string, isDraft: boolean) => {
     res = await client.findMany('pages', {
       filters: { slug: { $eq: 'home' } },
       fields: ['title', 'hideTitle', 'slug', 'seoTitle', 'seoDescription', 'noIndex', 'locale'],
-      populate: 'sections.blocks.cards.image,sections.blocks.image,sections.blocks.buttons.file,seoImage,localizations',
+      populate: 'sections.blocks.cards.image,sections.blocks.image,sections.blocks.buttons.file,sections.blocks.items.images,seoImage,localizations',
       locale: 'fr',
       publicationState: isDraft ? 'preview' : 'live',
     })
@@ -61,11 +60,12 @@ const fetchHomePageData = async (locale: string, isDraft: boolean) => {
   return res
 }
 
-const getHomePageData = unstable_cache(
-  async (locale: string) => fetchHomePageData(locale, false),
-  ['home-page'],
-  { revalidate: 3600, tags: ['strapi-pages'] }
-)
+const getHomePageData = async (locale: string) => fetchHomePageData(locale, false)
+// unstable_cache(
+//   async (locale: string) => fetchHomePageData(locale, false),
+//   ['home-page'],
+//   { revalidate: 3600, tags: ['strapi-pages'] }
+// )
 
 export async function generateMetadata({ params }: { params: { locale: string } | Promise<{ locale: string }> }) {
   const { locale } = await Promise.resolve(params)
@@ -149,6 +149,7 @@ export default async function HomeLocale({ params, searchParams }: { params: Pro
       {page.sections?.map((section) => (
         <SectionGeneric
           key={section.id}
+          identifier={section.identifier}
           title={section.hideTitle ? undefined : section.title}
           blocks={section.blocks as DynamicBlock[]}
           spacingTop={section.spacingTop as 'none' | 'small' | 'medium' | 'large' | undefined}

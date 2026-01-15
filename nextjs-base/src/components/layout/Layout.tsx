@@ -16,11 +16,41 @@ async function getHeaderData(locale: string) {
   }
 
   try {
-    const response = await fetchAPI<HeaderResponse>('/header?populate=navigation.page', {
-      locale,
-      next: { revalidate: 3600 }, // Cache 1h
-    })
-    return response.data
+    // Faire deux requêtes distinctes (Strapi ne supporte pas toujours la population multiple
+    // pour les components). On récupère les pages et les sections puis on fusionne.
+    const [respPage, respSection] = await Promise.all([
+      fetchAPI<HeaderResponse>('/header?populate=navigation.page', { locale, next: { revalidate: 3600 } }),
+      fetchAPI<HeaderResponse>('/header?populate=navigation.section', { locale, next: { revalidate: 3600 } }),
+    ])
+
+    const dataPage = respPage?.data || null
+    const dataSection = respSection?.data || null
+
+    if (!dataPage && !dataSection) return null
+
+    // Merge navigation arrays using the component item id as key
+    const navMap = new Map<number, any>()
+
+    if (dataPage?.navigation) {
+      for (const item of dataPage.navigation) {
+        navMap.set(item.id, { ...item })
+      }
+    }
+
+    if (dataSection?.navigation) {
+      for (const item of dataSection.navigation) {
+        const existing = navMap.get(item.id) || {}
+        navMap.set(item.id, { ...existing, ...item })
+      }
+    }
+
+    const merged = Array.from(navMap.values())
+
+    // Prefer dataPage root fields (logo/title), but attach merged navigation
+    return {
+      ...dataPage,
+      navigation: merged,
+    }
   } catch (error) {
     console.error('Erreur lors du chargement du header:', error)
     return null

@@ -3,13 +3,12 @@ import { buildMetadata, type Hreflang } from '@/lib/seo'
 import { Layout } from '@/components/layout'
 import { Hero } from '@/components/sections/Hero'
 import { SectionGeneric } from '@/components/sections/SectionGeneric'
-import { PageCollectionResponse, StrapiBlock, StrapiEntity, Page as PageType } from '@/types/strapi'
+import { PageCollectionResponse, StrapiEntity, Page as PageType } from '@/types/strapi'
 import { DynamicBlock } from '@/types/custom'
 import { notFound, redirect } from 'next/navigation'
 import { defaultLocale } from '@/lib/locales'
 import { isSupportedLocale } from '@/lib/supported-locales'
 import { draftMode } from 'next/headers'
-import { unstable_cache } from 'next/cache'
 
 export const revalidate = 3600 // Revalidate every hour as fallback
 
@@ -23,7 +22,7 @@ const fetchPageData = async (slug: string, locale: string, isDraft: boolean) => 
   const pageRes: PageCollectionResponse = await client.findMany('pages', {
     filters: { slug: { $eq: slug } },
     fields: ['title', 'hideTitle', 'slug', 'seoTitle', 'seoDescription', 'noIndex', 'locale'],
-    populate: 'sections.blocks.cards.image,sections.blocks.image,sections.blocks.buttons.file,seoImage,localizations',
+    populate: 'sections.blocks.cards.image,sections.blocks.image,sections.blocks.buttons.file,sections.blocks.items.images.image,sections.blocks.items.images.link,seoImage,localizations',
     locale,
     publicationState: isDraft ? 'preview' : 'live',
   })
@@ -41,24 +40,26 @@ const fetchPageDataFallback = async (slug: string, isDraft: boolean) => {
   const fallbackRes: PageCollectionResponse = await client.findMany('pages', {
     filters: { slug: { $eq: slug } },
     fields: ['title', 'hideTitle', 'slug', 'seoTitle', 'seoDescription', 'noIndex', 'locale'],
-    populate: 'sections.blocks.cards.image,sections.blocks.image,sections.blocks.buttons.file,seoImage,localizations',
+    populate: 'sections.blocks.cards.image,sections.blocks.image,sections.blocks.buttons.file,sections.blocks.items.images.image,sections.blocks.items.images.link,seoImage,localizations',
     publicationState: isDraft ? 'preview' : 'live',
   })
 
   return fallbackRes
 }
 
-const getPageData = unstable_cache(
-  async (slug: string, locale: string) => fetchPageData(slug, locale, false),
-  ['page-data'],
-  { revalidate: 3600, tags: ['strapi-pages'] }
-)
+const getPageData = async (slug: string, locale: string) => fetchPageData(slug, locale, false)
+// unstable_cache(
+//   async (slug: string, locale: string) => fetchPageData(slug, locale, false),
+//   ['page-data'],
+//   { revalidate: 3600, tags: ['strapi-pages'] }
+// )
 
-const getPageDataFallback = unstable_cache(
-  async (slug: string) => fetchPageDataFallback(slug, false),
-  ['page-data-fallback'],
-  { revalidate: 3600, tags: ['strapi-pages'] }
-)
+const getPageDataFallback = async (slug: string) => fetchPageDataFallback(slug, false)
+// unstable_cache(
+//   async (slug: string) => fetchPageDataFallback(slug, false),
+//   ['page-data-fallback'],
+//   { revalidate: 3600, tags: ['strapi-pages'] }
+// )
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string; slug: string }> }) {
   const { slug, locale } = await params
@@ -176,6 +177,7 @@ export default async function Page({ params, searchParams }: { params: Promise<{
       {sections.map((section) => (
         <SectionGeneric
           key={section.id}
+          identifier={section.identifier}
           title={section.hideTitle ? undefined : section.title}
           blocks={section.blocks as DynamicBlock[]}
         />
