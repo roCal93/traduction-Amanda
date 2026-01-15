@@ -38,6 +38,14 @@ export const Header = ({
       anchor: link.section?.identifier
     })), [navigation])
 
+  useEffect(() => {
+    if (process.env.NODE_ENV !== 'production') console.debug('[Header] navigation prop:', navigation)
+  }, [navigation])
+
+  useEffect(() => {
+    if (process.env.NODE_ENV !== 'production') console.debug('[Header] processed links:', links)
+  }, [links])
+
   const [activeAnchor, setActiveAnchor] = useState<string | null>(null)
   const [mounted, setMounted] = useState(false)
 

@@ -153,6 +153,115 @@ export interface TimelineItem {
 }
 
 // ============================================================================
+// BLOCK COMPONENTS
+// ============================================================================
+
+/**
+ * Component: blocks.button-block
+ */
+export interface ButtonBlock {
+  buttons: Button[];
+  alignment: string;
+}
+
+/**
+ * Component: blocks.cards-block
+ */
+export interface CardsBlock {
+  title?: string;
+  cards: (Card & StrapiEntity)[];
+  columns: string;
+  showImages?: boolean;
+  alignment?: string;
+}
+
+/**
+ * Component: blocks.carousel-block
+ */
+export interface CarouselBlock {
+  cards: CarouselCard[];
+  autoplay?: boolean;
+  autoplayDelay?: number;
+  showControls?: boolean;
+  showIndicators?: boolean;
+}
+
+/**
+ * Component: blocks.contact-form-block
+ */
+export interface ContactFormBlock {
+  title?: string;
+  description?: string;
+  submitButtonText?: string;
+  blockAlignment: string;
+  maxWidth: string;
+}
+
+/**
+ * Component: blocks.hero-block-simple-text
+ */
+export interface HeroBlockSimpleText {
+  title?: string;
+  content: string;
+  height: string;
+  textAlignment: string;
+}
+
+/**
+ * Component: blocks.image-block
+ */
+export interface ImageBlock {
+  image: StrapiMedia;
+  caption?: string;
+  alignment: string;
+  size: string;
+}
+
+/**
+ * Component: blocks.text-block
+ */
+export interface TextBlock {
+  content: StrapiBlock[];
+  textAlignment: string;
+  blockAlignment: string;
+  maxWidth: string;
+}
+
+/**
+ * Component: blocks.text-image-block
+ */
+export interface TextImageBlock {
+  content: StrapiBlock[];
+  image: StrapiMedia;
+  imagePosition: string;
+  imageSize: string;
+  verticalAlignment: string;
+  textAlignment: string;
+  roundedImage?: boolean;
+}
+
+/**
+ * Component: blocks.timeline-block
+ */
+export interface TimelineBlock {
+  items?: TimelineItem[];
+}
+
+/**
+ * Component: blocks.work-block
+ */
+export interface WorkBlock {
+  filterByCategories?: (WorkCategory & StrapiEntity)[];
+  showAllCategories?: boolean;
+  showFeaturedOnly?: boolean;
+  limit?: number;
+  columns: string;
+  showFilters?: boolean;
+  layout?: string;
+  filterByItemType?: string;
+}
+
+// ============================================================================
 // CONTENT TYPES
 // ============================================================================
 
