@@ -7,7 +7,6 @@ import { SectionGeneric } from '@/components/sections/SectionGeneric'
 import { PageCollectionResponse, StrapiBlock } from '@/types/strapi'
 import { DynamicBlock } from '@/types/custom'
 import { draftMode } from 'next/headers'
-import { unstable_cache } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { defaultLocale } from '@/lib/locales'
 

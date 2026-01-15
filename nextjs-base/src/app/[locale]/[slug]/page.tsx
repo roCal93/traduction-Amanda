@@ -3,13 +3,12 @@ import { buildMetadata, type Hreflang } from '@/lib/seo'
 import { Layout } from '@/components/layout'
 import { Hero } from '@/components/sections/Hero'
 import { SectionGeneric } from '@/components/sections/SectionGeneric'
-import { PageCollectionResponse, StrapiBlock, StrapiEntity, Page as PageType } from '@/types/strapi'
+import { PageCollectionResponse, StrapiEntity, Page as PageType } from '@/types/strapi'
 import { DynamicBlock } from '@/types/custom'
 import { notFound, redirect } from 'next/navigation'
 import { defaultLocale } from '@/lib/locales'
 import { isSupportedLocale } from '@/lib/supported-locales'
 import { draftMode } from 'next/headers'
-import { unstable_cache } from 'next/cache'
 
 export const revalidate = 3600 // Revalidate every hour as fallback
 

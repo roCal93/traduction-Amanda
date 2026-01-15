@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useMemo, useCallback } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
@@ -29,22 +29,31 @@ export const Header = ({
     : STATIC_DEFAULT_LOCALE
 
   // Transform PageLink to NavigationLink for easier processing
-  const links = navigation
+  const links = useMemo(() => navigation
     .filter(link => link.page?.slug) // Only keep links with valid pages
     .map(link => ({
       slug: link.page!.slug,
       label: link.customLabel || link.section?.title || link.page!.title || '',
       isHome: link.page!.slug === 'home',
       anchor: link.section?.identifier
-    }))
+    })), [navigation])
 
   const [activeAnchor, setActiveAnchor] = useState<string | null>(null)
   const [mounted, setMounted] = useState(false)
 
-  const getLocalizedHref = (slug: string, isHome: boolean, anchor?: string) => {
+  useEffect(() => {
+    // Set mounted asynchronously to avoid triggering a synchronous state update within the effect
+    const timeoutId = window.setTimeout(() => setMounted(true), 0)
+    return () => {
+      clearTimeout(timeoutId)
+      setMounted(false)
+    }
+  }, [])
+
+  const getLocalizedHref = useCallback((slug: string, isHome: boolean, anchor?: string) => {
     const base = isHome ? `/${currentLocale}` : `/${currentLocale}/${slug}`
     return anchor ? `${base}#${anchor}` : base
-  }
+  }, [currentLocale])
   
   const isActive = (slug: string, isHome: boolean, anchor?: string) => {
     const base = getLocalizedHref(slug, isHome).split('#')[0]
@@ -86,8 +95,9 @@ export const Header = ({
     // Recompute active anchor on scroll / hashchange
     const anchors = links.filter(l => l.anchor && getLocalizedHref(l.slug, l.isHome).split('#')[0] === pathname.split('#')[0]).map(l => l.anchor!)
     if (anchors.length === 0) {
-      setActiveAnchor(null)
-      return
+      // Avoid calling setState synchronously within the effect to prevent cascading renders
+      const timeoutId = window.setTimeout(() => setActiveAnchor(null), 0)
+      return () => clearTimeout(timeoutId)
     }
 
     const checkActive = () => {
@@ -114,7 +124,7 @@ export const Header = ({
       window.removeEventListener('hashchange', checkActive)
       window.removeEventListener('popstate', tryScrollHash)
     }
-  }, [pathname, navigation])
+  }, [pathname, links, getLocalizedHref])
 
   return (
     <header id="site-header" className="sticky top-0 z-50 backdrop-blur-sm bg-white/95 border-b border-gray-200 flex justify-between items-center p-6">
