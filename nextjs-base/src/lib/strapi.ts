@@ -46,15 +46,22 @@ export async function fetchAPI<T = unknown>(
   const text = await res.text()
 
   if (!res.ok) {
-    // Inclure le body et l'URL dans l'erreur pour faciliter le debug (limitée à 1000 chars)
+    // Inclure le body et l'URL dans le warning pour faciliter le debug (limitée à 1000 chars)
     const body = text.length > 1000 ? text.slice(0, 1000) + '...' : text
-    throw new Error(`Erreur Strapi: ${res.status} ${res.statusText} — ${body} — URL: ${url}`)
+    console.warn(`Strapi non OK: ${res.status} ${res.statusText} — ${body} — URL: ${url}`)
+    // Essayer de renvoyer le JSON quand même, sinon retourner une valeur vide sûre
+    try {
+      return JSON.parse(text) as T
+    } catch {
+      return {} as T
+    }
   }
 
   try {
     return JSON.parse(text) as T
   } catch {
-    throw new Error('Réponse non JSON : ' + text.slice(0, 200))
+    console.warn('Réponse non JSON depuis Strapi, retour d\'une valeur vide')
+    return {} as T
   }
 }
 
