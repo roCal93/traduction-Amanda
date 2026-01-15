@@ -39,9 +39,13 @@ export default ({ env }) => {
       config: {
         allowedOrigins: clientUrl,
         async handler(uid, { documentId, locale, status }) {
-          const document = await strapi.documents(uid).findOne({ 
+          // Temporary: TS types for `strapi.documents` differ across Strapi versions.
+          // Cast to `any` to bypass the type error until we perform a Strapi/types upgrade.
+          // TODO: remove cast after upgrading to a Strapi version with correct types.
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const document = await (strapi as any).documents(uid).findOne({
             documentId,
-            locale 
+            locale,
           })
           const pathname = getPreviewPathname(uid, { locale, document })
 
@@ -54,7 +58,7 @@ export default ({ env }) => {
           })
 
           return `${clientUrl}/api/preview?${urlSearchParams}`
-        },
+        }
       },
     },
   }

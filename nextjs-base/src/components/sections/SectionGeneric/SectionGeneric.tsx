@@ -1,191 +1,210 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react'
-import { 
-  TextBlock as TextBlockData, 
-  ButtonBlock as ButtonBlockData,
-  ImageBlock as ImageBlockData,
-  CardsBlock as CardsBlockData,
-  TextImageBlock as TextImageBlockData,
-  HeroBlockSimpleText as HeroBlockSimpleTextData,
-  CarouselBlock as CarouselBlockData,
-  ContactFormBlock as ContactFormBlockData,
-  WorkBlock as WorkBlockData,
-  TimelineBlock as TimelineBlockData,
-  StrapiMedia
-} from '@/types/strapi'
-import { TextBlock, ButtonBlock, ImageBlock, CardsBlock, TextImageBlock, HeroBlockSimpleText, CarouselBlock, ContactFormBlock, WorkBlock, TimelineBlock, } from '@/components/blocks'
 import * as Blocks from '@/components/blocks'
+
+type DynamicBlock = { __component: string; [k: string]: unknown }
 
 type BlocksMap = Record<string, React.ComponentType<any>>
 const TypedBlocks = Blocks as unknown as BlocksMap
 
-type DynamicBlock = 
-  | ({ __component: 'blocks.text-block' } & TextBlockData)
-  | ({ __component: 'blocks.button-block' } & ButtonBlockData)
-  | ({ __component: 'blocks.image-block' } & ImageBlockData)
-  | ({ __component: 'blocks.cards-block' } & CardsBlockData)
-  | ({ __component: 'blocks.text-image-block' } & TextImageBlockData)
-  | ({ __component: 'blocks.hero-block-simple-text' } & HeroBlockSimpleTextData)
-  | ({ __component: 'blocks.carousel-block' } & CarouselBlockData)
-  | ({ __component: 'blocks.contact-form-block' } & ContactFormBlockData)
-  | ({ __component: 'blocks.work-block' } & WorkBlockData)
-  | ({ __component: 'blocks.timeline-block' } & TimelineBlockData)
-
 type SectionGenericProps = {
   title?: string
-  blocks: DynamicBlock[]
-  identifier?: string
+  blocks: unknown[]
   spacingTop?: 'none' | 'small' | 'medium' | 'large'
   spacingBottom?: 'none' | 'small' | 'medium' | 'large'
 }
 
-export const SectionGeneric = ({ identifier, title, blocks, spacingTop = 'medium', spacingBottom = 'medium' }: SectionGenericProps) => {
-  const renderBlock = (block: DynamicBlock, index: number) => {
-    switch (block.__component) {
-      case 'blocks.text-block':
-        return (
-          <TextBlock 
-            key={index} 
-            content={block.content}
-            textAlignment={block.textAlignment as 'left' | 'center' | 'right' | 'justify'}
-            blockAlignment={block.blockAlignment as 'left' | 'center' | 'right' | 'full'}
-            maxWidth={block.maxWidth as 'small' | 'medium' | 'large' | 'full'}
-          />
-        )
-      
-      case 'blocks.button-block':
-        return (
-          <ButtonBlock 
-            key={index} 
-            buttons={block.buttons} 
-            alignment={block.alignment as 'left' | 'center' | 'right' | 'space-between'} 
-          />
-        )
-      
-      case 'blocks.image-block':
-        return (
-          <ImageBlock 
-            key={index} 
-            image={block.image} 
-            caption={block.caption}
-            alignment={block.alignment as 'left' | 'center' | 'right' | 'full'}
-            size={block.size as 'small' | 'medium' | 'large' | 'full'}
-          />
-        )
-      
-      case 'blocks.cards-block':
-        return (
-          <CardsBlock 
-            key={index} 
-            cards={block.cards} 
-            columns={block.columns as '1' | '2' | '3' | '4'}
-            alignment={block.alignment as 'left' | 'center' | 'right'}
-          />
-        )
-      
-      case 'blocks.text-image-block':
-        return (
-          <TextImageBlock
+export const SectionGeneric = ({ title, blocks, spacingTop = 'medium', spacingBottom = 'medium' }: SectionGenericProps) => {
+  const renderBlock = (block: unknown, index: number) => {
+    // Use a local any-typed alias to ease dynamic access to block props
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const b: any = block
+    switch (b.__component) {
+      case 'blocks.text-block': {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const b: any = block
+        const Comp = TypedBlocks.TextBlock as React.ComponentType<any> | undefined
+        return Comp ? (
+          <Comp
             key={index}
-            content={block.content}
-            image={block.image}
-            imagePosition={block.imagePosition as 'left' | 'right'}
-            imageSize={block.imageSize as 'small' | 'medium' | 'large'}
-            verticalAlignment={block.verticalAlignment as 'top' | 'center' | 'bottom'}
-            textAlignment={block.textAlignment as 'left' | 'center' | 'right' | 'justify'}
-            roundedImage={block.roundedImage}
+            content={b.content}
+            textAlignment={b.textAlignment as 'left' | 'center' | 'right' | 'justify'}
+            blockAlignment={b.blockAlignment as 'left' | 'center' | 'right' | 'full'}
+            maxWidth={b.maxWidth as 'small' | 'medium' | 'large' | 'full'}
           />
-        )
+        ) : null
+      }
       
-      case 'blocks.hero-block-simple-text':
-        return (
-          <HeroBlockSimpleText
-            key={index}
-            title={block.title}
-            content={block.content}
-            height={block.height as 'medium' | 'large' | 'full'}
-            textAlignment={block.textAlignment as 'left' | 'center' | 'right'}
+      case 'blocks.button-block': {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const b: any = block
+        const Comp = TypedBlocks.ButtonBlock as React.ComponentType<any> | undefined
+        return Comp ? (
+          <Comp 
+            key={index} 
+            buttons={b.buttons} 
+            alignment={b.alignment as 'left' | 'center' | 'right' | 'space-between'} 
           />
-        )
+        ) : null
+      }
       
-      case 'blocks.carousel-block':
-        return (
-          <CarouselBlock
+      case 'blocks.image-block': {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const b: any = block
+        const Comp = TypedBlocks.ImageBlock as React.ComponentType<any> | undefined
+        return Comp ? (
+          <Comp 
+            key={index} 
+            image={b.image} 
+            caption={b.caption}
+            alignment={b.alignment as 'left' | 'center' | 'right' | 'full'}
+            size={b.size as 'small' | 'medium' | 'large' | 'full'}
+          />
+        ) : null
+      }
+      
+      case 'blocks.cards-block': {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const b: any = block
+        const Comp = (Blocks as any).CardsBlock as React.ComponentType<any> | undefined
+        return Comp ? (
+          <Comp
             key={index}
-            cards={block.cards.map((card, idx) => ({
+            cards={b.cards}
+            columns={b.columns as '1' | '2' | '3' | '4'}
+            alignment={b.alignment as 'left' | 'center' | 'right'}
+          />
+        ) : null
+      }
+      
+      case 'blocks.text-image-block': {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const b: any = block
+        const Comp = (Blocks as any).TextImageBlock as React.ComponentType<any> | undefined
+        return Comp ? (
+          <Comp
+            key={index}
+            content={b.content}
+            image={b.image}
+            imagePosition={b.imagePosition as 'left' | 'right'}
+            imageSize={b.imageSize as 'small' | 'medium' | 'large'}
+            verticalAlignment={b.verticalAlignment as 'top' | 'center' | 'bottom'}
+            textAlignment={b.textAlignment as 'left' | 'center' | 'right' | 'justify'}
+            roundedImage={b.roundedImage}
+          />
+        ) : null
+      }
+      
+      case 'blocks.hero-block-simple-text': {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const b: any = block
+        const Comp = (Blocks as any).HeroBlockSimpleText as React.ComponentType<any> | undefined
+        return Comp ? (
+          <Comp
+            key={index}
+            title={b.title}
+            content={b.content}
+            height={b.height as 'medium' | 'large' | 'full'}
+            textAlignment={b.textAlignment as 'left' | 'center' | 'right'}
+          />
+        ) : null
+      }
+      
+      case 'blocks.carousel-block': {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const b: any = block
+        const Comp = (Blocks as any).CarouselBlock as React.ComponentType<any> | undefined
+        return Comp ? (
+          <Comp
+            key={index}
+            cards={b.cards.map((card: any, idx: number) => ({
               id: idx,
               frontTitle: card.frontTitle,
               frontContent: card.frontContent,
               backContent: card.backContent,
               image: card.image ? { url: card.image.url, alternativeText: card.image.alternativeText || undefined } : undefined
             }))}
-            autoplay={block.autoplay}
-            autoplayDelay={block.autoplayDelay}
-            showControls={block.showControls}
-            showIndicators={block.showIndicators}
+            autoplay={b.autoplay}
+            autoplayDelay={b.autoplayDelay}
+            showControls={b.showControls}
+            showIndicators={b.showIndicators}
           />
-        )
+        ) : null
+      }
       
-      case 'blocks.contact-form-block':
-        return (
-          <ContactFormBlock
+      case 'blocks.contact-form-block': {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const b: any = block
+        const Comp = (Blocks as any).ContactFormBlock as React.ComponentType<any> | undefined
+        return Comp ? (
+          <Comp
             key={index}
-            title={block.title}
-            description={block.description}
-            submitButtonText={block.submitButtonText}
-            blockAlignment={block.blockAlignment as 'left' | 'center' | 'right' | 'full'}
-            maxWidth={block.maxWidth as 'small' | 'medium' | 'large' | 'full'}
+            title={b.title}
+            description={b.description}
+            submitButtonText={b.submitButtonText}
+            blockAlignment={b.blockAlignment as 'left' | 'center' | 'right' | 'full'}
+            maxWidth={b.maxWidth as 'small' | 'medium' | 'large' | 'full'}
           />
-        )
+        ) : null
+      }
       
-      case 'blocks.work-block':
-        return (
-          <WorkBlock
+      case 'blocks.work-block': {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const b: any = block
+        const Comp = (Blocks as any).WorkBlock as React.ComponentType<any> | undefined
+        return Comp ? (
+          <Comp
             key={index}
-            filterByCategories={block.filterByCategories}
-            showAllCategories={block.showAllCategories}
-            showFeaturedOnly={block.showFeaturedOnly}
-            filterByItemType={block.filterByItemType as 'all' | 'project' | 'case-study' | 'service' | 'product' | 'article' | 'achievement' | 'custom' | undefined}
-            limit={block.limit}
-            columns={block.columns as '2' | '3' | '4'}
-            showFilters={block.showFilters}
-            layout={block.layout as 'grid' | 'masonry' | 'list'}
+            filterByCategories={b.filterByCategories}
+            showAllCategories={b.showAllCategories}
+            showFeaturedOnly={b.showFeaturedOnly}
+            filterByItemType={b.filterByItemType as 'all' | 'project' | 'case-study' | 'service' | 'product' | 'article' | 'achievement' | 'custom' | undefined}
+            limit={b.limit}
+            columns={b.columns as '2' | '3' | '4'}
+            showFilters={b.showFilters}
+            layout={b.layout as 'grid' | 'masonry' | 'list'}
           />
-        )
+        ) : null
+      }
       
-      case 'blocks.timeline-block':
-        return (
-          <TimelineBlock
+      case 'blocks.timeline-block': {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const b: any = block
+        const Comp = (Blocks as any).TimelineBlock as React.ComponentType<any> | undefined
+        return Comp ? (
+          <Comp
             key={index}
-            items={(block.items || []).map((it) => ({
+            items={(b.items || []).map((it: any) => ({
               title: it.title,
               date: it.date,
               description: it.description,
               images: it.images
-                ? (it.images.map((img) => (img.image ? { url: img.image.url, width: img.image.width, height: img.image.height } : null)).filter(Boolean) as StrapiMedia[])
+                ? (it.images.map((img: any) => (img.image ? { url: img.image.url, width: img.image.width, height: img.image.height } : null)).filter(Boolean) as { url: string; width?: number; height?: number }[])
                 : undefined,
-              links: it.images ? (it.images.map((img) => (img.link ? { url: img.link.url } : null)).filter(Boolean) as { url: string }[]) : undefined
+              links: it.images ? (it.images.map((img: any) => (img.link ? { url: img.link.url } : null)).filter(Boolean) as { url: string }[]) : undefined
             }))}
           />
-        )
+        ) : null
+      }
     
       
       default: {
         // Fallback dynamique : si un composant côté Next.js correspondant existe dans
         // `@/components/blocks` (nom PascalCase dérivé de `blocks.foo-bar`), on le rend.
         try {
-          const componentKey = (block as DynamicBlock).__component.replace(/^blocks\./, '') // ex: 'timeline-block'
-          const componentName = componentKey.split('-').map(s => s.charAt(0).toUpperCase() + s.slice(1)).join('') // 'TimelineBlock'
+          const componentKey = b.__component.replace(/^blocks\./, '') // ex: 'timeline-block'
+          const componentName = componentKey.split('-').map((s: string) => s.charAt(0).toUpperCase() + s.slice(1)).join('') // 'TimelineBlock'
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           const Component = TypedBlocks[componentName] as React.ComponentType<any> | undefined
           if (Component) {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            return <Component key={index} {...(block as any)} />
+            return <Component key={index} {...b} />
           }
         } catch {
           // ignore and fallback to warn
         }
 
-        console.warn('Unknown block type:', (block as DynamicBlock).__component)
+        console.warn('Unknown block type:', b.__component)
         return null
       } 
     }
