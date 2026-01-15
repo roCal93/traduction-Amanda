@@ -233,6 +233,7 @@ export interface ExternalLink {
  */
 export interface PageLink {
   page?: (Page & StrapiEntity);
+  section?: (Section & StrapiEntity);
   customLabel?: string;
 }
 

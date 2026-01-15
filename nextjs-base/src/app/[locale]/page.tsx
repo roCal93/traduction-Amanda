@@ -150,6 +150,7 @@ export default async function HomeLocale({ params, searchParams }: { params: Pro
       {page.sections?.map((section) => (
         <SectionGeneric
           key={section.id}
+          identifier={section.identifier}
           title={section.hideTitle ? undefined : section.title}
           blocks={section.blocks as DynamicBlock[]}
           spacingTop={section.spacingTop as 'none' | 'small' | 'medium' | 'large' | undefined}

@@ -1,11 +1,12 @@
 'use client'
 
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { BurgerMenu } from '@/components/ui/BurgerMenu'
 import { LanguageSwitcher } from '@/components/locale/LanguageSwitcher'
+import { scrollToAnchor, scrollToAnchorWithRetry } from '@/lib/anchor'
 import type { StrapiMedia, PageLink } from '@/types/strapi'
 import { defaultLocale as STATIC_DEFAULT_LOCALE, locales as STATIC_LOCALES } from '@/lib/locales'
 
@@ -32,20 +33,91 @@ export const Header = ({
     .filter(link => link.page?.slug) // Only keep links with valid pages
     .map(link => ({
       slug: link.page!.slug,
-      label: link.customLabel || link.page!.title || '',
-      isHome: link.page!.slug === 'home'
+      label: link.customLabel || link.section?.title || link.page!.title || '',
+      isHome: link.page!.slug === 'home',
+      anchor: link.section?.identifier
     }))
 
-  const getLocalizedHref = (slug: string, isHome: boolean) => 
-    isHome ? `/${currentLocale}` : `/${currentLocale}/${slug}`
+  const [activeAnchor, setActiveAnchor] = useState<string | null>(null)
+  const [mounted, setMounted] = useState(false)
+
+  const getLocalizedHref = (slug: string, isHome: boolean, anchor?: string) => {
+    const base = isHome ? `/${currentLocale}` : `/${currentLocale}/${slug}`
+    return anchor ? `${base}#${anchor}` : base
+  }
   
-  const isActive = (slug: string, isHome: boolean) => {
-    const fullHref = getLocalizedHref(slug, isHome)
-    return pathname === fullHref
+  const isActive = (slug: string, isHome: boolean, anchor?: string) => {
+    const base = getLocalizedHref(slug, isHome).split('#')[0]
+    // If we're on the same base path:
+    if (pathname === base) {
+      // If link targets an anchor, only consider it active after mount to avoid hydration mismatch
+      if (anchor) {
+        if (!mounted) return false
+        return activeAnchor === anchor || (typeof window !== 'undefined' && window.location.hash === `#${anchor}`)
+      }
+      return true
+    }
+    return false
   }
 
+  const handleNavClick = (e: React.MouseEvent, link: { slug: string; isHome: boolean; anchor?: string }) => {
+    const href = getLocalizedHref(link.slug, link.isHome, link.anchor)
+    const base = href.split('#')[0]
+    const currentBase = pathname.split('#')[0]
+    if (base === currentBase && link.anchor) {
+      e.preventDefault()
+      scrollToAnchor(link.anchor)
+    }
+  }
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+
+    // If the URL contains a hash after navigation to another page, attempt to scroll to it
+    const tryScrollHash = () => {
+      const h = window.location.hash ? window.location.hash.replace('#', '') : ''
+      if (h) {
+        scrollToAnchorWithRetry(h)
+      }
+    }
+
+    tryScrollHash()
+
+    // Recompute active anchor on scroll / hashchange
+    const anchors = links.filter(l => l.anchor && getLocalizedHref(l.slug, l.isHome).split('#')[0] === pathname.split('#')[0]).map(l => l.anchor!)
+    if (anchors.length === 0) {
+      setActiveAnchor(null)
+      return
+    }
+
+    const checkActive = () => {
+      let found: string | null = null
+      for (const id of anchors) {
+        const el = document.getElementById(id)
+        if (!el) continue
+        const rect = el.getBoundingClientRect()
+        if (rect.top <= 150 && rect.bottom > 0) {
+          found = id
+          break
+        }
+      }
+      setActiveAnchor(found)
+    }
+
+    checkActive()
+    window.addEventListener('scroll', checkActive, { passive: true })
+    window.addEventListener('hashchange', checkActive)
+    window.addEventListener('popstate', tryScrollHash)
+
+    return () => {
+      window.removeEventListener('scroll', checkActive)
+      window.removeEventListener('hashchange', checkActive)
+      window.removeEventListener('popstate', tryScrollHash)
+    }
+  }, [pathname, navigation])
+
   return (
-    <header className="relative flex justify-between items-center p-6 bg-gray-100">
+    <header id="site-header" className="sticky top-0 z-50 backdrop-blur-sm bg-white/95 border-b border-gray-200 flex justify-between items-center p-6">
       <Link href={`/${currentLocale}`} prefetch className="flex-1 md:flex-none">
         {logo ? (
           <Image
@@ -71,10 +143,11 @@ export const Header = ({
           {links.map((link, index) => (
             <Link 
               key={link.slug || index} 
-              href={getLocalizedHref(link.slug, link.isHome)} 
+              href={getLocalizedHref(link.slug, link.isHome, link.anchor)} 
               prefetch
+              onClick={(e) => handleNavClick(e, link)}
               className={`text-base transition-colors hover:text-gray-600 ${
-                isActive(link.slug, link.isHome) 
+                isActive(link.slug, link.isHome, link.anchor) 
                   ? 'font-semibold text-black' 
                   : 'text-gray-700'
               }`}

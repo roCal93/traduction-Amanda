@@ -178,6 +178,7 @@ export default async function Page({ params, searchParams }: { params: Promise<{
       {sections.map((section) => (
         <SectionGeneric
           key={section.id}
+          identifier={section.identifier}
           title={section.hideTitle ? undefined : section.title}
           blocks={section.blocks as DynamicBlock[]}
         />
