@@ -201,7 +201,8 @@ export class StrapiClient {
 
       return response.json();
     } catch (error) {
-      console.error(`Erreur lors de la récupération de ${contentType}:`, error);
+      const message = error && typeof error === 'object' && 'message' in error ? (error as Error).message : String(error);
+      console.warn(`Erreur lors de la récupération de ${contentType}: ${message}`);
       // Retourner une réponse vide pour éviter les erreurs de build
       return { data: [], meta: { pagination: { page: 1, pageSize: 25, pageCount: 0, total: 0 } } } as StrapiCollectionResponse<T>;
     }
@@ -231,7 +232,8 @@ export class StrapiClient {
 
       return response.json();
     } catch (error) {
-      console.error(`Erreur lors de la récupération de ${contentType}/${id}:`, error);
+      const message = error && typeof error === 'object' && 'message' in error ? (error as Error).message : String(error);
+      console.warn(`Erreur lors de la récupération de ${contentType}/${id}: ${message}`);
       // Retourner null pour éviter les erreurs de build
       return { data: null, meta: {} } as StrapiResponse<T>;
     }
