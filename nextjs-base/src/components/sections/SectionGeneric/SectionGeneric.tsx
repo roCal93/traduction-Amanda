@@ -10,9 +10,13 @@ import {
   ContactFormBlock as ContactFormBlockData,
   WorkBlock as WorkBlockData,
   TimelineBlock as TimelineBlockData,
+  StrapiMedia
 } from '@/types/strapi'
 import { TextBlock, ButtonBlock, ImageBlock, CardsBlock, TextImageBlock, HeroBlockSimpleText, CarouselBlock, ContactFormBlock, WorkBlock, TimelineBlock, } from '@/components/blocks'
 import * as Blocks from '@/components/blocks'
+
+type BlocksMap = Record<string, React.ComponentType<any>>
+const TypedBlocks = Blocks as unknown as BlocksMap
 
 type DynamicBlock = 
   | ({ __component: 'blocks.text-block' } & TextBlockData)
@@ -156,7 +160,7 @@ export const SectionGeneric = ({ title, blocks, spacingTop = 'medium', spacingBo
               date: it.date,
               description: it.description,
               images: it.images
-                ? (it.images.map((img) => (img.image ? { url: img.image.url, width: img.image.width, height: img.image.height } : null)).filter(Boolean) as any[])
+                ? (it.images.map((img) => (img.image ? { url: img.image.url, width: img.image.width, height: img.image.height } : null)).filter(Boolean) as StrapiMedia[])
                 : undefined,
               links: it.images ? (it.images.map((img) => (img.link ? { url: img.link.url } : null)).filter(Boolean) as { url: string }[]) : undefined
             }))}
@@ -171,7 +175,7 @@ export const SectionGeneric = ({ title, blocks, spacingTop = 'medium', spacingBo
           const componentKey = (block as DynamicBlock).__component.replace(/^blocks\./, '') // ex: 'timeline-block'
           const componentName = componentKey.split('-').map(s => s.charAt(0).toUpperCase() + s.slice(1)).join('') // 'TimelineBlock'
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          const Component = (Blocks as any)[componentName] as React.ComponentType<any> | undefined
+          const Component = TypedBlocks[componentName] as React.ComponentType<any> | undefined
           if (Component) {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             return <Component key={index} {...(block as any)} />
