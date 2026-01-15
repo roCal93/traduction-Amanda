@@ -28,19 +28,24 @@ async function getHeaderData(locale: string) {
 
     if (!dataPage && !dataSection) return null
 
-    // Merge navigation arrays using the component item id as key
-    const navMap = new Map<number, any>()
+    // Merge navigation arrays using page id as key
+    const navMap = new Map<string, any>()
 
+    // Only process page navigation since PageLink only has page references now
     if (dataPage?.navigation) {
       for (const item of dataPage.navigation) {
-        navMap.set(item.id, { ...item })
+        if (item.page?.id) {
+          navMap.set(`page-${item.page.id}`, { ...item })
+        }
       }
     }
 
     if (dataSection?.navigation) {
       for (const item of dataSection.navigation) {
-        const existing = navMap.get(item.id) || {}
-        navMap.set(item.id, { ...existing, ...item })
+        if (item.page?.id) {
+          const existing = navMap.get(`page-${item.page.id}`) || {}
+          navMap.set(`page-${item.page.id}`, { ...existing, ...item })
+        }
       }
     }
 
