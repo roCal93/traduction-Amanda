@@ -2,7 +2,7 @@ import React, { ReactNode } from 'react'
 import { Header } from '@/components/sections/Header'
 import { Footer } from '@/components/sections/Footer'
 import { fetchAPI } from '@/lib/strapi'
-import type { HeaderResponse } from '@/types/strapi'
+import type { HeaderResponse, PageLink } from '@/types/strapi'
 
 type LayoutProps = {
   children: ReactNode
@@ -28,19 +28,66 @@ async function getHeaderData(locale: string) {
 
     if (!dataPage && !dataSection) return null
 
-    // Merge navigation arrays using the component item id as key
-    const navMap = new Map<number, any>()
+    // Merge navigation arrays using page id as key
+    type NavItem = PageLink & { id?: number }
+    const navMap = new Map<string, NavItem>()
 
+    if (process.env.NODE_ENV !== 'production') {
+      console.debug('[Layout] respPage.navigation:', dataPage?.navigation)
+      console.debug('[Layout] respSection.navigation:', dataSection?.navigation)
+    }
+
+    // Only process page navigation since PageLink only has page references now
     if (dataPage?.navigation) {
-      for (const item of dataPage.navigation) {
-        navMap.set(item.id, { ...item })
+      for (const item of dataPage.navigation as NavItem[]) {
+        if (item.page?.id) {
+          navMap.set(`page-${item.page.id}`, { ...item })
+        }
       }
     }
 
     if (dataSection?.navigation) {
-      for (const item of dataSection.navigation) {
-        const existing = navMap.get(item.id) || {}
-        navMap.set(item.id, { ...existing, ...item })
+      for (const item of dataSection.navigation as NavItem[]) {
+        const pageId = item.page?.id
+        if (pageId) {
+          const existing = navMap.get(`page-${pageId}`) || {}
+          navMap.set(`page-${pageId}`, { ...existing, ...item })
+        } else {
+          // Try to match by nav item id (preferred) or by page slug if available.
+          let matchedKey: string | null = null
+
+          // 1) Match by navigation component id (e.g., both respPage and respSection have same nav item id)
+          for (const [key, val] of navMap.entries()) {
+            if (val.id && val.id === item.id) {
+              matchedKey = key
+              break
+            }
+          }
+
+          // 2) Fallback: match by page.slug
+          if (!matchedKey) {
+            const pageSlug = item.page?.slug
+            if (pageSlug) {
+              for (const [key, val] of navMap.entries()) {
+                if (val.page?.slug === pageSlug) {
+                  matchedKey = key
+                  break
+                }
+              }
+            }
+          }
+
+          if (matchedKey) {
+            const existing = navMap.get(matchedKey) || {}
+            navMap.set(matchedKey, { ...existing, ...item })
+            if (process.env.NODE_ENV !== 'production') console.debug(`[Layout] merged section item id=${item.id ?? 'unknown'} into ${matchedKey}`)
+          } else {
+            // keep as separate entry to avoid losing the section reference
+            const extraKey = `extra-${navMap.size}-${Math.random().toString(36).slice(2,7)}`
+            navMap.set(extraKey, { ...item })
+            if (process.env.NODE_ENV !== 'production') console.debug(`[Layout] added extra nav entry for item id=${item.id ?? 'unknown'} as ${extraKey}`)
+          }
+        }
       }
     }
 
