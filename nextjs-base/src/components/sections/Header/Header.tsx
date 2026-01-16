@@ -33,10 +33,18 @@ export const Header = ({
     .filter(link => link.page?.slug) // Only keep links with valid pages
     .map(link => ({
       slug: link.page!.slug,
-      label: link.customLabel || link.page!.title || '',
+      label: link.customLabel || link.section?.title || link.page!.title || '',
       isHome: link.page!.slug === 'home',
-      anchor: undefined // No section anchors for now
+      anchor: link.section?.identifier
     })), [navigation])
+
+  useEffect(() => {
+    if (process.env.NODE_ENV !== 'production') console.debug('[Header] navigation prop:', navigation)
+  }, [navigation])
+
+  useEffect(() => {
+    if (process.env.NODE_ENV !== 'production') console.debug('[Header] processed links:', links)
+  }, [links])
 
   const [activeAnchor, setActiveAnchor] = useState<string | null>(null)
   const [mounted, setMounted] = useState(false)
