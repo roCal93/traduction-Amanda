@@ -39,11 +39,11 @@ export const Header = ({
     })), [navigation])
 
   useEffect(() => {
-    if (process.env.NODE_ENV !== 'production') console.debug('[Header] navigation prop:', navigation)
+    // No-op: kept to avoid hydration glitches when debugging in dev.
   }, [navigation])
 
   useEffect(() => {
-    if (process.env.NODE_ENV !== 'production') console.debug('[Header] processed links:', links)
+    // No-op: kept to avoid hydration glitches when debugging in dev.
   }, [links])
 
   const [activeAnchor, setActiveAnchor] = useState<string | null>(null)

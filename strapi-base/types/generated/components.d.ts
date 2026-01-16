@@ -325,34 +325,6 @@ export interface SharedTimelineItem extends Struct.ComponentSchema {
   };
 }
 
-export interface SharedTimelineImage extends Struct.ComponentSchema {
-  collectionName: 'components_shared_timeline_images';
-  info: {
-    description: 'An image for the timeline with an optional external link';
-    displayName: 'Timeline Image';
-    icon: 'image';
-  };
-  attributes: {
-    image: Schema.Attribute.Media & Schema.Attribute.Required;
-    link: Schema.Attribute.Component<'shared.external-link', false>;
-  };
-}
-
-export interface SharedTimelineItem extends Struct.ComponentSchema {
-  collectionName: 'components_common_timeline_items';
-  info: {
-    description: 'A single item/step in the timeline.';
-    displayName: 'Timeline Item';
-    icon: 'dot-circle';
-  };
-  attributes: {
-    date: Schema.Attribute.String;
-    description: Schema.Attribute.Text;
-    images: Schema.Attribute.Component<'shared.timeline-image', true>;
-    title: Schema.Attribute.String & Schema.Attribute.Required;
-  };
-}
-
 declare module '@strapi/strapi' {
   export module Public {
     export interface ComponentSchemas {

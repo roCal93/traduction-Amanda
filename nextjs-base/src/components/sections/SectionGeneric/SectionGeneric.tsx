@@ -39,7 +39,19 @@ type SectionGenericProps = {
 
 export const SectionGeneric = ({ identifier, title, blocks, spacingTop = 'medium', spacingBottom = 'medium' }: SectionGenericProps) => {
   const renderBlock = (block: DynamicBlock, index: number) => {
-    // Placeholder rendering for starter - blocks will be added via create-hakuna-app
+    // Try to render a matching React block component from `src/components/blocks`.
+    // Component names are generated from Strapi __component like 'blocks.cards-block' -> 'CardsBlock'
+    const raw = (block as any).__component || ''
+    const key = raw.split('.').pop() || raw
+    const toPascal = (s: string) => s.split('-').map(p => p.charAt(0).toUpperCase() + p.slice(1)).join('')
+    const componentName = toPascal(key)
+    const BlockComponent = (TypedBlocks as any)[componentName] as React.ComponentType<any> | undefined
+
+    if (BlockComponent) {
+      return <BlockComponent key={index} {...block} />
+    }
+
+    // Fallback placeholder (starter)
     return (
       <div key={index} className="p-4 border-2 border-dashed border-gray-300 rounded-lg">
         <p className="text-gray-500 text-center">

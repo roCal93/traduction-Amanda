@@ -3,6 +3,9 @@ const STRAPI_TOKEN = process.env.STRAPI_API_TOKEN
 
 type FetchOptions = RequestInit & {
   next?: { revalidate?: number }
+  // When true, skip logging a console.warn on non-OK responses (useful for
+  // expected 4xx responses during feature-detection calls)
+  suppressWarnings?: boolean
 }
 
 // Fonction utilitaire Strapi v5 avec gestion du draft, du preview token et de la locale
@@ -48,7 +51,9 @@ export async function fetchAPI<T = unknown>(
   if (!res.ok) {
     // Inclure le body et l'URL dans le warning pour faciliter le debug (limitée à 1000 chars)
     const body = text.length > 1000 ? text.slice(0, 1000) + '...' : text
-    console.warn(`Strapi non OK: ${res.status} ${res.statusText} — ${body} — URL: ${url}`)
+    if (!((options as FetchOptions)?.suppressWarnings)) {
+      console.warn(`Strapi non OK: ${res.status} ${res.statusText} — ${body} — URL: ${url}`)
+    }
     // Essayer de renvoyer le JSON quand même, sinon retourner une valeur vide sûre
     try {
       return JSON.parse(text) as T

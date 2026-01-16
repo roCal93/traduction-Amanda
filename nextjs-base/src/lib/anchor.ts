@@ -20,13 +20,12 @@ export function scrollToAnchor(id?: string) {
 export async function scrollToAnchorWithRetry(id?: string, attempts = 10, interval = 100) {
   if (!id || typeof window === 'undefined') return
 
-  // debug log to help troubleshooting in dev
-  if (process.env.NODE_ENV !== 'production') console.debug(`[anchor] scrollToAnchorWithRetry: trying to scroll to '#${id}'`)
+  // trying to scroll to anchor with retry logic
 
   for (let i = 0; i < attempts; i++) {
     const el = document.getElementById(id)
     if (el) {
-      if (process.env.NODE_ENV !== 'production') console.debug(`[anchor] element found for '#${id}', scrolling (attempt ${i + 1})`)
+  
       const header = document.getElementById('site-header')
       const offset = header ? Math.ceil(header.getBoundingClientRect().height) : 0
       const TOP_PADDING = 8
@@ -38,7 +37,7 @@ export async function scrollToAnchorWithRetry(id?: string, attempts = 10, interv
     await new Promise(res => setTimeout(res, interval))
   }
   // last attempt: set hash as fallback
-  if (process.env.NODE_ENV !== 'production') console.debug(`[anchor] element not found for '#${id}', setting location.hash as fallback`)
+
   location.hash = id
 }
 
