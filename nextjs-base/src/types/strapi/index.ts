@@ -96,67 +96,6 @@ export interface StrapiErrorResponse {
 // ============================================================================
 
 /**
- * Component: shared.button
- */
-export interface Button {
-  label: string;
-  url?: string;
-  file?: StrapiMedia;
-  variant: string;
-  isExternal?: boolean;
-  icon?: string;
-}
-
-/**
- * Component: shared.carousel-card
- */
-export interface CarouselCard {
-  frontTitle: string;
-  frontContent?: StrapiBlock[];
-  backContent?: StrapiBlock[];
-  image?: StrapiMedia;
-}
-
-/**
- * Component: shared.external-link
- */
-export interface ExternalLink {
-  url: string;
-  label?: string;
-}
-
-/**
- * Component: shared.page-link
- */
-export interface PageLink {
-  page?: (Page & StrapiEntity);
-  section?: (Section & StrapiEntity);
-  customLabel?: string;
-}
-
-/**
- * Component: shared.timeline-image
- */
-export interface TimelineImage {
-  image: StrapiMedia;
-  link?: ExternalLink;
-}
-
-/**
- * Component: shared.timeline-item
- */
-export interface TimelineItem {
-  title: string;
-  date?: string;
-  description?: string;
-  images?: TimelineImage[];
-}
-
-// ============================================================================
-// BLOCK COMPONENTS
-// ============================================================================
-
-/**
  * Component: blocks.button-block
  */
 export interface ButtonBlock {
@@ -168,11 +107,9 @@ export interface ButtonBlock {
  * Component: blocks.cards-block
  */
 export interface CardsBlock {
-  title?: string;
   cards: (Card & StrapiEntity)[];
   columns: string;
-  showImages?: boolean;
-  alignment?: string;
+  alignment: string;
 }
 
 /**
@@ -259,6 +196,63 @@ export interface WorkBlock {
   showFilters?: boolean;
   layout?: string;
   filterByItemType?: string;
+}
+
+/**
+ * Component: shared.button
+ */
+export interface Button {
+  label: string;
+  url?: string;
+  file?: StrapiMedia;
+  variant: string;
+  isExternal?: boolean;
+  icon?: string;
+}
+
+/**
+ * Component: shared.carousel-card
+ */
+export interface CarouselCard {
+  frontTitle: string;
+  frontContent?: StrapiBlock[];
+  backContent?: StrapiBlock[];
+  image?: StrapiMedia;
+}
+
+/**
+ * Component: shared.external-link
+ */
+export interface ExternalLink {
+  url: string;
+  label?: string;
+}
+
+/**
+ * Component: shared.page-link
+ */
+export interface PageLink {
+  page?: (Page & StrapiEntity);
+  section?: (Section & StrapiEntity);
+  customLabel?: string;
+}
+
+/**
+ * Component: shared.timeline-image
+ */
+export interface TimelineImage {
+  image: StrapiMedia;
+  link?: ExternalLink;
+}
+
+/**
+ * Component: shared.timeline-item
+ */
+export interface TimelineItem {
+  title: string;
+  date?: string;
+  description?: string;
+  images?: TimelineImage[];
 }
 
 // ============================================================================
