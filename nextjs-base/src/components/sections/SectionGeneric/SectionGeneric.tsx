@@ -1,6 +1,6 @@
 import React from 'react'
-import { 
-  TextBlock as TextBlockData, 
+import {
+  TextBlock as TextBlockData,
   ButtonBlock as ButtonBlockData,
   ImageBlock as ImageBlockData,
   CardsBlock as CardsBlockData,
@@ -12,7 +12,6 @@ import {
   TimelineBlock as TimelineBlockData,
   StrapiMedia
 } from '@/types/strapi'
-import { TextBlock, ButtonBlock, ImageBlock, CardsBlock, TextImageBlock, HeroBlockSimpleText, CarouselBlock, ContactFormBlock, WorkBlock, TimelineBlock, } from '@/components/blocks'
 import * as Blocks from '@/components/blocks'
 
 type BlocksMap = Record<string, React.ComponentType<any>>
@@ -40,155 +39,14 @@ type SectionGenericProps = {
 
 export const SectionGeneric = ({ identifier, title, blocks, spacingTop = 'medium', spacingBottom = 'medium' }: SectionGenericProps) => {
   const renderBlock = (block: DynamicBlock, index: number) => {
-    switch (block.__component) {
-      case 'blocks.text-block':
-        return (
-          <TextBlock 
-            key={index} 
-            content={block.content}
-            textAlignment={block.textAlignment as 'left' | 'center' | 'right' | 'justify'}
-            blockAlignment={block.blockAlignment as 'left' | 'center' | 'right' | 'full'}
-            maxWidth={block.maxWidth as 'small' | 'medium' | 'large' | 'full'}
-          />
-        )
-      
-      case 'blocks.button-block':
-        return (
-          <ButtonBlock 
-            key={index} 
-            buttons={block.buttons} 
-            alignment={block.alignment as 'left' | 'center' | 'right' | 'space-between'} 
-          />
-        )
-      
-      case 'blocks.image-block':
-        return (
-          <ImageBlock 
-            key={index} 
-            image={block.image} 
-            caption={block.caption}
-            alignment={block.alignment as 'left' | 'center' | 'right' | 'full'}
-            size={block.size as 'small' | 'medium' | 'large' | 'full'}
-          />
-        )
-      
-      case 'blocks.cards-block':
-        return (
-          <CardsBlock 
-            key={index} 
-            cards={block.cards} 
-            columns={block.columns as '1' | '2' | '3' | '4'}
-            alignment={block.alignment as 'left' | 'center' | 'right'}
-          />
-        )
-      
-      case 'blocks.text-image-block':
-        return (
-          <TextImageBlock
-            key={index}
-            content={block.content}
-            image={block.image}
-            imagePosition={block.imagePosition as 'left' | 'right'}
-            imageSize={block.imageSize as 'small' | 'medium' | 'large'}
-            verticalAlignment={block.verticalAlignment as 'top' | 'center' | 'bottom'}
-            textAlignment={block.textAlignment as 'left' | 'center' | 'right' | 'justify'}
-            roundedImage={block.roundedImage}
-          />
-        )
-      
-      case 'blocks.hero-block-simple-text':
-        return (
-          <HeroBlockSimpleText
-            key={index}
-            title={block.title}
-            content={block.content}
-            height={block.height as 'medium' | 'large' | 'full'}
-            textAlignment={block.textAlignment as 'left' | 'center' | 'right'}
-          />
-        )
-      
-      case 'blocks.carousel-block':
-        return (
-          <CarouselBlock
-            key={index}
-            cards={block.cards.map((card, idx) => ({
-              id: idx,
-              frontTitle: card.frontTitle,
-              frontContent: card.frontContent,
-              backContent: card.backContent,
-              image: card.image ? { url: card.image.url, alternativeText: card.image.alternativeText || undefined } : undefined
-            }))}
-            autoplay={block.autoplay}
-            autoplayDelay={block.autoplayDelay}
-            showControls={block.showControls}
-            showIndicators={block.showIndicators}
-          />
-        )
-      
-      case 'blocks.contact-form-block':
-        return (
-          <ContactFormBlock
-            key={index}
-            title={block.title}
-            description={block.description}
-            submitButtonText={block.submitButtonText}
-            blockAlignment={block.blockAlignment as 'left' | 'center' | 'right' | 'full'}
-            maxWidth={block.maxWidth as 'small' | 'medium' | 'large' | 'full'}
-          />
-        )
-      
-      case 'blocks.work-block':
-        return (
-          <WorkBlock
-            key={index}
-            filterByCategories={block.filterByCategories}
-            showAllCategories={block.showAllCategories}
-            showFeaturedOnly={block.showFeaturedOnly}
-            filterByItemType={block.filterByItemType as 'all' | 'project' | 'case-study' | 'service' | 'product' | 'article' | 'achievement' | 'custom' | undefined}
-            limit={block.limit}
-            columns={block.columns as '2' | '3' | '4'}
-            showFilters={block.showFilters}
-            layout={block.layout as 'grid' | 'masonry' | 'list'}
-          />
-        )
-      
-      case 'blocks.timeline-block':
-        return (
-          <TimelineBlock
-            key={index}
-            items={(block.items || []).map((it) => ({
-              title: it.title,
-              date: it.date,
-              description: it.description,
-              images: it.images
-                ? (it.images.map((img) => (img.image ? { url: img.image.url, width: img.image.width, height: img.image.height } : null)).filter(Boolean) as StrapiMedia[])
-                : undefined,
-              links: it.images ? (it.images.map((img) => (img.link ? { url: img.link.url } : null)).filter(Boolean) as { url: string }[]) : undefined
-            }))}
-          />
-        )
-    
-      
-      default: {
-        // Fallback dynamique : si un composant côté Next.js correspondant existe dans
-        // `@/components/blocks` (nom PascalCase dérivé de `blocks.foo-bar`), on le rend.
-        try {
-          const componentKey = (block as DynamicBlock).__component.replace(/^blocks\./, '') // ex: 'timeline-block'
-          const componentName = componentKey.split('-').map(s => s.charAt(0).toUpperCase() + s.slice(1)).join('') // 'TimelineBlock'
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          const Component = TypedBlocks[componentName] as React.ComponentType<any> | undefined
-          if (Component) {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            return <Component key={index} {...(block as any)} />
-          }
-        } catch {
-          // ignore and fallback to warn
-        }
-
-        console.warn('Unknown block type:', (block as DynamicBlock).__component)
-        return null
-      } 
-    }
+    // Placeholder rendering for starter - blocks will be added via create-hakuna-app
+    return (
+      <div key={index} className="p-4 border-2 border-dashed border-gray-300 rounded-lg">
+        <p className="text-gray-500 text-center">
+          Block: {block.__component} (placeholder - will be replaced by create-hakuna-app)
+        </p>
+      </div>
+    )
   }
 
   const getTopSpacingClass = (spacing: 'none' | 'small' | 'medium' | 'large') => {

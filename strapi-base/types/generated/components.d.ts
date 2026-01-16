@@ -294,7 +294,34 @@ export interface SharedPageLink extends Struct.ComponentSchema {
   attributes: {
     customLabel: Schema.Attribute.String;
     page: Schema.Attribute.Relation<'oneToOne', 'api::page.page'>;
-    section: Schema.Attribute.Relation<'oneToOne', 'api::section.section'>;
+  };
+}
+
+export interface SharedTimelineImage extends Struct.ComponentSchema {
+  collectionName: 'components_shared_timeline_images';
+  info: {
+    description: 'An image for the timeline with an optional external link';
+    displayName: 'Timeline Image';
+    icon: 'image';
+  };
+  attributes: {
+    image: Schema.Attribute.Media & Schema.Attribute.Required;
+    link: Schema.Attribute.Component<'shared.external-link', false>;
+  };
+}
+
+export interface SharedTimelineItem extends Struct.ComponentSchema {
+  collectionName: 'components_common_timeline_items';
+  info: {
+    description: 'A single item/step in the timeline.';
+    displayName: 'Timeline Item';
+    icon: 'dot-circle';
+  };
+  attributes: {
+    date: Schema.Attribute.String;
+    description: Schema.Attribute.Text;
+    images: Schema.Attribute.Component<'shared.timeline-image', true>;
+    title: Schema.Attribute.String & Schema.Attribute.Required;
   };
 }
 

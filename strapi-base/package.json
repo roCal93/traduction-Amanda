@@ -18,22 +18,19 @@
     "upgrade:dry": "npx @strapi/upgrade latest --dry"
   },
   "dependencies": {
-    "@strapi/strapi": "5.33.3",
+    "@strapi/plugin-cloud": "5.33.3",
     "@strapi/plugin-users-permissions": "5.33.3",
-    "@strapi/plugin-email": "5.0.0-beta.5",
-    "@strapi/plugin-upload": "5.0.0-beta.5",
-    "@strapi/plugin-content-type-builder": "5.0.0-beta.5",
-    "@strapi/plugin-content-manager": "5.0.0-beta.5",
+    "@strapi/strapi": "5.33.3",
     "better-sqlite3": "12.6.0",
     "pg": "^8.17.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.30.3",
     "sharp": "^0.34.5",
-    "styled-components": "^5.3.10"
+    "styled-components": "^6.3.6"
   },
   "devDependencies": {
-    "@types/node": "^25",
+    "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "typescript": "^5"

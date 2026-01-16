@@ -28,14 +28,14 @@ async function getHeaderData(locale: string) {
 
     if (!dataPage && !dataSection) return null
 
+    // Merge navigation arrays using page id as key
+    type NavItem = PageLink & { id?: number }
+    const navMap = new Map<string, NavItem>()
+
     if (process.env.NODE_ENV !== 'production') {
       console.debug('[Layout] respPage.navigation:', dataPage?.navigation)
       console.debug('[Layout] respSection.navigation:', dataSection?.navigation)
     }
-
-    // Merge navigation arrays using page id as key
-    type NavItem = PageLink & { id?: number }
-    const navMap = new Map<string, NavItem>()
 
     // Only process page navigation since PageLink only has page references now
     if (dataPage?.navigation) {
