@@ -3,9 +3,12 @@ import Image from "next/image"
 import { cleanImageUrl } from "@/lib/strapi"
 
 export interface TimelineImage {
-  url: string
-  width?: number
-  height?: number
+  image: {
+    url: string
+    width?: number
+    height?: number
+  }
+  link?: { url: string }
 }
 
 export type TimelineImageOrString = string | TimelineImage
@@ -34,10 +37,10 @@ const TimelineBlock: React.FC<TimelineBlockProps> = ({ items }) => {
     return (
       <div className={`flex gap-2 ${className}`}>
         {images.map((rawImage, imgIdx) => {
-          const imageUrl = typeof rawImage === "string" ? rawImage : rawImage.url
+          const imageUrl = typeof rawImage === "string" ? rawImage : rawImage.image.url
           const imageSrc = cleanImageUrl(imageUrl)
-          const imageWidth = typeof rawImage === "string" ? 200 : (rawImage.width || 200)
-          const imageHeight = typeof rawImage === "string" ? imageSize : (rawImage.height || imageSize)
+          const imageWidth = typeof rawImage === "string" ? 200 : (rawImage.image.width || 200)
+          const imageHeight = typeof rawImage === "string" ? imageSize : (rawImage.image.height || imageSize)
           const link = links && links[imgIdx]
           return imageSrc ? (
             link ? (
