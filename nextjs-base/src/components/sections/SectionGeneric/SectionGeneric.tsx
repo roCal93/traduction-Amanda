@@ -47,7 +47,7 @@ export const SectionGeneric = ({ identifier, title, blocks, spacingTop = 'medium
     const BlockComponent = TypedBlocks[componentName] as React.ComponentType<Record<string, unknown>> | undefined
 
     if (BlockComponent) {
-      return <BlockComponent key={index} {...(block as Record<string, unknown>)} />
+      return <BlockComponent key={index} {...(block as unknown as Record<string, unknown>)} />
     }
 
     // Fallback placeholder (starter)
