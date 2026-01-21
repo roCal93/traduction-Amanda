@@ -127,7 +127,10 @@ async function getHeaderData(locale: string) {
     const tokens = (s: string | undefined) =>
       normalize(s).split(/\s+/).filter(Boolean)
 
-    const findMatchingSection = async (pageSlug?: string, label?: string): Promise<(Section & StrapiEntity) | null> => {
+    const findMatchingSection = async (
+      pageSlug?: string,
+      label?: string
+    ): Promise<(Section & StrapiEntity) | null> => {
       if (!pageSlug || !label) return null
       if (!pageSectionsCache.has(pageSlug)) {
         try {
