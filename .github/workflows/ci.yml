@@ -1,0 +1,32 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, fix/timeline-export ]
+  pull_request:
+    branches: [ main, fix/timeline-export ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [20.x]
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+        cache-dependency-path: nextjs-base/package-lock.json
+    - name: Install dependencies (Next.js)
+      run: cd nextjs-base && npm ci
+    - name: Lint
+      run: cd nextjs-base && npm run lint
+    - name: Test
+      run: cd nextjs-base && npm run test
+    - name: Build
+      run: cd nextjs-base && npm run build
