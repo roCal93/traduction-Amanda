@@ -9,13 +9,21 @@ export function middleware(req: NextRequest) {
     const { pathname } = req.nextUrl
 
     // Ignore static assets, API and other non-page requests
-    if (pathname.startsWith('/_next') || pathname.startsWith('/api') || pathname.startsWith('/static') || pathname.includes('.')) {
+    if (
+      pathname.startsWith('/_next') ||
+      pathname.startsWith('/api') ||
+      pathname.startsWith('/static') ||
+      pathname.includes('.')
+    ) {
       return NextResponse.next()
     }
 
     const segments = pathname.split('/').filter(Boolean)
     const first = segments[0]
-    const locale = (first && (locales as readonly string[]).includes(first)) ? first : defaultLocale
+    const locale =
+      first && (locales as readonly string[]).includes(first)
+        ? first
+        : defaultLocale
 
     // Only redirect when there is NO locale segment at all ("/").
     // If the first segment exists but is not a supported locale (e.g. "/f"),
@@ -35,7 +43,7 @@ export function middleware(req: NextRequest) {
           secure: process.env.NODE_ENV === 'production',
           maxAge: 60 * 60 * 24 * 30,
         })
-      } catch (err) {
+      } catch {
         const cookieValue = `locale=${encodeURIComponent(locale)}; Path=/; SameSite=Lax; Max-Age=${60 * 60 * 24 * 30}${process.env.NODE_ENV === 'production' ? '; Secure; HttpOnly' : ''}`
         redirectRes.headers.set('set-cookie', cookieValue)
       }
@@ -61,14 +69,14 @@ export function middleware(req: NextRequest) {
         secure: process.env.NODE_ENV === 'production',
         maxAge: 60 * 60 * 24 * 30,
       })
-    } catch (err) {
+    } catch {
       // Fallback to setting header
       const cookieValue = `locale=${encodeURIComponent(locale)}; Path=/; SameSite=Lax; Max-Age=${60 * 60 * 24 * 30}${process.env.NODE_ENV === 'production' ? '; Secure; HttpOnly' : ''}`
       res.headers.set('set-cookie', cookieValue)
     }
 
     return res
-  } catch (err) {
+  } catch {
     return NextResponse.next()
   }
 }

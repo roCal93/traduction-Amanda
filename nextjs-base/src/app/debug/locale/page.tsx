@@ -8,12 +8,12 @@ export default async function LocaleDebugPage() {
   try {
     const cookieStore = await cookies()
     localeCookie = cookieStore.get('locale')?.value ?? null
-  } catch (err) {
+  } catch {
     try {
       const cookieHeader = (await headers()).get('cookie') ?? ''
       const match = cookieHeader.match(/(?:^|; )locale=([^;]+)/)
       localeCookie = match ? decodeURIComponent(match[1]) : null
-    } catch (_) {
+    } catch {
       localeCookie = null
     }
   }
