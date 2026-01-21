@@ -2,7 +2,7 @@ import React, { ReactNode } from 'react'
 import { Header } from '@/components/sections/Header'
 import { Footer } from '@/components/sections/Footer'
 import { fetchAPI } from '@/lib/strapi'
-import type { HeaderResponse, PageLink } from '@/types/strapi'
+import type { HeaderResponse, PageLink, PageCollectionResponse } from '@/types/strapi'
 
 type LayoutProps = {
   children: ReactNode
@@ -121,7 +121,7 @@ async function getHeaderData(locale: string) {
       if (!pageSectionsCache.has(pageSlug)) {
         try {
           const encoded = `filters%5Bslug%5D%5B%24eq%5D=${encodeURIComponent(pageSlug)}`
-          const res = await fetchAPI(`/pages?${encoded}&populate=sections`, { locale, next: { revalidate: 3600 } })
+          const res = await fetchAPI<PageCollectionResponse>(`/pages?${encoded}&populate=sections`, { locale, next: { revalidate: 3600 } })
           const p = res?.data?.[0]
           pageSectionsCache.set(pageSlug, p?.sections || [])
         } catch (err) {
