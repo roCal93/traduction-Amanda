@@ -39,11 +39,11 @@ export const Header = ({
     })), [navigation])
 
   useEffect(() => {
-    // No-op: kept to avoid hydration glitches when debugging in dev.
+    // No-op: navigation prop is available via props
   }, [navigation])
 
   useEffect(() => {
-    // No-op: kept to avoid hydration glitches when debugging in dev.
+    // No-op: links are derived from navigation prop
   }, [links])
 
   const [activeAnchor, setActiveAnchor] = useState<string | null>(null)

@@ -125,7 +125,10 @@ async function getHeaderData(locale: string) {
           const p = res?.data?.[0]
           pageSectionsCache.set(pageSlug, p?.sections || [])
         } catch (err) {
+<<<<<<< HEAD
     
+=======
+>>>>>>> upstream/main
           pageSectionsCache.set(pageSlug, [])
         }
       }
@@ -135,11 +138,15 @@ async function getHeaderData(locale: string) {
 
       const labelTokens = tokens(label)
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> upstream/main
       for (const sec of secs) {
         const secTitle = normalize(sec.title)
         const secIdentifier = normalize(sec.identifier)
         // Exact or substring matches
+<<<<<<< HEAD
         if (labelTokens.some(t => secTitle.includes(t) || secIdentifier.includes(t))) {
 
           return sec
@@ -149,6 +156,11 @@ async function getHeaderData(locale: string) {
 
           return sec
         }
+=======
+        if (labelTokens.some(t => secTitle.includes(t) || secIdentifier.includes(t))) return sec
+        // Prefix match (first 4 letters) to handle 'contact' vs 'contacter'
+        if (labelTokens.some(t => secTitle.split(/\s+/).some(s => s.startsWith(t.slice(0,4))) || secIdentifier.split(/\s+/).some(s => s.startsWith(t.slice(0,4))))) return sec
+>>>>>>> upstream/main
       }
 
       return null
@@ -161,14 +173,20 @@ async function getHeaderData(locale: string) {
         const matched = await findMatchingSection(item.page.slug, item.customLabel || item.page.title)
         if (matched) {
           merged[i] = { ...item, section: matched }
+<<<<<<< HEAD
 
+=======
+>>>>>>> upstream/main
         }
       }
     }
 
+<<<<<<< HEAD
     // Debug: show final merged navigation (useful to verify section auto-matching)
 
 
+=======
+>>>>>>> upstream/main
     // Prefer dataPage root fields (logo/title), but attach merged navigation
     return {
       ...dataPage,
