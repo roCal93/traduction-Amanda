@@ -10,11 +10,10 @@ import {
   ContactFormBlock as ContactFormBlockData,
   WorkBlock as WorkBlockData,
   TimelineBlock as TimelineBlockData,
-  StrapiMedia
 } from '@/types/strapi'
 import * as Blocks from '@/components/blocks'
 
-type BlocksMap = Record<string, React.ComponentType<any>>
+type BlocksMap = Record<string, React.ComponentType<Record<string, unknown>>>
 const TypedBlocks = Blocks as unknown as BlocksMap
 
 type DynamicBlock = 
@@ -41,14 +40,14 @@ export const SectionGeneric = ({ identifier, title, blocks, spacingTop = 'medium
   const renderBlock = (block: DynamicBlock, index: number) => {
     // Try to render a matching React block component from `src/components/blocks`.
     // Component names are generated from Strapi __component like 'blocks.cards-block' -> 'CardsBlock'
-    const raw = (block as any).__component || ''
+    const raw = (block as { __component?: string }).__component ?? ''
     const key = raw.split('.').pop() || raw
     const toPascal = (s: string) => s.split('-').map(p => p.charAt(0).toUpperCase() + p.slice(1)).join('')
     const componentName = toPascal(key)
-    const BlockComponent = (TypedBlocks as any)[componentName] as React.ComponentType<any> | undefined
+    const BlockComponent = TypedBlocks[componentName] as React.ComponentType<Record<string, unknown>> | undefined
 
     if (BlockComponent) {
-      return <BlockComponent key={index} {...block} />
+      return <BlockComponent key={index} {...(block as Record<string, unknown>)} />
     }
 
     // Fallback placeholder (starter)

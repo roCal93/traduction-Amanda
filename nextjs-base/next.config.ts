@@ -29,7 +29,7 @@ const nextConfig: NextConfig = {
   // See https://nextjs.org/docs/app/api-reference/config/next-config-js/turbopack#root-directory
   turbopack: {
     root: __dirname,
-  } as any,
+  } as const,
 
   // Autoriser l'admin Strapi à intégrer le site en iframe pour la Preview
   async headers() {

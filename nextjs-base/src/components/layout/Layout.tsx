@@ -2,7 +2,7 @@ import React, { ReactNode } from 'react'
 import { Header } from '@/components/sections/Header'
 import { Footer } from '@/components/sections/Footer'
 import { fetchAPI } from '@/lib/strapi'
-import type { HeaderResponse, PageLink, PageCollectionResponse } from '@/types/strapi'
+import type { HeaderResponse, PageLink, PageCollectionResponse, Section, StrapiEntity } from '@/types/strapi'
 
 type LayoutProps = {
   children: ReactNode
@@ -105,7 +105,7 @@ async function getHeaderData(locale: string) {
 
     // If sections population failed, attempt a best-effort match by fetching the
     // target page sections and matching by label/title/identifier to recover anchors.
-    const pageSectionsCache = new Map<string, any[]>()
+    const pageSectionsCache = new Map<string, (Section & StrapiEntity)[]>()
 
     const normalize = (s: string | undefined) => (s || '')
       .normalize('NFD')
@@ -116,7 +116,7 @@ async function getHeaderData(locale: string) {
 
     const tokens = (s: string | undefined) => normalize(s).split(/\s+/).filter(Boolean)
 
-    const findMatchingSection = async (pageSlug?: string, label?: string) => {
+    const findMatchingSection = async (pageSlug?: string, label?: string): Promise<(Section & StrapiEntity) | null> => {
       if (!pageSlug || !label) return null
       if (!pageSectionsCache.has(pageSlug)) {
         try {
@@ -124,13 +124,13 @@ async function getHeaderData(locale: string) {
           const res = await fetchAPI<PageCollectionResponse>(`/pages?${encoded}&populate=sections`, { locale, next: { revalidate: 3600 } })
           const p = res?.data?.[0]
           pageSectionsCache.set(pageSlug, p?.sections || [])
-        } catch (err) {
+        } catch {
           pageSectionsCache.set(pageSlug, [])
         }
       }
 
-      const secs = pageSectionsCache.get(pageSlug) as any[]
-      if (!secs || !secs.length) return null
+      const secs = pageSectionsCache.get(pageSlug) || []
+      if (!secs.length) return null
 
       const labelTokens = tokens(label)
 
@@ -147,8 +147,9 @@ async function getHeaderData(locale: string) {
     }
 
     // Enrich merged navigation when section info is missing
+    type NavItemWithSection = NavItem & { section?: Section & StrapiEntity }
     for (let i = 0; i < merged.length; i++) {
-      const item = merged[i] as any
+      const item: NavItemWithSection = merged[i]
       if (!item.section && item.page?.slug && (item.customLabel || '').trim()) {
         const matched = await findMatchingSection(item.page.slug, item.customLabel || item.page.title)
         if (matched) {

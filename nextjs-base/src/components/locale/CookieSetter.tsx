@@ -14,7 +14,7 @@ export function CookieSetter({ lang }: CookieSetterProps) {
       if (!has) {
         document.cookie = `locale=${encodeURIComponent(lang)}; Path=/; SameSite=Lax`
       }
-    } catch (err) {
+    } catch {
       // ignore
     }
   }, [lang])
