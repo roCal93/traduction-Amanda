@@ -52,24 +52,38 @@ describe('buildMetadata', () => {
     const ogImages = Array.isArray(result.openGraph?.images)
       ? result.openGraph?.images
       : result.openGraph?.images
-      ? [result.openGraph?.images]
-      : []
+        ? [result.openGraph?.images]
+        : []
 
-    const firstOg = ogImages[0]
-    const ogUrl = typeof firstOg === 'string' ? firstOg : (firstOg as any)?.url
+    type OgImage = string | { url?: string; width?: number; height?: number }
+    const firstOg = ogImages[0] as OgImage | undefined
+
+    const isOgImageObject = (
+      v: unknown
+    ): v is { url?: string; width?: number; height?: number } =>
+      typeof v === 'object' && v !== null
+
+    const ogUrl =
+      typeof firstOg === 'string'
+        ? firstOg
+        : isOgImageObject(firstOg)
+          ? firstOg.url
+          : undefined
     expect(ogUrl).toBe('https://example.com/image.jpg')
-    if (typeof firstOg !== 'string') {
-      expect((firstOg as any).width).toBe(1200)
-      expect((firstOg as any).height).toBe(630)
+
+    if (isOgImageObject(firstOg)) {
+      expect(firstOg.width).toBe(1200)
+      expect(firstOg.height).toBe(630)
     }
 
     // twitter.images can be a string or an array; normalize to array
     const twImages = Array.isArray(result.twitter?.images)
       ? result.twitter?.images
       : result.twitter?.images
-      ? [result.twitter?.images]
-      : []
+        ? [result.twitter?.images]
+        : []
 
-    expect(twImages[0]).toBe('https://example.com/image.jpg')
+    const twFirst = twImages[0] as string | undefined
+    expect(twFirst).toBe('https://example.com/image.jpg')
   })
 })
