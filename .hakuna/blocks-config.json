@@ -12,9 +12,10 @@
     "WorkBlock",
     "WorkCard",
     "TimelineBlock",
-    "timeline-item"
+    "timeline-item",
+    "BackgroundBlock"
   ],
   "preset": "portfolio",
   "autoSync": true,
-  "lastSync": "2026-01-15T09:00:25Z"
+  "lastSync": "2026-01-22T08:55:56Z"
 }

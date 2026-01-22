@@ -96,6 +96,24 @@ export interface StrapiErrorResponse {
 // ============================================================================
 
 /**
+ * Component: blocks.background-block
+ */
+export interface BackgroundBlock {
+  type: string;
+  color?: string;
+  gradient?: string;
+  image?: StrapiMedia;
+  imageDesktop?: StrapiMedia;
+  position?: string;
+  size?: string;
+  repeat?: string;
+  fixed?: boolean;
+  overlayColor?: string;
+  overlayOpacity?: number;
+  scope?: string;
+}
+
+/**
  * Component: blocks.button-block
  */
 export interface ButtonBlock {
@@ -233,7 +251,6 @@ export interface ExternalLink {
  */
 export interface PageLink {
   page?: (Page & StrapiEntity);
-  section?: (Section & StrapiEntity);
   customLabel?: string;
 }
 

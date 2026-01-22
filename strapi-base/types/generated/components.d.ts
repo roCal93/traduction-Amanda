@@ -1,5 +1,43 @@
 import type { Schema, Struct } from '@strapi/strapi';
 
+export interface BlocksBackgroundBlock extends Struct.ComponentSchema {
+  collectionName: 'components_blocks_background_blocks';
+  info: {
+    description: 'Change le fond du site (couleur, image, gradient)';
+    displayName: 'Background Block';
+  };
+  attributes: {
+    color: Schema.Attribute.String;
+    fixed: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
+    gradient: Schema.Attribute.String;
+    image: Schema.Attribute.Media;
+    imageDesktop: Schema.Attribute.Media;
+    overlayColor: Schema.Attribute.String;
+    overlayOpacity: Schema.Attribute.Decimal & Schema.Attribute.DefaultTo<0>;
+    position: Schema.Attribute.Enumeration<
+      [
+        'center center',
+        'top center',
+        'bottom center',
+        'left center',
+        'right center',
+      ]
+    > &
+      Schema.Attribute.DefaultTo<'center center'>;
+    repeat: Schema.Attribute.Enumeration<
+      ['no-repeat', 'repeat', 'repeat-x', 'repeat-y']
+    > &
+      Schema.Attribute.DefaultTo<'no-repeat'>;
+    scope: Schema.Attribute.Enumeration<['section', 'global']> &
+      Schema.Attribute.DefaultTo<'section'>;
+    size: Schema.Attribute.Enumeration<['cover', 'contain', 'auto']> &
+      Schema.Attribute.DefaultTo<'cover'>;
+    type: Schema.Attribute.Enumeration<['color', 'image', 'gradient']> &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<'color'>;
+  };
+}
+
 export interface BlocksButtonBlock extends Struct.ComponentSchema {
   collectionName: 'components_blocks_button_blocks';
   info: {
@@ -328,6 +366,7 @@ export interface SharedTimelineItem extends Struct.ComponentSchema {
 declare module '@strapi/strapi' {
   export module Public {
     export interface ComponentSchemas {
+      'blocks.background-block': BlocksBackgroundBlock;
       'blocks.button-block': BlocksButtonBlock;
       'blocks.cards-block': BlocksCardsBlock;
       'blocks.carousel-block': BlocksCarouselBlock;

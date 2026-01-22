@@ -61,7 +61,8 @@
         "blocks.carousel-block",
         "blocks.contact-form-block",
         "blocks.work-block",
-        "blocks.timeline-block"
+        "blocks.timeline-block",
+        "blocks.background-block"
       ],
       "required": true
     },

@@ -4,7 +4,7 @@
  * ⚠️  FICHIER AUTO-GÉNÉRÉ - NE PAS MODIFIER
  * 
  * Pour régénérer: npm run generate:types
- * Généré le: 2026-01-15T12:42:51.363Z
+ * Généré le: 2026-01-22T11:15:17.330Z
  */
 
 // ============================================================================
@@ -90,6 +90,24 @@ export interface StrapiErrorResponse {
 // ============================================================================
 // COMPONENTS
 // ============================================================================
+
+/**
+ * Component: blocks.background-block
+ */
+export interface BackgroundBlock {
+  type: string;
+  color?: string;
+  gradient?: string;
+  image?: StrapiMedia;
+  imageDesktop?: StrapiMedia;
+  position?: string;
+  size?: string;
+  repeat?: string;
+  fixed?: boolean;
+  overlayColor?: string;
+  overlayOpacity?: number;
+  scope?: string;
+}
 
 /**
  * Component: blocks.button-block
