@@ -55,7 +55,7 @@ async function getHeaderData(locale: string) {
     if (!dataPage && !dataSection) return null
 
     // Merge navigation arrays using page id as key
-    type NavItem = PageLink & { id?: number }
+    type NavItem = PageLink & { id?: number; section?: Section & StrapiEntity }
     const navMap = new Map<string, NavItem>()
 
     // Only process page navigation since PageLink only has page references now
