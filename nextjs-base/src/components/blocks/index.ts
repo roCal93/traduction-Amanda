@@ -19,3 +19,4 @@ export const CarouselBlock = () => null
 export const ContactFormBlock = () => null
 export const WorkBlock = () => null
 export const TimelineBlock = () => null
+export const BackgroundBlock = () => null
