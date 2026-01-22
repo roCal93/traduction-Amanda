@@ -1,6 +1,6 @@
 import React from 'react'
-import { 
-  TextBlock as TextBlockData, 
+import {
+  TextBlock as TextBlockData,
   ButtonBlock as ButtonBlockData,
   ImageBlock as ImageBlockData,
   CardsBlock as CardsBlockData,
@@ -9,10 +9,14 @@ import {
   CarouselBlock as CarouselBlockData,
   ContactFormBlock as ContactFormBlockData,
   WorkBlock as WorkBlockData,
+  TimelineBlock as TimelineBlockData,
 } from '@/types/strapi'
-import { TextBlock, ButtonBlock, ImageBlock, CardsBlock, TextImageBlock, HeroBlockSimpleText, CarouselBlock, ContactFormBlock, WorkBlock } from '@/components/blocks'
+import * as Blocks from '@/components/blocks'
 
-type DynamicBlock = 
+type BlocksMap = Record<string, React.ComponentType<Record<string, unknown>>>
+const TypedBlocks = Blocks as unknown as BlocksMap
+
+type DynamicBlock =
   | ({ __component: 'blocks.text-block' } & TextBlockData)
   | ({ __component: 'blocks.button-block' } & ButtonBlockData)
   | ({ __component: 'blocks.image-block' } & ImageBlockData)
@@ -22,158 +26,104 @@ type DynamicBlock =
   | ({ __component: 'blocks.carousel-block' } & CarouselBlockData)
   | ({ __component: 'blocks.contact-form-block' } & ContactFormBlockData)
   | ({ __component: 'blocks.work-block' } & WorkBlockData)
+  | ({ __component: 'blocks.timeline-block' } & TimelineBlockData)
 
 type SectionGenericProps = {
   title?: string
   blocks: DynamicBlock[]
+  identifier?: string
   spacingTop?: 'none' | 'small' | 'medium' | 'large'
   spacingBottom?: 'none' | 'small' | 'medium' | 'large'
 }
 
-export const SectionGeneric = ({ title, blocks, spacingTop = 'medium', spacingBottom = 'medium' }: SectionGenericProps) => {
+export const SectionGeneric = ({
+  identifier,
+  title,
+  blocks,
+  spacingTop = 'medium',
+  spacingBottom = 'medium',
+}: SectionGenericProps) => {
   const renderBlock = (block: DynamicBlock, index: number) => {
-    switch (block.__component) {
-      case 'blocks.text-block':
-        return (
-          <TextBlock 
-            key={index} 
-            content={block.content}
-            textAlignment={block.textAlignment as 'left' | 'center' | 'right' | 'justify'}
-            blockAlignment={block.blockAlignment as 'left' | 'center' | 'right' | 'full'}
-            maxWidth={block.maxWidth as 'small' | 'medium' | 'large' | 'full'}
-          />
-        )
-      
-      case 'blocks.button-block':
-        return (
-          <ButtonBlock 
-            key={index} 
-            buttons={block.buttons} 
-            alignment={block.alignment as 'left' | 'center' | 'right' | 'space-between'} 
-          />
-        )
-      
-      case 'blocks.image-block':
-        return (
-          <ImageBlock 
-            key={index} 
-            image={block.image} 
-            caption={block.caption}
-            alignment={block.alignment as 'left' | 'center' | 'right' | 'full'}
-            size={block.size as 'small' | 'medium' | 'large' | 'full'}
-          />
-        )
-      
-      case 'blocks.cards-block':
-        return (
-          <CardsBlock 
-            key={index} 
-            cards={block.cards} 
-            columns={block.columns as '1' | '2' | '3' | '4'}
-            alignment={block.alignment as 'left' | 'center' | 'right'}
-          />
-        )
-      
-      case 'blocks.text-image-block':
-        return (
-          <TextImageBlock
-            key={index}
-            content={block.content}
-            image={block.image}
-            imagePosition={block.imagePosition as 'left' | 'right'}
-            imageSize={block.imageSize as 'small' | 'medium' | 'large'}
-            verticalAlignment={block.verticalAlignment as 'top' | 'center' | 'bottom'}
-            textAlignment={block.textAlignment as 'left' | 'center' | 'right' | 'justify'}
-            roundedImage={block.roundedImage}
-          />
-        )
-      
-      case 'blocks.hero-block-simple-text':
-        return (
-          <HeroBlockSimpleText
-            key={index}
-            title={block.title}
-            content={block.content}
-            height={block.height as 'medium' | 'large' | 'full'}
-            textAlignment={block.textAlignment as 'left' | 'center' | 'right'}
-          />
-        )
-      
-      case 'blocks.carousel-block':
-        return (
-          <CarouselBlock
-            key={index}
-            cards={block.cards.map((card, idx) => ({
-              id: idx,
-              frontTitle: card.frontTitle,
-              frontContent: card.frontContent,
-              backContent: card.backContent,
-              image: card.image ? { url: card.image.url, alternativeText: card.image.alternativeText || undefined } : undefined
-            }))}
-            autoplay={block.autoplay}
-            autoplayDelay={block.autoplayDelay}
-            showControls={block.showControls}
-            showIndicators={block.showIndicators}
-          />
-        )
-      
-      case 'blocks.contact-form-block':
-        return (
-          <ContactFormBlock
-            key={index}
-            title={block.title}
-            description={block.description}
-            submitButtonText={block.submitButtonText}
-            blockAlignment={block.blockAlignment as 'left' | 'center' | 'right' | 'full'}
-            maxWidth={block.maxWidth as 'small' | 'medium' | 'large' | 'full'}
-          />
-        )
-      
-      case 'blocks.work-block':
-        return (
-          <WorkBlock
-            key={index}
-            filterByCategories={block.filterByCategories}
-            showAllCategories={block.showAllCategories}
-            showFeaturedOnly={block.showFeaturedOnly}
-            filterByItemType={block.filterByItemType}
-            limit={block.limit}
-            columns={block.columns as '2' | '3' | '4'}
-            showFilters={block.showFilters}
-            layout={block.layout as 'grid' | 'masonry' | 'list'}
-          />
-        )
-      
+    // Try to render a matching React block component from `src/components/blocks`.
+    // Component names are generated from Strapi __component like 'blocks.cards-block' -> 'CardsBlock'
+    const raw = (block as { __component?: string }).__component ?? ''
+    const key = raw.split('.').pop() || raw
+    const toPascal = (s: string) =>
+      s
+        .split('-')
+        .map((p) => p.charAt(0).toUpperCase() + p.slice(1))
+        .join('')
+    const componentName = toPascal(key)
+    const BlockComponent = TypedBlocks[componentName] as
+      | React.ComponentType<Record<string, unknown>>
+      | undefined
+
+    if (BlockComponent) {
+      return (
+        <BlockComponent
+          key={index}
+          {...(block as unknown as Record<string, unknown>)}
+        />
+      )
+    }
+
+    // Fallback placeholder (starter)
+    return (
+      <div
+        key={index}
+        className="p-4 border-2 border-dashed border-gray-300 rounded-lg"
+      >
+        <p className="text-gray-500 text-center">
+          Block: {block.__component} (placeholder - will be replaced by
+          create-hakuna-app)
+        </p>
+      </div>
+    )
+  }
+
+  const getTopSpacingClass = (
+    spacing: 'none' | 'small' | 'medium' | 'large'
+  ) => {
+    switch (spacing) {
+      case 'none':
+        return ''
+      case 'small':
+        return 'mt-6'
+      case 'medium':
+        return 'mt-12'
+      case 'large':
+        return 'mt-24'
       default:
-        console.warn('Unknown block type:', (block as DynamicBlock).__component)
-        return null
+        return 'mt-12'
     }
   }
 
-  const getTopSpacingClass = (spacing: 'none' | 'small' | 'medium' | 'large') => {
+  const getBottomSpacingClass = (
+    spacing: 'none' | 'small' | 'medium' | 'large'
+  ) => {
     switch (spacing) {
-      case 'none': return ''
-      case 'small': return 'mt-6'
-      case 'medium': return 'mt-12'
-      case 'large': return 'mt-24'
-      default: return 'mt-12'
-    }
-  }
-
-  const getBottomSpacingClass = (spacing: 'none' | 'small' | 'medium' | 'large') => {
-    switch (spacing) {
-      case 'none': return ''
-      case 'small': return 'mb-6'
-      case 'medium': return 'mb-12'
-      case 'large': return 'mb-24'
-      default: return 'mb-12'
+      case 'none':
+        return ''
+      case 'small':
+        return 'mb-6'
+      case 'medium':
+        return 'mb-12'
+      case 'large':
+        return 'mb-24'
+      default:
+        return 'mb-12'
     }
   }
 
   return (
-    <section className={`${getTopSpacingClass(spacingTop)} ${getBottomSpacingClass(spacingBottom)} px-4`}>
+    <section
+      id={identifier}
+      className={`${getTopSpacingClass(spacingTop)} ${getBottomSpacingClass(spacingBottom)} px-4`}
+    >
       <div className="max-w-6xl mx-auto">
-        {title && <h2 className="text-3xl font-bold mb-8 text-center">{title}</h2>}
+        {title && (
+          <h2 className="text-3xl font-bold mb-8 text-center">{title}</h2>
+        )}
         <div className="space-y-4">
           {blocks?.map((block, index) => renderBlock(block, index))}
         </div>

@@ -1,29 +1,48 @@
 import { createStrapiClient } from '@/lib/strapi-client'
-import { buildMetadata, type Hreflang } from '@/lib/seo' 
+import { buildMetadata, type Hreflang } from '@/lib/seo'
 import { Layout } from '@/components/layout'
 import { Hero } from '@/components/sections/Hero'
 import { SectionGeneric } from '@/components/sections/SectionGeneric'
-import { PageCollectionResponse, StrapiBlock, StrapiEntity, Page as PageType } from '@/types/strapi'
+import {
+  PageCollectionResponse,
+  StrapiEntity,
+  Page as PageType,
+} from '@/types/strapi'
 import { DynamicBlock } from '@/types/custom'
 import { notFound, redirect } from 'next/navigation'
 import { defaultLocale } from '@/lib/locales'
 import { isSupportedLocale } from '@/lib/supported-locales'
 import { draftMode } from 'next/headers'
-import { unstable_cache } from 'next/cache'
 
 export const revalidate = 3600 // Revalidate every hour as fallback
 
-const fetchPageData = async (slug: string, locale: string, isDraft: boolean) => {
+const fetchPageData = async (
+  slug: string,
+  locale: string,
+  isDraft: boolean
+) => {
   const apiToken = isDraft
-    ? (process.env.STRAPI_PREVIEW_TOKEN || process.env.STRAPI_API_TOKEN)
+    ? process.env.STRAPI_PREVIEW_TOKEN || process.env.STRAPI_API_TOKEN
     : process.env.STRAPI_API_TOKEN
 
-  const client = createStrapiClient({ apiUrl: process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1337', apiToken })
+  const client = createStrapiClient({
+    apiUrl: process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1337',
+    apiToken,
+  })
 
   const pageRes: PageCollectionResponse = await client.findMany('pages', {
     filters: { slug: { $eq: slug } },
-    fields: ['title', 'hideTitle', 'slug', 'seoTitle', 'seoDescription', 'noIndex', 'locale'],
-    populate: 'sections.blocks.cards.image,sections.blocks.image,sections.blocks.buttons.file,seoImage,localizations',
+    fields: [
+      'title',
+      'hideTitle',
+      'slug',
+      'seoTitle',
+      'seoDescription',
+      'noIndex',
+      'locale',
+    ],
+    populate:
+      'sections.blocks.cards.image,sections.blocks.image,sections.blocks.imageDesktop,sections.blocks.buttons.file,sections.blocks.items.images.image,sections.blocks.items.images.link,seoImage,localizations',
     locale,
     publicationState: isDraft ? 'preview' : 'live',
   })
@@ -33,47 +52,77 @@ const fetchPageData = async (slug: string, locale: string, isDraft: boolean) => 
 
 const fetchPageDataFallback = async (slug: string, isDraft: boolean) => {
   const apiToken = isDraft
-    ? (process.env.STRAPI_PREVIEW_TOKEN || process.env.STRAPI_API_TOKEN)
+    ? process.env.STRAPI_PREVIEW_TOKEN || process.env.STRAPI_API_TOKEN
     : process.env.STRAPI_API_TOKEN
 
-  const client = createStrapiClient({ apiUrl: process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1337', apiToken })
+  const client = createStrapiClient({
+    apiUrl: process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1337',
+    apiToken,
+  })
 
   const fallbackRes: PageCollectionResponse = await client.findMany('pages', {
     filters: { slug: { $eq: slug } },
-    fields: ['title', 'hideTitle', 'slug', 'seoTitle', 'seoDescription', 'noIndex', 'locale'],
-    populate: 'sections.blocks.cards.image,sections.blocks.image,sections.blocks.buttons.file,seoImage,localizations',
+    fields: [
+      'title',
+      'hideTitle',
+      'slug',
+      'seoTitle',
+      'seoDescription',
+      'noIndex',
+      'locale',
+    ],
+    populate:
+      'sections.blocks.cards.image,sections.blocks.image,sections.blocks.imageDesktop,sections.blocks.buttons.file,sections.blocks.items.images.image,sections.blocks.items.images.link,seoImage,localizations',
     publicationState: isDraft ? 'preview' : 'live',
   })
 
   return fallbackRes
 }
 
-const getPageData = unstable_cache(
-  async (slug: string, locale: string) => fetchPageData(slug, locale, false),
-  ['page-data'],
-  { revalidate: 3600, tags: ['strapi-pages'] }
-)
+const getPageData = async (slug: string, locale: string) =>
+  fetchPageData(slug, locale, false)
+// unstable_cache(
+//   async (slug: string, locale: string) => fetchPageData(slug, locale, false),
+//   ['page-data'],
+//   { revalidate: 3600, tags: ['strapi-pages'] }
+// )
 
-const getPageDataFallback = unstable_cache(
-  async (slug: string) => fetchPageDataFallback(slug, false),
-  ['page-data-fallback'],
-  { revalidate: 3600, tags: ['strapi-pages'] }
-)
+const getPageDataFallback = async (slug: string) =>
+  fetchPageDataFallback(slug, false)
+// unstable_cache(
+//   async (slug: string) => fetchPageDataFallback(slug, false),
+//   ['page-data-fallback'],
+//   { revalidate: 3600, tags: ['strapi-pages'] }
+// )
 
-export async function generateMetadata({ params }: { params: Promise<{ locale: string; slug: string }> }) {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string; slug: string }>
+}) {
   const { slug, locale } = await params
 
-  const client = createStrapiClient({ apiUrl: process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1337', apiToken: process.env.STRAPI_API_TOKEN })
+  const client = createStrapiClient({
+    apiUrl: process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1337',
+    apiToken: process.env.STRAPI_API_TOKEN,
+  })
   const res: PageCollectionResponse = await client.findMany('pages', {
     filters: { slug: { $eq: slug } },
-    fields: ['title', 'slug', 'seoTitle', 'seoDescription', 'noIndex', 'locale'],
-    populate: { 
-      seoImage: { 
-        fields: ['url', 'alternativeText', 'width', 'height', 'formats'] 
-      }, 
-      localizations: { 
-        fields: ['slug', 'locale'] 
-      } 
+    fields: [
+      'title',
+      'slug',
+      'seoTitle',
+      'seoDescription',
+      'noIndex',
+      'locale',
+    ],
+    populate: {
+      seoImage: {
+        fields: ['url', 'alternativeText', 'width', 'height', 'formats'],
+      },
+      localizations: {
+        fields: ['slug', 'locale'],
+      },
     },
     locale,
   })
@@ -81,7 +130,11 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   const page = res?.data?.[0]
   if (!page) return {}
 
-  const siteBase = (process.env.NEXT_PUBLIC_SITE_URL ?? process.env.SITE_URL ?? 'https://example.com').replace(/\/$/, '')
+  const siteBase = (
+    process.env.NEXT_PUBLIC_SITE_URL ??
+    process.env.SITE_URL ??
+    'https://example.com'
+  ).replace(/\/$/, '')
 
   const pageLocalizations = page.localizations ?? []
 
@@ -97,8 +150,10 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   ]
 
   const description = Array.isArray(page.seoDescription)
-    ? page.seoDescription?.[0]?.children?.[0]?.text ?? undefined
-    : typeof page.seoDescription === 'string' ? page.seoDescription : undefined
+    ? (page.seoDescription?.[0]?.children?.[0]?.text ?? undefined)
+    : typeof page.seoDescription === 'string'
+      ? page.seoDescription
+      : undefined
 
   return buildMetadata({
     title: page.seoTitle || page.title,
@@ -112,7 +167,13 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 
 export const dynamicParams = true // Allow dynamic params for pages that might not exist yet
 
-export default async function Page({ params, searchParams }: { params: Promise<{ locale: string; slug: string }>, searchParams?: { draft?: string } | Promise<{ draft?: string }> }) {
+export default async function Page({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ locale: string; slug: string }>
+  searchParams?: { draft?: string } | Promise<{ draft?: string }>
+}) {
   const { locale, slug } = await params
 
   // Defensive: [locale]/layout.tsx already validates, but keep it here too.
@@ -127,19 +188,21 @@ export default async function Page({ params, searchParams }: { params: Promise<{
 
   const sparams = searchParams ? await Promise.resolve(searchParams) : undefined
   const { isEnabled } = await draftMode()
-  const isDraft = (sparams?.draft === 'true') || false
+  const isDraft = sparams?.draft === 'true' || false
 
   // Bypass cache when Draft Mode is enabled (preview mode) regardless of draft/published status
-  const pageRes = isEnabled || isDraft
-    ? await fetchPageData(slug, locale, isDraft)
-    : await getPageData(slug, locale)
+  const pageRes =
+    isEnabled || isDraft
+      ? await fetchPageData(slug, locale, isDraft)
+      : await getPageData(slug, locale)
 
   if (!pageRes.data.length) {
     // Prefer redirecting to the default locale when the page doesn't exist in the requested locale.
     if (locale !== defaultLocale) {
-      const defaultRes = isEnabled || isDraft
-        ? await fetchPageData(slug, defaultLocale, isDraft)
-        : await getPageData(slug, defaultLocale)
+      const defaultRes =
+        isEnabled || isDraft
+          ? await fetchPageData(slug, defaultLocale, isDraft)
+          : await getPageData(slug, defaultLocale)
 
       if (defaultRes.data.length) {
         redirect(`/${defaultLocale}/${slug}`)
@@ -147,9 +210,10 @@ export default async function Page({ params, searchParams }: { params: Promise<{
     }
 
     // Fallback: try without locale (global)
-    const fallbackRes = isEnabled || isDraft
-      ? await fetchPageDataFallback(slug, isDraft)
-      : await getPageDataFallback(slug)
+    const fallbackRes =
+      isEnabled || isDraft
+        ? await fetchPageDataFallback(slug, isDraft)
+        : await getPageDataFallback(slug)
 
     if (!fallbackRes.data.length) {
       // Nothing found in any locale → show 404 page
@@ -163,19 +227,18 @@ export default async function Page({ params, searchParams }: { params: Promise<{
   }
 
   const page = pageRes.data[0]
-  const sections = (page.sections || []).sort((a, b) => (a.order || 0) - (b.order || 0))
+  const sections = (page.sections || []).sort(
+    (a, b) => (a.order || 0) - (b.order || 0)
+  )
 
   return (
     <Layout locale={locale}>
-      {!page.hideTitle && (
-        <Hero
-          title={page.title || ''}
-        />
-      )}
+      {!page.hideTitle && <Hero title={page.title || ''} />}
 
       {sections.map((section) => (
         <SectionGeneric
           key={section.id}
+          identifier={section.identifier}
           title={section.hideTitle ? undefined : section.title}
           blocks={section.blocks as DynamicBlock[]}
         />

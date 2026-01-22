@@ -1,13 +1,17 @@
 'use client'
 
-import React from 'react'
+import React, { useEffect, useState, useMemo, useCallback } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { BurgerMenu } from '@/components/ui/BurgerMenu'
 import { LanguageSwitcher } from '@/components/locale/LanguageSwitcher'
+import { scrollToAnchor, scrollToAnchorWithRetry } from '@/lib/anchor'
 import type { StrapiMedia, PageLink } from '@/types/strapi'
-import { defaultLocale as STATIC_DEFAULT_LOCALE, locales as STATIC_LOCALES } from '@/lib/locales'
+import {
+  defaultLocale as STATIC_DEFAULT_LOCALE,
+  locales as STATIC_LOCALES,
+} from '@/lib/locales'
 
 export interface HeaderProps {
   logo?: StrapiMedia
@@ -15,37 +19,163 @@ export interface HeaderProps {
   navigation?: PageLink[]
 }
 
-export const Header = ({ 
-  logo, 
-  title = 'My Website', 
-  navigation = [] 
+export const Header = ({
+  logo,
+  title = 'My Website',
+  navigation = [],
 }: HeaderProps) => {
   const pathname = usePathname() ?? '/'
   const segments = pathname.split('/')
   const currentSegment = segments[1]
-  const currentLocale = (currentSegment && (STATIC_LOCALES as readonly string[]).includes(currentSegment))
-    ? currentSegment
-    : STATIC_DEFAULT_LOCALE
+  const currentLocale =
+    currentSegment &&
+    (STATIC_LOCALES as readonly string[]).includes(currentSegment)
+      ? currentSegment
+      : STATIC_DEFAULT_LOCALE
 
   // Transform PageLink to NavigationLink for easier processing
-  const links = navigation
-    .filter(link => link.page?.slug) // Only keep links with valid pages
-    .map(link => ({
-      slug: link.page!.slug,
-      label: link.customLabel || link.page!.title || '',
-      isHome: link.page!.slug === 'home'
-    }))
+  const links = useMemo(
+    () =>
+      navigation
+        .filter((link) => link.page?.slug) // Only keep links with valid pages
+        .map(
+          (
+            link: PageLink & {
+              section?: { title?: string; identifier?: string }
+            }
+          ) => {
+            const sec = link.section
+            return {
+              slug: link.page!.slug,
+              label: link.customLabel || sec?.title || link.page!.title || '',
+              isHome: link.page!.slug === 'home',
+              anchor: sec?.identifier,
+            }
+          }
+        ),
+    [navigation]
+  )
 
-  const getLocalizedHref = (slug: string, isHome: boolean) => 
-    isHome ? `/${currentLocale}` : `/${currentLocale}/${slug}`
-  
-  const isActive = (slug: string, isHome: boolean) => {
-    const fullHref = getLocalizedHref(slug, isHome)
-    return pathname === fullHref
+  useEffect(() => {
+    // No-op: navigation prop is available via props
+  }, [navigation])
+
+  useEffect(() => {
+    // No-op: links are derived from navigation prop
+  }, [links])
+
+  const [activeAnchor, setActiveAnchor] = useState<string | null>(null)
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    // Set mounted asynchronously to avoid triggering a synchronous state update within the effect
+    const timeoutId = window.setTimeout(() => setMounted(true), 0)
+    return () => {
+      clearTimeout(timeoutId)
+      setMounted(false)
+    }
+  }, [])
+
+  const getLocalizedHref = useCallback(
+    (slug: string, isHome: boolean, anchor?: string) => {
+      const base = isHome ? `/${currentLocale}` : `/${currentLocale}/${slug}`
+      return anchor ? `${base}#${anchor}` : base
+    },
+    [currentLocale]
+  )
+
+  const isActive = (slug: string, isHome: boolean, anchor?: string) => {
+    const base = getLocalizedHref(slug, isHome).split('#')[0]
+    // If we're on the same base path:
+    if (pathname === base) {
+      // If link targets an anchor, only consider it active after mount to avoid hydration mismatch
+      if (anchor) {
+        if (!mounted) return false
+        return (
+          activeAnchor === anchor ||
+          (typeof window !== 'undefined' &&
+            window.location.hash === `#${anchor}`)
+        )
+      }
+      return true
+    }
+    return false
   }
 
+  const handleNavClick = (
+    e: React.MouseEvent,
+    link: { slug: string; isHome: boolean; anchor?: string }
+  ) => {
+    const href = getLocalizedHref(link.slug, link.isHome, link.anchor)
+    const base = href.split('#')[0]
+    const currentBase = pathname.split('#')[0]
+    if (base === currentBase && link.anchor) {
+      e.preventDefault()
+      scrollToAnchor(link.anchor)
+    }
+  }
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+
+    // If the URL contains a hash after navigation to another page, attempt to scroll to it
+    const tryScrollHash = () => {
+      const h = window.location.hash
+        ? window.location.hash.replace('#', '')
+        : ''
+      if (h) {
+        scrollToAnchorWithRetry(h)
+      }
+    }
+
+    tryScrollHash()
+
+    // Recompute active anchor on scroll / hashchange
+    const anchors = links
+      .filter(
+        (l) =>
+          l.anchor &&
+          getLocalizedHref(l.slug, l.isHome).split('#')[0] ===
+            pathname.split('#')[0]
+      )
+      .map((l) => l.anchor!)
+    if (anchors.length === 0) {
+      // Avoid calling setState synchronously within the effect to prevent cascading renders
+      const timeoutId = window.setTimeout(() => setActiveAnchor(null), 0)
+      return () => clearTimeout(timeoutId)
+    }
+
+    const checkActive = () => {
+      let found: string | null = null
+      for (const id of anchors) {
+        const el = document.getElementById(id)
+        if (!el) continue
+        const rect = el.getBoundingClientRect()
+        if (rect.top <= 150 && rect.bottom > 0) {
+          found = id
+          break
+        }
+      }
+      setActiveAnchor(found)
+    }
+
+    checkActive()
+    window.addEventListener('scroll', checkActive, { passive: true })
+    window.addEventListener('hashchange', checkActive)
+    window.addEventListener('popstate', tryScrollHash)
+
+    return () => {
+      window.removeEventListener('scroll', checkActive)
+      window.removeEventListener('hashchange', checkActive)
+      window.removeEventListener('popstate', tryScrollHash)
+    }
+  }, [pathname, links, getLocalizedHref])
+
   return (
-    <header className="relative flex justify-between items-center p-6 bg-gray-100">
+    <header
+      id="site-header"
+      className="sticky top-0 z-50 backdrop-blur-sm bg-white/10 border-b border-gray-200 flex justify-between items-center p-6"
+    >
       <Link href={`/${currentLocale}`} prefetch className="flex-1 md:flex-none">
         {logo ? (
           <Image
@@ -60,7 +190,8 @@ export const Header = ({
           <h1 className="text-2xl font-bold cursor-pointer text-center md:text-left">
             {title.split(' ').map((word, i) => (
               <span key={i} className="block md:inline">
-                {word}{i < title.split(' ').length - 1 && ' '}
+                {word}
+                {i < title.split(' ').length - 1 && ' '}
               </span>
             ))}
           </h1>
@@ -69,13 +200,14 @@ export const Header = ({
       <div className="hidden md:flex items-center space-x-12">
         <nav className="hidden md:flex space-x-6">
           {links.map((link, index) => (
-            <Link 
-              key={link.slug || index} 
-              href={getLocalizedHref(link.slug, link.isHome)} 
+            <Link
+              key={link.slug || index}
+              href={getLocalizedHref(link.slug, link.isHome, link.anchor)}
               prefetch
+              onClick={(e) => handleNavClick(e, link)}
               className={`text-base transition-colors hover:text-gray-600 ${
-                isActive(link.slug, link.isHome) 
-                  ? 'font-semibold text-black' 
+                isActive(link.slug, link.isHome, link.anchor)
+                  ? 'font-semibold text-black'
                   : 'text-gray-700'
               }`}
             >

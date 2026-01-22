@@ -16,13 +16,20 @@ const nextConfig: NextConfig = {
       //   pathname: '/uploads/**',
       // },
     ],
-    unoptimized: process.env.NODE_ENV === 'development' || (process.env.NEXT_PUBLIC_STRAPI_URL || '').includes('localhost'), // Toujours non-optimisé pour localhost
+    unoptimized: true, // Désactiver l'optimisation pour éviter les problèmes de domaine
     formats: ['image/webp', 'image/avif'], // Formats modernes pour réduire la taille
   },
 
   // Optimisations de performance
   compress: true, // Activer la compression Gzip/Brotli
   poweredByHeader: false, // Supprimer l'en-tête X-Powered-By
+
+  // For Turbopack: explicitly set workspace root to this Next app to avoid
+  // module resolution issues when the repo contains multiple lockfiles.
+  // See https://nextjs.org/docs/app/api-reference/config/next-config-js/turbopack#root-directory
+  turbopack: {
+    root: __dirname,
+  } as const,
 
   // Autoriser l'admin Strapi à intégrer le site en iframe pour la Preview
   async headers() {

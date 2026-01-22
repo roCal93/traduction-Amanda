@@ -60,7 +60,9 @@
         "blocks.hero-block-simple-text",
         "blocks.carousel-block",
         "blocks.contact-form-block",
-        "blocks.work-block"
+        "blocks.work-block",
+        "blocks.timeline-block",
+        "blocks.background-block"
       ],
       "required": true
     },

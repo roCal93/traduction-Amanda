@@ -614,6 +614,8 @@ export interface ApiSectionSection extends Struct.CollectionTypeSchema {
         'blocks.carousel-block',
         'blocks.contact-form-block',
         'blocks.work-block',
+        'blocks.timeline-block',
+        'blocks.background-block',
       ]
     > &
       Schema.Attribute.Required &

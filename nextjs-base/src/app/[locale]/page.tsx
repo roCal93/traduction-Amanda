@@ -7,7 +7,6 @@ import { SectionGeneric } from '@/components/sections/SectionGeneric'
 import { PageCollectionResponse, StrapiBlock } from '@/types/strapi'
 import { DynamicBlock } from '@/types/custom'
 import { draftMode } from 'next/headers'
-import { unstable_cache } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { defaultLocale } from '@/lib/locales'
 
@@ -15,15 +14,27 @@ export const revalidate = 3600 // Revalidate every hour as fallback
 
 const fetchHomePageData = async (locale: string, isDraft: boolean) => {
   const apiToken = isDraft
-    ? (process.env.STRAPI_PREVIEW_TOKEN || process.env.STRAPI_API_TOKEN)
+    ? process.env.STRAPI_PREVIEW_TOKEN || process.env.STRAPI_API_TOKEN
     : process.env.STRAPI_API_TOKEN
 
-  const client = createStrapiClient({ apiUrl: process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1337', apiToken })
+  const client = createStrapiClient({
+    apiUrl: process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1337',
+    apiToken,
+  })
 
   let res: PageCollectionResponse = await client.findMany('pages', {
     filters: { slug: { $eq: 'home' } },
-    fields: ['title', 'hideTitle', 'slug', 'seoTitle', 'seoDescription', 'noIndex', 'locale'],
-    populate: 'sections.blocks.cards.image,sections.blocks.image,sections.blocks.buttons.file,seoImage,localizations',
+    fields: [
+      'title',
+      'hideTitle',
+      'slug',
+      'seoTitle',
+      'seoDescription',
+      'noIndex',
+      'locale',
+    ],
+    populate:
+      'sections.blocks.cards.image,sections.blocks.image,sections.blocks.imageDesktop,sections.blocks.buttons.file,sections.blocks.items.images,seoImage,localizations',
     locale,
     publicationState: isDraft ? 'preview' : 'live',
   })
@@ -32,8 +43,17 @@ const fetchHomePageData = async (locale: string, isDraft: boolean) => {
   if (!res.data || res.data.length === 0) {
     res = await client.findMany('pages', {
       filters: { slug: { $eq: 'home' } },
-      fields: ['title', 'hideTitle', 'slug', 'seoTitle', 'seoDescription', 'noIndex', 'locale'],
-      populate: 'sections.blocks.cards.image,sections.blocks.image,sections.blocks.buttons.file,seoImage,localizations',
+      fields: [
+        'title',
+        'hideTitle',
+        'slug',
+        'seoTitle',
+        'seoDescription',
+        'noIndex',
+        'locale',
+      ],
+      populate:
+        'sections.blocks.cards.image,sections.blocks.image,sections.blocks.imageDesktop,sections.blocks.buttons.file,sections.blocks.items.images,seoImage,localizations',
       locale: 'fr',
       publicationState: isDraft ? 'preview' : 'live',
     })
@@ -42,76 +62,98 @@ const fetchHomePageData = async (locale: string, isDraft: boolean) => {
   // If still no data, return fallback
   if (!res.data || res.data.length === 0) {
     return {
-      data: [{
-        id: 1,
-        documentId: 'fallback-home',
-        title: 'Bienvenue',
-        slug: 'home',
-        seoTitle: 'Accueil',
-        seoDescription: [{ type: 'paragraph', children: [{ type: 'text', text: 'Page d\'accueil' }] }],
-        noIndex: false,
-        locale: locale,
-        sections: [],
-        seoImage: undefined
-      }],
-      meta: { pagination: { page: 1, pageSize: 1, pageCount: 1, total: 1 } }
+      data: [
+        {
+          id: 1,
+          documentId: 'fallback-home',
+          title: 'Bienvenue',
+          slug: 'home',
+          seoTitle: 'Accueil',
+          seoDescription: [
+            {
+              type: 'paragraph',
+              children: [{ type: 'text', text: "Page d'accueil" }],
+            },
+          ],
+          noIndex: false,
+          locale: locale,
+          sections: [],
+          seoImage: undefined,
+        },
+      ],
+      meta: { pagination: { page: 1, pageSize: 1, pageCount: 1, total: 1 } },
     } as PageCollectionResponse
   }
 
   return res
 }
 
-const getHomePageData = unstable_cache(
-  async (locale: string) => fetchHomePageData(locale, false),
-  ['home-page'],
-  { revalidate: 3600, tags: ['strapi-pages'] }
-)
+const getHomePageData = async (locale: string) =>
+  fetchHomePageData(locale, false)
+// unstable_cache(
+//   async (locale: string) => fetchHomePageData(locale, false),
+//   ['home-page'],
+//   { revalidate: 3600, tags: ['strapi-pages'] }
+// )
 
-export async function generateMetadata({ params }: { params: { locale: string } | Promise<{ locale: string }> }) {
+export async function generateMetadata({
+  params,
+}: {
+  params: { locale: string } | Promise<{ locale: string }>
+}) {
   const { locale } = await Promise.resolve(params)
-  
+
   // Fetch home data to get the first image for preload
   const res = await getHomePageData(locale)
   const page = res?.data?.[0]
-  const firstBlock = page?.sections?.[0]?.blocks?.[0] as { image?: { url: string } } | undefined
+  const firstBlock = page?.sections?.[0]?.blocks?.[0] as
+    | { image?: { url: string } }
+    | undefined
   const firstImage = firstBlock?.image
-  
+
   const links: { rel: string; href: string; as?: string }[] = []
-  
+
   if (firstImage) {
     const imageUrl = cleanImageUrl(firstImage.url)
     if (imageUrl) {
-      const fullUrl = imageUrl.startsWith('/') 
-        ? `${process.env.NEXT_PUBLIC_STRAPI_URL}${imageUrl}` 
+      const fullUrl = imageUrl.startsWith('/')
+        ? `${process.env.NEXT_PUBLIC_STRAPI_URL}${imageUrl}`
         : imageUrl
       links.push({
         rel: 'preload',
         href: fullUrl,
-        as: 'image'
+        as: 'image',
       })
     }
   }
-  
+
   // SEO per-locale: fetch home metadata for the active locale
   const seo = await getPageSEO('home', false, locale)
-  
+
   return {
     ...seo,
-    other: links
+    other: links,
   }
 }
 
-export default async function HomeLocale({ params, searchParams }: { params: Promise<{ locale: string }>, searchParams?: { draft?: string } | Promise<{ draft?: string }> }) {
+export default async function HomeLocale({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ locale: string }>
+  searchParams?: { draft?: string } | Promise<{ draft?: string }>
+}) {
   const { locale } = await params
 
   const sparams = searchParams ? await Promise.resolve(searchParams) : undefined
   const { isEnabled } = await draftMode()
-  const isDraft = (sparams?.draft === 'true')
+  const isDraft = sparams?.draft === 'true'
 
   // Bypass cache when Draft Mode is enabled (preview mode) regardless of draft/published status
-  const res = isEnabled || isDraft
-    ? await fetchHomePageData(locale, isDraft)
-    : await getHomePageData(locale)
+  const res =
+    isEnabled || isDraft
+      ? await fetchHomePageData(locale, isDraft)
+      : await getHomePageData(locale)
 
   const page = res?.data?.[0]
 
@@ -125,7 +167,8 @@ export default async function HomeLocale({ params, searchParams }: { params: Pro
     return (
       <Layout locale={locale}>
         <div style={{ color: 'red', padding: 32, textAlign: 'center' }}>
-          Erreur : page &quot;home&quot; introuvable dans Strapi pour la locale {locale}.
+          Erreur : page &quot;home&quot; introuvable dans Strapi pour la locale{' '}
+          {locale}.
         </div>
       </Layout>
     )
@@ -134,25 +177,39 @@ export default async function HomeLocale({ params, searchParams }: { params: Pro
   const getText = (value: unknown) =>
     typeof value === 'string'
       ? value
-      : ((value as StrapiBlock[])?.map(block =>
-          block.children?.map(child => child.text || '').join('') || ''
-        ).join('\n') || '')
+      : (value as StrapiBlock[])
+          ?.map(
+            (block) =>
+              block.children?.map((child) => child.text || '').join('') || ''
+          )
+          .join('\n') || ''
 
   return (
     <Layout locale={locale}>
-      {!page.hideTitle && (
-        <Hero
-          title={getText(page.title)}
-        />
-      )}
+      {!page.hideTitle && <Hero title={getText(page.title)} />}
 
       {page.sections?.map((section) => (
         <SectionGeneric
           key={section.id}
+          identifier={section.identifier}
           title={section.hideTitle ? undefined : section.title}
           blocks={section.blocks as DynamicBlock[]}
-          spacingTop={section.spacingTop as 'none' | 'small' | 'medium' | 'large' | undefined}
-          spacingBottom={section.spacingBottom as 'none' | 'small' | 'medium' | 'large' | undefined}
+          spacingTop={
+            section.spacingTop as
+              | 'none'
+              | 'small'
+              | 'medium'
+              | 'large'
+              | undefined
+          }
+          spacingBottom={
+            section.spacingBottom as
+              | 'none'
+              | 'small'
+              | 'medium'
+              | 'large'
+              | undefined
+          }
         />
       ))}
     </Layout>

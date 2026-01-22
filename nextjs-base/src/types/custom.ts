@@ -9,7 +9,8 @@ import type {
   CardsBlock, 
   ImageBlock, 
   TextBlock, 
-  TextImageBlock 
+  TextImageBlock,
+  TimelineBlock
 } from './strapi'
 
 /**
@@ -22,3 +23,4 @@ export type DynamicBlock =
   | ({ __component: 'blocks.image-block' } & ImageBlock)
   | ({ __component: 'blocks.text-block' } & TextBlock)
   | ({ __component: 'blocks.text-image-block' } & TextImageBlock)
+  | ({ __component: 'blocks.timeline-block' } & TimelineBlock)
