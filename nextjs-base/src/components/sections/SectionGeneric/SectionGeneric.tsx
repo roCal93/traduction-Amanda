@@ -122,7 +122,7 @@ export const SectionGeneric = ({
     >
       <div className="max-w-6xl mx-auto">
         {title && (
-          <h2 className="text-3xl font-bold mb-8 text-center">{title}</h2>
+          <h2 className="text-3xl font-semibold mb-8 text-center">{title}</h2>
         )}
         <div className="space-y-4">
           {blocks?.map((block, index) => renderBlock(block, index))}

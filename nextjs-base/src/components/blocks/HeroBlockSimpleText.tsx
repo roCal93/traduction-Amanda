@@ -26,16 +26,20 @@ const HeroBlockSimpleText = ({
   }
 
   return (
-    <section className={`${heightClasses[height]} flex items-center justify-center`}>
+    <section
+      className={`${heightClasses[height]} flex items-center justify-center`}
+    >
       <div className="w-full max-w-6xl mx-auto px-4">
-        <div className={`flex flex-col ${textAlignmentClasses[textAlignment]} gap-6`}>
+        <div
+          className={`flex flex-col ${textAlignmentClasses[textAlignment]} gap-6`}
+        >
           {title && (
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900">
               {title}
             </h1>
           )}
-          
-          <p className="text-lg md:text-xl lg:text-2xl text-gray-700 max-w-4xl whitespace-pre-line">
+
+          <p className="text-3xl font-caveat md:text-4xl lg:text-4xl text-gray-700 max-w-4xl whitespace-pre-line">
             {content}
           </p>
         </div>

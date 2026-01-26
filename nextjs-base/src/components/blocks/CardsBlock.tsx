@@ -4,16 +4,22 @@ import { Card } from '@/components/sections/Card'
 
 type CardsBlockProps = {
   cards: (CardData & StrapiEntity)[]
-  columns: '1' | '2' | '3' | '4'
+  // only allow single column or multi (3 or more) columns
+  columns: '1' | '3' | '4'
   alignment?: 'left' | 'center' | 'right'
 }
 
-const CardsBlock = ({ cards, columns, alignment = 'center' }: CardsBlockProps) => {
+const CardsBlock = ({
+  cards,
+  columns,
+  alignment = 'center',
+}: CardsBlockProps) => {
   const columnClasses = {
     '1': 'grid-cols-1 max-w-3xl mx-auto',
-    '2': 'grid-cols-1 md:grid-cols-2',
-    '3': 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3',
-    '4': 'grid-cols-1 md:grid-cols-2 lg:grid-cols-4',
+    // single column on small screens, 3 columns on large screens
+    '3': 'grid-cols-1 lg:grid-cols-3',
+    // single column on small screens, 4 columns on large screens
+    '4': 'grid-cols-1 lg:grid-cols-4',
   }
 
   const alignmentClasses = {
@@ -25,18 +31,20 @@ const CardsBlock = ({ cards, columns, alignment = 'center' }: CardsBlockProps) =
   // Add width classes for individual cards based on column count
   const cardWidthClasses = {
     '1': 'w-full',
-    '2': 'w-full',
     '3': 'w-full',
     '4': 'w-full',
   }
 
   return (
-    <div className={`grid ${columnClasses[columns]} ${alignmentClasses[alignment]} gap-6 my-8`}>
+    <div
+      className={`grid ${columnClasses[columns]} ${alignmentClasses[alignment]} gap-6 my-14`}
+    >
       {cards.map((card) => (
         <div key={card.id} className={cardWidthClasses[columns]}>
           <Card
             title={card.title}
-            description={card.description || []}
+            subtitle={card.subtitle}
+            content={card.content || []}
             image={card.image?.url}
           />
         </div>

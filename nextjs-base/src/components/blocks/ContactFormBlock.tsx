@@ -10,20 +10,22 @@ type ContactFormBlockProps = {
   maxWidth?: 'small' | 'medium' | 'large' | 'full'
 }
 
-const ContactFormBlock = ({ 
+const ContactFormBlock = ({
   title = 'Contactez-nous',
   description,
   submitButtonText = 'Envoyer',
   blockAlignment = 'center',
-  maxWidth = 'medium'
+  maxWidth = 'medium',
 }: ContactFormBlockProps) => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    message: ''
+    message: '',
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle')
+  const [submitStatus, setSubmitStatus] = useState<
+    'idle' | 'success' | 'error'
+  >('idle')
 
   const blockAlignmentClasses = {
     left: 'mr-auto',
@@ -39,9 +41,11 @@ const ContactFormBlock = ({
     full: 'max-w-none',
   }
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target
-    setFormData(prev => ({ ...prev, [name]: value }))
+    setFormData((prev) => ({ ...prev, [name]: value }))
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -51,8 +55,8 @@ const ContactFormBlock = ({
 
     try {
       // TODO: Implémenter l'envoi du formulaire (API route, service email, etc.)
-      await new Promise(resolve => setTimeout(resolve, 1000))
-      
+      await new Promise((resolve) => setTimeout(resolve, 1000))
+
       console.log('Form submitted:', formData)
       setSubmitStatus('success')
       setFormData({ name: '', email: '', message: '' })
@@ -65,18 +69,18 @@ const ContactFormBlock = ({
   }
 
   return (
-    <div className={`w-full ${blockAlignmentClasses[blockAlignment]} ${maxWidthClasses[maxWidth]} py-12 px-4`}>
+    <div
+      className={`w-full ${blockAlignmentClasses[blockAlignment]} ${maxWidthClasses[maxWidth]} py-12 px-4`}
+    >
       <div className="bg-white rounded-lg shadow-md p-8">
         {title && (
-          <h2 className="text-3xl font-bold text-gray-900 mb-4 text-center">
+          <h2 className="text-3xl font-semibold text-gray-900 mb-4 text-center">
             {title}
           </h2>
         )}
-        
+
         {description && (
-          <p className="text-gray-600 mb-8 text-center">
-            {description}
-          </p>
+          <p className="text-gray-600 mb-8 text-center">{description}</p>
         )}
 
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -84,7 +88,10 @@ const ContactFormBlock = ({
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Champ Nom */}
             <div>
-              <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                htmlFor="name"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
                 Nom <span className="text-red-500">*</span>
               </label>
               <input
@@ -101,7 +108,10 @@ const ContactFormBlock = ({
 
             {/* Champ Email */}
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
                 Email <span className="text-red-500">*</span>
               </label>
               <input
@@ -119,7 +129,10 @@ const ContactFormBlock = ({
 
           {/* Champ Message */}
           <div>
-            <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">
+            <label
+              htmlFor="message"
+              className="block text-sm font-medium text-gray-700 mb-2"
+            >
               Message <span className="text-red-500">*</span>
             </label>
             <textarea

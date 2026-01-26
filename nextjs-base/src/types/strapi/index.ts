@@ -281,7 +281,8 @@ export interface TimelineItem {
  */
 export interface Card {
   title: string;
-  description?: StrapiBlock[];
+  subtitle?: string;
+  content?: StrapiBlock[];
   image?: StrapiMedia;
   locale?: string;
   localizations?: (Card & StrapiEntity)[];
