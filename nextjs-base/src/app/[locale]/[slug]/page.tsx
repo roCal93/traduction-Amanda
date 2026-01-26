@@ -72,7 +72,7 @@ const fetchPageDataFallback = async (slug: string, isDraft: boolean) => {
       'locale',
     ],
     populate:
-      'sections.blocks.cards.image,sections.blocks.image,sections.blocks.imageDesktop,sections.blocks.buttons.file,sections.blocks.items.images.image,sections.blocks.items.images.link,seoImage,localizations',
+      'sections.blocks.cards.image,sections.blocks.image,sections.blocks.buttons.file,sections.blocks.items.images.image,sections.blocks.items.images.link,seoImage,localizations',
     publicationState: isDraft ? 'preview' : 'live',
   })
 
