@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Source_Serif_4, Caveat } from "next/font/google";
 import "./globals.css";
 import { cookies, headers } from 'next/headers'
-import { defaultLocale } from '@/lib/locales'
+import { defaultLocale } from '@/lib/locales' 
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -12,6 +12,20 @@ const geistSans = Geist({
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+});
+
+const sourceSerif = Source_Serif_4({
+  variable: "--font-serif",
+  weight: ["300","400","600","700"],
+  subsets: ["latin"],
+  display: 'swap',
+});
+
+const caveat = Caveat({
+  variable: "--font-caveat",
+  weight: ["400","700"],
+  subsets: ["latin"],
+  display: 'swap',
 });
 
 export const metadata: Metadata = {
@@ -52,7 +66,7 @@ export default async function RootLayout({
   return (
     <html lang={locale} suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${sourceSerif.variable} ${caveat.variable} antialiased`}
       >
         {/* Dev-only protective wrapper to avoid dev tooling throwing on performance.measure */}
         <DevPerfProtector />

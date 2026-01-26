@@ -91,11 +91,7 @@ export const Header = ({
       // If link targets an anchor, only consider it active after mount to avoid hydration mismatch
       if (anchor) {
         if (!mounted) return false
-        return (
-          activeAnchor === anchor ||
-          (typeof window !== 'undefined' &&
-            window.location.hash === `#${anchor}`)
-        )
+        return activeAnchor === anchor
       }
       return true
     }
@@ -176,20 +172,20 @@ export const Header = ({
       id="site-header"
       className="sticky top-0 z-50 backdrop-blur-sm bg-white/10 border-b border-gray-200 flex justify-between items-center p-6"
     >
-      <Link href={`/${currentLocale}`} prefetch className="flex-1 md:flex-none">
+      <Link href={`/${currentLocale}`} prefetch className="flex-1 min-[850px]:flex-none">
         {logo ? (
           <Image
             src={logo.url}
             alt={logo.alternativeText || title}
             width={logo.width || 180}
             height={logo.height || 60}
-            className="cursor-pointer mx-auto md:mx-0"
+            className="cursor-pointer mx-auto min-[850px]:mx-0"
             priority
           />
         ) : (
-          <h1 className="text-2xl font-bold cursor-pointer text-center md:text-left">
+          <h1 className="text-5xl font-caveat cursor-pointer text-center min-[850px]:text-left">
             {title.split(' ').map((word, i) => (
-              <span key={i} className="block md:inline">
+              <span key={i} className="block min-[850px]:inline">
                 {word}
                 {i < title.split(' ').length - 1 && ' '}
               </span>
@@ -197,17 +193,17 @@ export const Header = ({
           </h1>
         )}
       </Link>
-      <div className="hidden md:flex items-center space-x-12">
-        <nav className="hidden md:flex space-x-6">
+      <div className="hidden min-[850px]:flex items-center space-x-12">
+        <nav className="hidden min-[850px]:flex min-[850px]:flex-nowrap min-[850px]:space-x-6 min-[850px]:overflow-x-auto">
           {links.map((link, index) => (
             <Link
               key={link.slug || index}
               href={getLocalizedHref(link.slug, link.isHome, link.anchor)}
               prefetch
               onClick={(e) => handleNavClick(e, link)}
-              className={`text-base transition-colors hover:text-gray-600 ${
+              className={`text-lg transition-colors hover:text-gray-600 hover:border-b-[#F88379] whitespace-nowrap flex-none border-b-[3px] border-transparent pb-1 ${
                 isActive(link.slug, link.isHome, link.anchor)
-                  ? 'font-semibold text-black'
+                  ? 'font-semibold text-black border-b-[#F88379]'
                   : 'text-gray-700'
               }`}
             >
@@ -215,11 +211,11 @@ export const Header = ({
             </Link>
           ))}
         </nav>
-        <div className="hidden md:block">
+        <div className="hidden min-[850px]:block">
           <LanguageSwitcher />
         </div>
       </div>
-      <div className="md:hidden absolute right-6">
+      <div className="min-[850px]:hidden absolute right-6">
         <BurgerMenu links={links} currentLocale={currentLocale} />
       </div>
     </header>
