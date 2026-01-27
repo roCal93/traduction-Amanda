@@ -9,18 +9,18 @@ export const Footer = ({ siteName = 'Hakuna Mataweb' }: FooterProps) => {
   const currentYear = new Date().getFullYear()
 
   return (
-    <footer className="bg-gray-900 text-white py-8 text-center">
+    <footer className="backdrop-blur-sm bg-white/10 border-t border-gray-200 text-black/25 py-8 text-center">
       <div className="space-y-3">
-        <p className="text-sm">
+        <p className="text-sm text-black/25">
           {siteName} © {currentYear}. Tous droits réservés.
         </p>
-        <p className="text-sm text-gray-400">
+        <p className="text-sm text-black/25">
           Fait avec passion par{' '}
-          <a 
-            href="https://hakuna-mataweb.com" 
-            target="_blank" 
+          <a
+            href="https://hakuna-mataweb.com"
+            target="_blank"
             rel="noopener noreferrer"
-            className="text-white hover:underline"
+            className="text-black/25 hover:underline"
           >
             Hakuna Mataweb
           </a>
@@ -32,7 +32,7 @@ export const Footer = ({ siteName = 'Hakuna Mataweb' }: FooterProps) => {
             width={30}
             height={25}
             style={{ transform: 'rotate(21deg)' }}
-            className="opacity-80 hover:opacity-100 transition-opacity"
+            className="filter brightness-0 opacity-25 transition-opacity"
           />
         </div>
       </div>

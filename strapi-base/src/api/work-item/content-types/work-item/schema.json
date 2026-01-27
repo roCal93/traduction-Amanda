@@ -112,11 +112,6 @@
     "order": {
       "type": "integer",
       "default": 0
-    },
-    "itemType": {
-      "type": "enumeration",
-      "enum": ["project", "case-study", "service", "product", "article", "achievement", "custom"],
-      "default": "project"
     }
   }
 }

@@ -45,20 +45,6 @@
         "list"
       ],
       "default": "grid"
-    },
-    "filterByItemType": {
-      "type": "enumeration",
-      "enum": [
-        "all",
-        "project",
-        "case-study",
-        "service",
-        "product",
-        "article",
-        "achievement",
-        "custom"
-      ],
-      "default": "all"
     }
   },
   "config": {}

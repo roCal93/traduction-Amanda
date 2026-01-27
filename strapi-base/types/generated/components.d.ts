@@ -252,19 +252,6 @@ export interface BlocksWorkBlock extends Struct.ComponentSchema {
       'oneToMany',
       'api::work-category.work-category'
     >;
-    filterByItemType: Schema.Attribute.Enumeration<
-      [
-        'all',
-        'project',
-        'case-study',
-        'service',
-        'product',
-        'article',
-        'achievement',
-        'custom',
-      ]
-    > &
-      Schema.Attribute.DefaultTo<'all'>;
     layout: Schema.Attribute.Enumeration<['grid', 'masonry', 'list']> &
       Schema.Attribute.DefaultTo<'grid'>;
     limit: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<12>;

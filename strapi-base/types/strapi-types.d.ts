@@ -4,7 +4,7 @@
  * ⚠️  FICHIER AUTO-GÉNÉRÉ - NE PAS MODIFIER
  * 
  * Pour régénérer: npm run generate:types
- * Généré le: 2026-01-26T13:52:36.350Z
+ * Généré le: 2026-01-27T13:05:22.213Z
  */
 
 // ============================================================================
@@ -209,7 +209,6 @@ export interface WorkBlock {
   columns: string;
   showFilters?: boolean;
   layout?: string;
-  filterByItemType?: string;
 }
 
 /**
@@ -369,7 +368,6 @@ export interface WorkItem {
   metadata?: Record<string, unknown>;
   featured?: boolean;
   order?: number;
-  itemType?: string;
   locale?: string;
   localizations?: (WorkItem & StrapiEntity)[];
 }

@@ -20,12 +20,12 @@ type CarouselBlockProps = {
   showIndicators?: boolean
 }
 
-const CarouselBlock = ({ 
-  cards, 
-  autoplay = false, 
+const CarouselBlock = ({
+  cards,
+  autoplay = false,
   autoplayDelay = 5000,
   showControls = true,
-  showIndicators = true
+  showIndicators = true,
 }: CarouselBlockProps) => {
   const [currentIndex, setCurrentIndex] = useState(0)
 
@@ -59,7 +59,7 @@ const CarouselBlock = ({
     <div className="relative w-full max-w-4xl mx-auto my-8">
       {/* Carousel Content */}
       <div className="relative overflow-hidden">
-        <div 
+        <div
           className="flex transition-transform duration-500 ease-in-out"
           style={{ transform: `translateX(-${currentIndex * 100}%)` }}
         >
@@ -76,45 +76,69 @@ const CarouselBlock = ({
         </div>
       </div>
 
-      {/* Controls */}
-      {showControls && cards.length > 1 && (
-        <>
-          <button
-            onClick={goToPrevious}
-            className="absolute top-1/2 left-0 -translate-y-1/2 bg-white/80 hover:bg-white rounded-full p-3 shadow-lg transition-all z-10"
-            aria-label="Previous slide"
-          >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-            </svg>
-          </button>
-          <button
-            onClick={goToNext}
-            className="absolute top-1/2 right-0 -translate-y-1/2 bg-white/80 hover:bg-white rounded-full p-3 shadow-lg transition-all z-10"
-            aria-label="Next slide"
-          >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-            </svg>
-          </button>
-        </>
-      )}
-
-      {/* Indicators */}
-      {showIndicators && cards.length > 1 && (
-        <div className="flex justify-center gap-2 mt-6">
-          {cards.map((_, index) => (
+      {/* Controls & Indicators - placed outside the cards */}
+      {(showControls || showIndicators) && cards.length > 1 && (
+        <div className="flex items-center justify-center mt-6 md:mt-8 lg:mt-10 gap-3">
+          {showControls && (
             <button
-              key={index}
-              onClick={() => goToIndex(index)}
-              className={`w-3 h-3 rounded-full transition-all ${
-                index === currentIndex 
-                  ? 'bg-blue-600 w-8' 
-                  : 'bg-gray-300 hover:bg-gray-400'
-              }`}
-              aria-label={`Go to slide ${index + 1}`}
-            />
-          ))}
+              onClick={goToPrevious}
+              className="group text-[#FADCA3] hover:text-[#F6C87E] mr-10 transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+              aria-label="Previous slide"
+            >
+              <svg
+                className="w-8 h-6 drop-shadow-sm group-hover:drop-shadow-lg transition-shadow"
+                width="32"
+                height="24"
+                viewBox="0 0 56 45"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M0 22.0837L55.6685 9.15527e-05L55.6685 44.1674L0 22.0837Z"
+                  fill="currentColor"
+                />
+              </svg>
+            </button>
+          )}
+
+          {showIndicators && (
+            <div className="flex items-center gap-2 mx-2">
+              {cards.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => goToIndex(index)}
+                  className={`w-3 h-3 rounded-full transition-all cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[#FADCA3] ${
+                    index === currentIndex
+                      ? 'bg-[#F88379] w-8'
+                      : 'bg-[#FADCA3] hover:bg-[#FADCA3]/90'
+                  }`}
+                  aria-label={`Go to slide ${index + 1}`}
+                />
+              ))}
+            </div>
+          )}
+
+          {showControls && (
+            <button
+              onClick={goToNext}
+              className="group text-[#FADCA3] hover:text-[#F6C87E] ml-10 transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+              aria-label="Next slide"
+            >
+              <svg
+                className="w-8 h-6 drop-shadow-sm group-hover:drop-shadow-lg transform -scale-x-100 transition-shadow"
+                width="32"
+                height="24"
+                viewBox="0 0 56 45"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M0 22.0837L55.6685 9.15527e-05L55.6685 44.1674L0 22.0837Z"
+                  fill="currentColor"
+                />
+              </svg>
+            </button>
+          )}
         </div>
       )}
     </div>

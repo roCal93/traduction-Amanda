@@ -101,7 +101,7 @@ const WorkCard = ({ item, layout = 'grid' }: WorkCardProps) => {
         onClick={() => setIsModalOpen(false)}
       >
         <div
-          className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto"
+          className="bg-[#FFE8BD] rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto"
           onClick={(e) => e.stopPropagation()}
         >
           {imageUrl && (
@@ -129,11 +129,6 @@ const WorkCard = ({ item, layout = 'grid' }: WorkCardProps) => {
             <div className="flex flex-wrap gap-4 text-sm text-gray-600 mb-6">
               {item.client && <span>👤 {item.client}</span>}
               {item.year && <span>📅 {item.year}</span>}
-              {item.itemType && (
-                <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full font-medium">
-                  {item.itemType}
-                </span>
-              )}
             </div>
 
             {item.categories && item.categories.length > 0 && (
@@ -145,7 +140,7 @@ const WorkCard = ({ item, layout = 'grid' }: WorkCardProps) => {
                     style={{
                       backgroundColor: category.color
                         ? `${category.color}20`
-                        : '#f3f4f6',
+                        : '#C5E1A599',
                       color: category.color || '#6b7280',
                     }}
                   >
@@ -270,11 +265,6 @@ const WorkCard = ({ item, layout = 'grid' }: WorkCardProps) => {
                 Featured
               </div>
             )}
-            {item.itemType && (
-              <div className="absolute top-3 left-3 bg-blue-600 text-white px-3 py-1 rounded-full text-xs font-bold">
-                {item.itemType}
-              </div>
-            )}
           </>
         )}
 
@@ -296,12 +286,6 @@ const WorkCard = ({ item, layout = 'grid' }: WorkCardProps) => {
         >
           {item.title}
         </h3>
-
-        {item.itemType && variant === 'list' && (
-          <span className="ml-4 px-3 py-1 bg-blue-100 text-blue-700 text-xs rounded-full font-medium">
-            {item.itemType}
-          </span>
-        )}
 
         {item.shortDescription && (
           <p
@@ -334,7 +318,7 @@ const WorkCard = ({ item, layout = 'grid' }: WorkCardProps) => {
                 style={{
                   backgroundColor: category.color
                     ? `${category.color}20`
-                    : '#f3f4f6',
+                    : '#C5E1A599',
                   color: category.color || '#6b7280',
                 }}
               >
@@ -437,7 +421,7 @@ const WorkCard = ({ item, layout = 'grid' }: WorkCardProps) => {
       <>
         <div
           onClick={() => setIsModalOpen(true)}
-          className="group flex gap-6 p-6 rounded-lg shadow-lg hover:shadow-2xl transition-all duration-300 bg-white cursor-pointer"
+          className="group flex gap-6 p-6 rounded-lg shadow-lg hover:shadow-2xl transition-all duration-300 bg-[#FFE5B3]/60 cursor-pointer"
         >
           {renderCardContent('list')}
         </div>
@@ -451,7 +435,7 @@ const WorkCard = ({ item, layout = 'grid' }: WorkCardProps) => {
     <>
       <div
         onClick={() => setIsModalOpen(true)}
-        className="group relative overflow-hidden rounded-lg shadow-lg hover:shadow-2xl transition-all duration-300 bg-white cursor-pointer"
+        className="group relative overflow-hidden rounded-lg shadow-lg hover:shadow-2xl transition-all duration-300 bg-[#FFE5B3]/60 cursor-pointer"
       >
         {renderCardContent('grid')}
       </div>

@@ -793,18 +793,6 @@ export interface ApiWorkItemWorkItem extends Struct.CollectionTypeSchema {
     featured: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
     gallery: Schema.Attribute.Media<'images', true>;
     image: Schema.Attribute.Media<'images'> & Schema.Attribute.Required;
-    itemType: Schema.Attribute.Enumeration<
-      [
-        'project',
-        'case-study',
-        'service',
-        'product',
-        'article',
-        'achievement',
-        'custom',
-      ]
-    > &
-      Schema.Attribute.DefaultTo<'project'>;
     link: Schema.Attribute.String &
       Schema.Attribute.SetPluginOptions<{
         i18n: {

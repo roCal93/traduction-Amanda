@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useState } from 'react'
+import { Button } from '@/components/ui/Button'
 
 type ContactFormBlockProps = {
   title?: string
@@ -70,9 +71,9 @@ const ContactFormBlock = ({
 
   return (
     <div
-      className={`w-full ${blockAlignmentClasses[blockAlignment]} ${maxWidthClasses[maxWidth]} py-12 px-4`}
+      className={`w-full ${blockAlignmentClasses[blockAlignment]} ${maxWidthClasses[maxWidth]} py-2 px-4`}
     >
-      <div className="bg-white rounded-lg shadow-md p-8">
+      <div className="bg-transparent rounded-lg p-8">
         {title && (
           <h2 className="text-3xl font-semibold text-gray-900 mb-4 text-center">
             {title}
@@ -83,16 +84,16 @@ const ContactFormBlock = ({
           <p className="text-gray-600 mb-8 text-center">{description}</p>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-12">
           {/* Champs Nom et Email côte à côte */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 md:gap-32 gap-8">
             {/* Champ Nom */}
             <div>
               <label
                 htmlFor="name"
-                className="block text-sm font-medium text-gray-700 mb-2"
+                className="block text-lg font-medium text-gray-700 mb-2"
               >
-                Nom <span className="text-red-500">*</span>
+                Votre nom
               </label>
               <input
                 type="text"
@@ -101,7 +102,7 @@ const ContactFormBlock = ({
                 value={formData.name}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                className="w-full px-4 py-2 bg-[#FFFACD]/80 rounded-md focus:ring-2 focus:ring-[#F88379] focus:border-transparent transition-colors"
                 placeholder="Votre nom"
               />
             </div>
@@ -110,9 +111,9 @@ const ContactFormBlock = ({
             <div>
               <label
                 htmlFor="email"
-                className="block text-sm font-medium text-gray-700 mb-2"
+                className="block text-lg font-medium text-gray-700 mb-2"
               >
-                Email <span className="text-red-500">*</span>
+                Votre email
               </label>
               <input
                 type="email"
@@ -121,7 +122,7 @@ const ContactFormBlock = ({
                 value={formData.email}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                className="w-full px-4 py-2 bg-[#FFFACD]/80 rounded-md focus:ring-2 focus:ring-[#F88379] focus:border-transparent transition-colors"
                 placeholder="votre@email.com"
               />
             </div>
@@ -131,9 +132,9 @@ const ContactFormBlock = ({
           <div>
             <label
               htmlFor="message"
-              className="block text-sm font-medium text-gray-700 mb-2"
+              className="block text-lg font-medium text-center   text-gray-700 mb-2"
             >
-              Message <span className="text-red-500">*</span>
+              Votre message
             </label>
             <textarea
               id="message"
@@ -142,20 +143,21 @@ const ContactFormBlock = ({
               onChange={handleChange}
               required
               rows={5}
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors resize-vertical"
+              className="w-full px-4 py-2 bg-[#FFFACD]/80 rounded-md focus:ring-2 focus:ring-[#F88379] focus:border-transparent transition-colors resize-vertical"
               placeholder="Votre message..."
             />
           </div>
 
           {/* Bouton d'envoi */}
           <div className="text-center">
-            <button
+            <Button
               type="submit"
+              variant="primary"
               disabled={isSubmitting}
-              className="px-6 py-3 rounded-lg font-medium transition-colors inline-flex items-center justify-center gap-2 bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-6 py-3 rounded-full disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-[#F88379] focus:ring-offset-2"
             >
               {isSubmitting ? 'Envoi en cours...' : submitButtonText}
-            </button>
+            </Button>
           </div>
 
           {/* Messages de statut */}

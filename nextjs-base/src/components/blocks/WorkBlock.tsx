@@ -8,7 +8,7 @@ type WorkBlockProps = {
   filterByCategories?: (WorkCategory & StrapiEntity)[]
   showAllCategories?: boolean
   showFeaturedOnly?: boolean
-  filterByItemType?: 'all' | 'project' | 'case-study' | 'service' | 'product' | 'article' | 'achievement' | 'custom'
+
   limit?: number
   columns?: '2' | '3' | '4'
   showFilters?: boolean
@@ -19,7 +19,6 @@ const WorkBlock = ({
   filterByCategories = [],
   showAllCategories = true,
   showFeaturedOnly = false,
-  filterByItemType = 'all',
   limit = 12,
   columns = '3',
   showFilters = true,
@@ -51,13 +50,12 @@ const WorkBlock = ({
           params.append('filters[featured][$eq]', 'true')
         }
 
-        if (filterByItemType !== 'all') {
-          params.append('filters[itemType][$eq]', filterByItemType)
-        }
-
         if (!showAllCategories && filterByCategories.length > 0) {
           filterByCategories.forEach((category, index) => {
-            params.append(`filters[categories][id][$in][${index}]`, category.id.toString())
+            params.append(
+              `filters[categories][id][$in][${index}]`,
+              category.id.toString()
+            )
           })
         }
 
@@ -75,12 +73,17 @@ const WorkBlock = ({
 
     fetchWorkItems()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [showAllCategories, showFeaturedOnly, filterByItemType, limit, JSON.stringify(filterByCategories.map(c => c.id))])
+  }, [
+    showAllCategories,
+    showFeaturedOnly,
+    limit,
+    JSON.stringify(filterByCategories.map((c) => c.id)),
+  ])
 
   // Get all unique categories from loaded items
   const availableCategories = useMemo(() => {
     const categoriesMap = new Map<number, WorkCategory & StrapiEntity>()
-    
+
     workItems.forEach((item) => {
       item.categories?.forEach((category) => {
         if (!categoriesMap.has(category.id)) {
@@ -89,7 +92,7 @@ const WorkBlock = ({
       })
     })
 
-    return Array.from(categoriesMap.values()).sort((a, b) => 
+    return Array.from(categoriesMap.values()).sort((a, b) =>
       a.name.localeCompare(b.name)
     )
   }, [workItems])
@@ -134,8 +137,8 @@ const WorkBlock = ({
             onClick={() => setSelectedCategory(null)}
             className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
               selectedCategory === null
-                ? 'bg-red-900 text-white'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                ? 'bg-[#C5E1A599] text-gray-800 shadow-lg'
+                : 'bg-[#FFFACD]/80 text-gray-700 hover:!bg-[#C5E1A599]'
             }`}
           >
             Tous
@@ -146,8 +149,8 @@ const WorkBlock = ({
               onClick={() => setSelectedCategory(category.slug)}
               className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
                 selectedCategory === category.slug
-                  ? 'bg-gray-900 text-white'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  ? 'bg-[#C5E1A599] text-gray-800 shadow-lg'
+                  : 'bg-[#FFFACD]/80 text-gray-700 hover:!bg-[#C5E1A599]'
               }`}
               style={
                 selectedCategory === category.slug && category.color
