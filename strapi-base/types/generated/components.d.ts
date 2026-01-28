@@ -319,6 +319,7 @@ export interface SharedPageLink extends Struct.ComponentSchema {
   attributes: {
     customLabel: Schema.Attribute.String;
     page: Schema.Attribute.Relation<'oneToOne', 'api::page.page'>;
+    section: Schema.Attribute.Relation<'oneToOne', 'api::section.section'>;
   };
 }
 

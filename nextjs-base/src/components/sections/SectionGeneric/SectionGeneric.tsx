@@ -34,6 +34,7 @@ type SectionGenericProps = {
   identifier?: string
   spacingTop?: 'none' | 'small' | 'medium' | 'large'
   spacingBottom?: 'none' | 'small' | 'medium' | 'large'
+  containerWidth?: 'small' | 'medium' | 'large' | 'full'
 }
 
 export const SectionGeneric = ({
@@ -42,7 +43,24 @@ export const SectionGeneric = ({
   blocks,
   spacingTop = 'medium',
   spacingBottom = 'medium',
+  containerWidth = 'medium',
 }: SectionGenericProps) => {
+  const getContainerWidthClass = (
+    width: 'small' | 'medium' | 'large' | 'full'
+  ) => {
+    switch (width) {
+      case 'small':
+        return 'max-w-3xl'
+      case 'medium':
+        return 'max-w-6xl'
+      case 'large':
+        return 'max-w-7xl'
+      case 'full':
+        return 'max-w-full'
+      default:
+        return 'max-w-6xl'
+    }
+  }
   const renderBlock = (block: DynamicBlock, index: number) => {
     // Try to render a matching React block component from `src/components/blocks`.
     // Component names are generated from Strapi __component like 'blocks.cards-block' -> 'CardsBlock'
@@ -120,7 +138,7 @@ export const SectionGeneric = ({
       id={identifier}
       className={`${getTopSpacingClass(spacingTop)} ${getBottomSpacingClass(spacingBottom)} px-4`}
     >
-      <div className="max-w-6xl mx-auto">
+      <div className={`${getContainerWidthClass(containerWidth)} mx-auto`}>
         {title && (
           <h2 className="text-3xl font-semibold mb-8 text-center">{title}</h2>
         )}

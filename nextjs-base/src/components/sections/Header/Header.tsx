@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useEffect, useState, useMemo, useCallback } from 'react'
+import { motion, useReducedMotion } from 'framer-motion'
 import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
@@ -66,6 +67,9 @@ export const Header = ({
 
   const [activeAnchor, setActiveAnchor] = useState<string | null>(null)
   const [mounted, setMounted] = useState(false)
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
+
+  const shouldReduceMotion = useReducedMotion()
 
   useEffect(() => {
     // Set mounted asynchronously to avoid triggering a synchronous state update within the effect
@@ -170,9 +174,13 @@ export const Header = ({
   return (
     <header
       id="site-header"
-      className="sticky top-0 z-50 backdrop-blur-sm bg-white/10 border-b border-gray-200 flex justify-between items-center p-6"
+      className="sticky top-0 z-50 backdrop-blur-sm bg-white/10 border-b border-gray-200 flex justify-center min-[850px]:justify-between items-center p-6"
     >
-      <Link href={`/${currentLocale}`} prefetch className="flex-1 min-[850px]:flex-none">
+      <Link
+        href={`/${currentLocale}`}
+        prefetch
+        className="flex-none min-[850px]:flex-1"
+      >
         {logo ? (
           <Image
             src={logo.url}
@@ -183,7 +191,7 @@ export const Header = ({
             priority
           />
         ) : (
-          <h1 className="text-5xl font-caveat cursor-pointer text-center min-[850px]:text-left">
+          <h1 className="text-5xl font-caveat cursor-pointer hover:text-gray-600 text-center mx-auto min-[850px]:text-left min-[850px]:mx-0">
             {title.split(' ').map((word, i) => (
               <span key={i} className="block min-[850px]:inline">
                 {word}
@@ -194,22 +202,48 @@ export const Header = ({
         )}
       </Link>
       <div className="hidden min-[850px]:flex items-center space-x-12">
-        <nav className="hidden min-[850px]:flex min-[850px]:flex-nowrap min-[850px]:space-x-6 min-[850px]:overflow-x-auto">
-          {links.map((link, index) => (
-            <Link
-              key={link.slug || index}
-              href={getLocalizedHref(link.slug, link.isHome, link.anchor)}
-              prefetch
-              onClick={(e) => handleNavClick(e, link)}
-              className={`text-lg transition-colors hover:text-gray-600 hover:border-b-[#F88379] whitespace-nowrap flex-none border-b-[3px] border-transparent pb-1 ${
-                isActive(link.slug, link.isHome, link.anchor)
-                  ? 'font-semibold text-black border-b-[#F88379]'
-                  : 'text-gray-700'
-              }`}
-            >
-              {link.label}
-            </Link>
-          ))}
+        <nav className="hidden min-[850px]:flex min-[850px]:flex-nowrap min-[850px]:space-x-6">
+          {links.map((link, index) => {
+            const active = isActive(link.slug, link.isHome, link.anchor)
+            const hovered = hoveredIndex === index
+            return (
+              <Link
+                key={link.slug || index}
+                href={getLocalizedHref(link.slug, link.isHome, link.anchor)}
+                prefetch
+                onClick={(e) => handleNavClick(e, link)}
+                onMouseEnter={() => setHoveredIndex(index)}
+                onMouseLeave={() => setHoveredIndex(null)}
+                // Relative container for absolute animated underline
+                className={`relative inline-flex items-center h-9 text-lg transition-colors hover:text-gray-600 whitespace-nowrap flex-none ${
+                  active ? 'font-semibold text-black' : 'text-gray-700'
+                }`}
+              >
+                <span className="z-10">{link.label}</span>
+                <motion.span
+                  aria-hidden
+                  className="absolute left-0 bottom-0 h-[3px] w-full bg-[#F88379] origin-left transform"
+                  initial={
+                    shouldReduceMotion
+                      ? {}
+                      : { scaleX: active || hovered ? 1 : 0 }
+                  }
+                  animate={
+                    shouldReduceMotion
+                      ? {}
+                      : { scaleX: active || hovered ? 1 : 0 }
+                  }
+                  transition={{
+                    type: 'spring',
+                    stiffness: 400,
+                    damping: 30,
+                    duration: 0.18,
+                  }}
+                  style={{ transformOrigin: 'left' }}
+                />
+              </Link>
+            )
+          })}
         </nav>
         <div className="hidden min-[850px]:block">
           <LanguageSwitcher />

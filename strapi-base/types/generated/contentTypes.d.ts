@@ -629,6 +629,15 @@ export interface ApiSectionSection extends Struct.CollectionTypeSchema {
           localized: true;
         };
       }>;
+    containerWidth: Schema.Attribute.Enumeration<
+      ['small', 'medium', 'large', 'full']
+    > &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }> &
+      Schema.Attribute.DefaultTo<'medium'>;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;

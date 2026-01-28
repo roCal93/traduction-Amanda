@@ -241,6 +241,7 @@ export default async function Page({
           identifier={section.identifier}
           title={section.hideTitle ? undefined : section.title}
           blocks={section.blocks as DynamicBlock[]}
+          containerWidth={section.containerWidth as any}
         />
       ))}
     </Layout>
