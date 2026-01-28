@@ -95,6 +95,20 @@ const getPageDataFallback = async (slug: string) =>
 //   { revalidate: 3600, tags: ['strapi-pages'] }
 // )
 
+// Normalize container width coming from Strapi to the allowed values
+const normalizeContainerWidth = (
+  width: unknown
+): 'small' | 'medium' | 'large' | 'full' => {
+  if (
+    width === 'small' ||
+    width === 'medium' ||
+    width === 'large' ||
+    width === 'full'
+  )
+    return width
+  return 'medium'
+}
+
 export async function generateMetadata({
   params,
 }: {
@@ -241,7 +255,7 @@ export default async function Page({
           identifier={section.identifier}
           title={section.hideTitle ? undefined : section.title}
           blocks={section.blocks as DynamicBlock[]}
-          containerWidth={section.containerWidth as any}
+          containerWidth={normalizeContainerWidth(section.containerWidth)}
         />
       ))}
     </Layout>

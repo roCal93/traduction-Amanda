@@ -29,6 +29,11 @@ const WorkBlock = ({
   const [loading, setLoading] = useState(true)
 
   // Fetch work items
+  const filterCategoryIds = React.useMemo(
+    () => filterByCategories.map((c) => c.id).join(','),
+    [filterByCategories]
+  )
+
   React.useEffect(() => {
     const fetchWorkItems = async () => {
       try {
@@ -72,13 +77,7 @@ const WorkBlock = ({
     }
 
     fetchWorkItems()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    showAllCategories,
-    showFeaturedOnly,
-    limit,
-    JSON.stringify(filterByCategories.map((c) => c.id)),
-  ])
+  }, [showAllCategories, showFeaturedOnly, limit, filterCategoryIds])
 
   // Get all unique categories from loaded items
   const availableCategories = useMemo(() => {
