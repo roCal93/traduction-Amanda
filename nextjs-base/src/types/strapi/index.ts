@@ -364,12 +364,7 @@ export interface WorkItem {
   description?: StrapiBlock[];
   shortDescription?: string;
   image: StrapiMedia;
-  gallery?: StrapiMedia[];
   categories?: (WorkCategory & StrapiEntity)[];
-  link?: string;
-  client?: string;
-  year?: number;
-  technologies?: Record<string, unknown>;
   customFields?: Record<string, unknown>;
   metadata?: Record<string, unknown>;
   featured?: boolean;

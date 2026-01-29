@@ -778,12 +778,6 @@ export interface ApiWorkItemWorkItem extends Struct.CollectionTypeSchema {
       'manyToMany',
       'api::work-category.work-category'
     >;
-    client: Schema.Attribute.String &
-      Schema.Attribute.SetPluginOptions<{
-        i18n: {
-          localized: true;
-        };
-      }>;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -800,14 +794,7 @@ export interface ApiWorkItemWorkItem extends Struct.CollectionTypeSchema {
         };
       }>;
     featured: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
-    gallery: Schema.Attribute.Media<'images', true>;
     image: Schema.Attribute.Media<'images'> & Schema.Attribute.Required;
-    link: Schema.Attribute.String &
-      Schema.Attribute.SetPluginOptions<{
-        i18n: {
-          localized: true;
-        };
-      }>;
     locale: Schema.Attribute.String;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
@@ -829,7 +816,6 @@ export interface ApiWorkItemWorkItem extends Struct.CollectionTypeSchema {
           localized: false;
         };
       }>;
-    technologies: Schema.Attribute.JSON;
     title: Schema.Attribute.String &
       Schema.Attribute.Required &
       Schema.Attribute.SetPluginOptions<{
@@ -840,7 +826,6 @@ export interface ApiWorkItemWorkItem extends Struct.CollectionTypeSchema {
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    year: Schema.Attribute.Integer;
   };
 }
 

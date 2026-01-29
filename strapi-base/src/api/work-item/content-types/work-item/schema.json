@@ -27,13 +27,13 @@
     },
     "slug": {
       "type": "uid",
-      "targetField": "title",
-      "required": true,
       "pluginOptions": {
         "i18n": {
           "localized": false
         }
-      }
+      },
+      "targetField": "title",
+      "required": true
     },
     "description": {
       "type": "blocks",
@@ -59,40 +59,11 @@
         "images"
       ]
     },
-    "gallery": {
-      "type": "media",
-      "multiple": true,
-      "allowedTypes": [
-        "images"
-      ]
-    },
     "categories": {
       "type": "relation",
       "relation": "manyToMany",
       "target": "api::work-category.work-category",
       "inversedBy": "work_items"
-    },
-    "link": {
-      "type": "string",
-      "pluginOptions": {
-        "i18n": {
-          "localized": true
-        }
-      }
-    },
-    "client": {
-      "type": "string",
-      "pluginOptions": {
-        "i18n": {
-          "localized": true
-        }
-      }
-    },
-    "year": {
-      "type": "integer"
-    },
-    "technologies": {
-      "type": "json"
     },
     "customFields": {
       "type": "json",

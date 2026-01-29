@@ -167,7 +167,12 @@ const WorkBlock = ({
       {layout === 'list' ? (
         <div className="space-y-4">
           {filteredItems.map((item) => (
-            <WorkCard key={item.id} item={item} layout="list" />
+            <WorkCard
+              key={item.id}
+              item={item}
+              layout="list"
+              showFilters={showFilters}
+            />
           ))}
         </div>
       ) : (
@@ -177,7 +182,12 @@ const WorkBlock = ({
           }`}
         >
           {filteredItems.map((item) => (
-            <WorkCard key={item.id} item={item} layout={layout} />
+            <WorkCard
+              key={item.id}
+              item={item}
+              layout={layout}
+              showFilters={showFilters}
+            />
           ))}
         </div>
       )}

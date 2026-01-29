@@ -3,13 +3,13 @@
 import React, { useState } from 'react'
 import type { JSX } from 'react'
 import Image from 'next/image'
-import Link from 'next/link'
 import { WorkItem, StrapiEntity } from '@/types/strapi'
 import { cleanImageUrl } from '@/lib/strapi'
 
 type WorkCardProps = {
   item: WorkItem & StrapiEntity
   layout?: 'grid' | 'masonry' | 'list'
+  showFilters?: boolean
 }
 
 // Helper pour render le rich text de Strapi
@@ -89,7 +89,11 @@ const renderRichText = (content: RichTextBlock[] | undefined) => {
   })
 }
 
-const WorkCard = ({ item, layout = 'grid' }: WorkCardProps) => {
+const WorkCard = ({
+  item,
+  layout = 'grid',
+  showFilters = true,
+}: WorkCardProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const imageUrl = cleanImageUrl(item.image?.url)
 
@@ -101,20 +105,9 @@ const WorkCard = ({ item, layout = 'grid' }: WorkCardProps) => {
         onClick={() => setIsModalOpen(false)}
       >
         <div
-          className="bg-[#FFE8BD] rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto"
+          className="bg-[#FFE8BD] rounded-lg max-w-xl w-full max-h-[90vh] overflow-y-auto"
           onClick={(e) => e.stopPropagation()}
         >
-          {imageUrl && (
-            <div className="relative w-full h-64 md:h-96">
-              <Image
-                src={imageUrl}
-                alt={item.image?.alternativeText || item.title}
-                fill
-                className="object-cover"
-              />
-            </div>
-          )}
-
           <div className="p-6 md:p-8">
             <div className="flex items-start justify-between mb-4">
               <h2 className="text-3xl font-semibold">{item.title}</h2>
@@ -126,12 +119,7 @@ const WorkCard = ({ item, layout = 'grid' }: WorkCardProps) => {
               </button>
             </div>
 
-            <div className="flex flex-wrap gap-4 text-sm text-gray-600 mb-6">
-              {item.client && <span>👤 {item.client}</span>}
-              {item.year && <span>📅 {item.year}</span>}
-            </div>
-
-            {item.categories && item.categories.length > 0 && (
+            {showFilters && item.categories && item.categories.length > 0 && (
               <div className="flex flex-wrap gap-2 mb-6">
                 {item.categories.map((category) => (
                   <span
@@ -164,22 +152,6 @@ const WorkCard = ({ item, layout = 'grid' }: WorkCardProps) => {
               </div>
             )}
 
-            {item.technologies && typeof item.technologies === 'object' && (
-              <div className="mb-6">
-                <h3 className="font-bold text-lg mb-2">Technologies</h3>
-                <div className="flex flex-wrap gap-2">
-                  {Object.values(item.technologies).map((tech, index) => (
-                    <span
-                      key={index}
-                      className="px-3 py-1 bg-gray-100 text-gray-700 text-sm rounded"
-                    >
-                      {String(tech)}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            )}
-
             {item.customFields &&
               typeof item.customFields === 'object' &&
               Object.keys(item.customFields).length > 0 && (
@@ -199,30 +171,6 @@ const WorkCard = ({ item, layout = 'grid' }: WorkCardProps) => {
                   </div>
                 </div>
               )}
-
-            {item.link && (
-              <Link
-                href={item.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-              >
-                Voir le projet
-                <svg
-                  className="ml-2 w-4 h-4"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M14 5l7 7m0 0l-7 7m7-7H3"
-                  />
-                </svg>
-              </Link>
-            )}
           </div>
         </div>
       </div>
@@ -235,22 +183,28 @@ const WorkCard = ({ item, layout = 'grid' }: WorkCardProps) => {
       <div
         className={
           variant === 'list'
-            ? 'relative w-48 h-48 flex-shrink-0 overflow-hidden rounded-lg'
-            : 'relative w-full aspect-[4/3] overflow-hidden'
+            ? 'relative w-28 h-28 flex-shrink-0 flex items-center justify-center overflow-hidden rounded-lg p-1'
+            : 'relative w-full aspect-[3/2] overflow-hidden flex items-center justify-center p-2'
         }
       >
         {imageUrl ? (
-          <Image
-            src={imageUrl}
-            alt={item.image?.alternativeText || item.title}
-            fill
-            className="object-cover transition-transform duration-300 group-hover:scale-110"
-            sizes={
-              variant === 'list'
-                ? '192px'
-                : '(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
-            }
-          />
+          variant === 'list' ? (
+            <Image
+              src={imageUrl}
+              alt={item.image?.alternativeText || item.title}
+              width={112}
+              height={112}
+              className="max-w-full max-h-full object-contain transition-transform duration-300 group-hover:scale-110"
+            />
+          ) : (
+            <Image
+              src={imageUrl}
+              alt={item.image?.alternativeText || item.title}
+              width={420}
+              height={280}
+              className="max-w-full max-h-full object-contain transition-transform duration-300 group-hover:scale-110"
+            />
+          )
         ) : (
           <div className="w-full h-full bg-gray-200 flex items-center justify-center">
             <span className="text-gray-400">No image</span>
@@ -276,12 +230,12 @@ const WorkCard = ({ item, layout = 'grid' }: WorkCardProps) => {
       </div>
 
       {/* Content */}
-      <div className={variant === 'list' ? 'flex-1' : 'p-6'}>
+      <div className={variant === 'list' ? 'flex-1' : 'p-4'}>
         <h3
           className={
             variant === 'list'
-              ? 'text-2xl font-bold group-hover:text-gray-600 transition-colors'
-              : 'text-xl font-bold mb-2 group-hover:text-gray-600 transition-colors'
+              ? 'text-xl font-bold group-hover:text-gray-600 transition-colors'
+              : 'text-lg font-bold mb-2 group-hover:text-gray-600 transition-colors'
           }
         >
           {item.title}
@@ -291,15 +245,15 @@ const WorkCard = ({ item, layout = 'grid' }: WorkCardProps) => {
           <p
             className={
               variant === 'list'
-                ? 'text-gray-600 mb-4'
-                : 'text-gray-600 text-sm mb-4 line-clamp-2'
+                ? 'text-gray-600 mb-4 whitespace-pre-line'
+                : 'text-gray-600 text-sm mb-4 line-clamp-2 whitespace-pre-line'
             }
           >
             {item.shortDescription}
           </p>
         )}
 
-        {item.categories && item.categories.length > 0 && (
+        {showFilters && item.categories && item.categories.length > 0 && (
           <div
             className={
               variant === 'list'
@@ -328,40 +282,6 @@ const WorkCard = ({ item, layout = 'grid' }: WorkCardProps) => {
           </div>
         )}
 
-        <div
-          className={
-            variant === 'list'
-              ? 'flex items-center gap-4 text-sm text-gray-500 mb-4'
-              : 'flex items-center justify-between text-xs text-gray-500 mb-4'
-          }
-        >
-          {item.client && (
-            <span>
-              {variant === 'list' ? `Client: ${item.client}` : item.client}
-            </span>
-          )}
-          {item.year && (
-            <span>
-              {variant === 'list' ? `Année: ${item.year}` : item.year}
-            </span>
-          )}
-        </div>
-
-        {item.technologies &&
-          typeof item.technologies === 'object' &&
-          variant === 'grid' && (
-            <div className="flex flex-wrap gap-1 mb-4">
-              {Object.values(item.technologies).map((tech, index) => (
-                <span
-                  key={index}
-                  className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded"
-                >
-                  {String(tech)}
-                </span>
-              ))}
-            </div>
-          )}
-
         {item.customFields &&
           typeof item.customFields === 'object' &&
           Object.keys(item.customFields).length > 0 && (
@@ -386,31 +306,6 @@ const WorkCard = ({ item, layout = 'grid' }: WorkCardProps) => {
               ))}
             </div>
           )}
-
-        {item.link && (
-          <Link
-            href={item.link}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={(e) => e.stopPropagation()}
-            className="inline-flex items-center text-sm font-medium text-blue-600 hover:text-blue-800 transition-colors"
-          >
-            Voir plus
-            <svg
-              className="ml-1 w-4 h-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-              />
-            </svg>
-          </Link>
-        )}
       </div>
     </>
   )
@@ -421,7 +316,7 @@ const WorkCard = ({ item, layout = 'grid' }: WorkCardProps) => {
       <>
         <div
           onClick={() => setIsModalOpen(true)}
-          className="group flex gap-6 p-6 rounded-lg shadow-lg hover:shadow-2xl transition-all duration-300 bg-[#FFE5B3]/60 cursor-pointer"
+          className="group flex gap-4 p-4 rounded-lg shadow-lg hover:shadow-2xl transition-all duration-300 bg-[#FFE5B3]/60 cursor-pointer"
         >
           {renderCardContent('list')}
         </div>

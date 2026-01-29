@@ -4,7 +4,7 @@
  * ⚠️  FICHIER AUTO-GÉNÉRÉ - NE PAS MODIFIER
  * 
  * Pour régénérer: npm run generate:types
- * Généré le: 2026-01-28T06:48:17.711Z
+ * Généré le: 2026-01-28T14:22:57.185Z
  */
 
 // ============================================================================
@@ -360,12 +360,7 @@ export interface WorkItem {
   description?: StrapiBlock[];
   shortDescription?: string;
   image: StrapiMedia;
-  gallery?: StrapiMedia[];
   categories?: (WorkCategory & StrapiEntity)[];
-  link?: string;
-  client?: string;
-  year?: number;
-  technologies?: Record<string, unknown>;
   customFields?: Record<string, unknown>;
   metadata?: Record<string, unknown>;
   featured?: boolean;
