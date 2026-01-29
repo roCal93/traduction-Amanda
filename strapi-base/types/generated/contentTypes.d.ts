@@ -621,6 +621,7 @@ export interface ApiSectionSection extends Struct.CollectionTypeSchema {
         'blocks.work-block',
         'blocks.timeline-block',
         'blocks.background-block',
+        'blocks.translation-block',
       ]
     > &
       Schema.Attribute.Required &

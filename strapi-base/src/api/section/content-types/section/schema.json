@@ -62,7 +62,8 @@
         "blocks.contact-form-block",
         "blocks.work-block",
         "blocks.timeline-block",
-        "blocks.background-block"
+        "blocks.background-block",
+        "blocks.translation-block"
       ],
       "required": true
     },

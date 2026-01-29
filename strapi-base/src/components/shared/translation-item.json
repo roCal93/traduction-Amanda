@@ -1,0 +1,14 @@
+{
+  "collectionName": "components_shared_translation_items",
+  "info": {
+    "displayName": "Translation Item",
+    "description": "A single source/translation pair"
+  },
+  "options": {},
+  "attributes": {
+    "source": { "type": "blocks", "required": true },
+    "translation": { "type": "blocks", "required": true },
+    "sourceLanguage": { "type": "enumeration", "enum": ["en", "it"], "default": "en", "required": true },
+    "author": { "type": "string" }
+  }
+}

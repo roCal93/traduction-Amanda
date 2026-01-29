@@ -238,6 +238,29 @@ export interface BlocksTimelineBlock extends Struct.ComponentSchema {
   };
 }
 
+export interface BlocksTranslationBlock extends Struct.ComponentSchema {
+  collectionName: 'components_blocks_translation_blocks';
+  info: {
+    description: 'Bloc comparant un texte source et sa traduction (source: EN/IT, traduction: FR)';
+    displayName: 'Translation Block';
+  };
+  attributes: {
+    alignmentMapping: Schema.Attribute.JSON & Schema.Attribute.DefaultTo<{}>;
+    author: Schema.Attribute.String;
+    examples: Schema.Attribute.Component<'shared.translation-item', true>;
+    showLanguageLabel: Schema.Attribute.Boolean &
+      Schema.Attribute.DefaultTo<true>;
+    source: Schema.Attribute.Blocks;
+    sourceLanguage: Schema.Attribute.Enumeration<['en', 'it']> &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<'en'>;
+    translation: Schema.Attribute.Blocks;
+    translationLanguage: Schema.Attribute.Enumeration<['fr']> &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<'fr'>;
+  };
+}
+
 export interface BlocksWorkBlock extends Struct.ComponentSchema {
   collectionName: 'components_blocks_work_blocks';
   info: {
@@ -351,6 +374,22 @@ export interface SharedTimelineItem extends Struct.ComponentSchema {
   };
 }
 
+export interface SharedTranslationItem extends Struct.ComponentSchema {
+  collectionName: 'components_shared_translation_items';
+  info: {
+    description: 'A single source/translation pair';
+    displayName: 'Translation Item';
+  };
+  attributes: {
+    author: Schema.Attribute.String;
+    source: Schema.Attribute.Blocks & Schema.Attribute.Required;
+    sourceLanguage: Schema.Attribute.Enumeration<['en', 'it']> &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<'en'>;
+    translation: Schema.Attribute.Blocks & Schema.Attribute.Required;
+  };
+}
+
 declare module '@strapi/strapi' {
   export module Public {
     export interface ComponentSchemas {
@@ -364,6 +403,7 @@ declare module '@strapi/strapi' {
       'blocks.text-block': BlocksTextBlock;
       'blocks.text-image-block': BlocksTextImageBlock;
       'blocks.timeline-block': BlocksTimelineBlock;
+      'blocks.translation-block': BlocksTranslationBlock;
       'blocks.work-block': BlocksWorkBlock;
       'shared.button': SharedButton;
       'shared.carousel-card': SharedCarouselCard;
@@ -371,6 +411,7 @@ declare module '@strapi/strapi' {
       'shared.page-link': SharedPageLink;
       'shared.timeline-image': SharedTimelineImage;
       'shared.timeline-item': SharedTimelineItem;
+      'shared.translation-item': SharedTranslationItem;
     }
   }
 }
