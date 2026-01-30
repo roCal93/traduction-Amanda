@@ -29,6 +29,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.1.4",
+    "happy-dom": "^20.4.0",
     "husky": "^9.1.6",
     "jsdom": "^27.4.0",
     "lint-staged": "^16.2.7",
@@ -37,5 +38,12 @@
     "tailwindcss": "^4",
     "typescript": "^5",
     "vitest": "^4.0.17"
+  },
+  "pnpm": {
+    "overrides": {
+      "html-encoding-sniffer": "5.0.0",
+      "parse5": "7.1.1",
+      "@exodus/bytes": "1.6.0"
+    }
   }
 }
