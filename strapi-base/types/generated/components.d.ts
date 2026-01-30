@@ -245,16 +245,10 @@ export interface BlocksTranslationBlock extends Struct.ComponentSchema {
     displayName: 'Translation Block';
   };
   attributes: {
-    alignmentMapping: Schema.Attribute.JSON & Schema.Attribute.DefaultTo<{}>;
-    author: Schema.Attribute.String;
     examples: Schema.Attribute.Component<'shared.translation-item', true>;
     showLanguageLabel: Schema.Attribute.Boolean &
       Schema.Attribute.DefaultTo<true>;
-    source: Schema.Attribute.Blocks;
-    sourceLanguage: Schema.Attribute.Enumeration<['en', 'it']> &
-      Schema.Attribute.Required &
-      Schema.Attribute.DefaultTo<'en'>;
-    translation: Schema.Attribute.Blocks;
+    title: Schema.Attribute.String;
     translationLanguage: Schema.Attribute.Enumeration<['fr']> &
       Schema.Attribute.Required &
       Schema.Attribute.DefaultTo<'fr'>;

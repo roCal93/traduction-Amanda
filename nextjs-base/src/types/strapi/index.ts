@@ -207,13 +207,9 @@ export interface TimelineBlock {
  */
 export interface TranslationBlock {
   examples?: TranslationItem[];
-  source?: StrapiBlock[];
-  translation?: StrapiBlock[];
-  sourceLanguage: string;
+  title?: string;
   translationLanguage: string;
   showLanguageLabel?: boolean;
-  author?: string;
-  alignmentMapping?: Record<string, unknown>;
 }
 
 /**

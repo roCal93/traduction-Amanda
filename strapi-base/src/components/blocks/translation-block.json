@@ -11,23 +11,14 @@
       "repeatable": true,
       "component": "shared.translation-item"
     },
-    "source": { "type": "blocks" },
-    "translation": { "type": "blocks" },
-    "sourceLanguage": {
-      "type": "enumeration",
-      "enum": ["en", "it"],
-      "default": "en",
-      "required": true
-    },
+    "title": { "type": "string" },
     "translationLanguage": {
       "type": "enumeration",
       "enum": ["fr"],
       "default": "fr",
       "required": true
     },
-    "showLanguageLabel": { "type": "boolean", "default": true },
-    "author": { "type": "string" },
-    "alignmentMapping": { "type": "json", "default": {} }
+    "showLanguageLabel": { "type": "boolean", "default": true }
   },
   "config": {}
 }

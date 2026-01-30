@@ -4,7 +4,7 @@
  * ⚠️  FICHIER AUTO-GÉNÉRÉ - NE PAS MODIFIER
  * 
  * Pour régénérer: npm run generate:types
- * Généré le: 2026-01-29T13:41:47.854Z
+ * Généré le: 2026-01-30T12:00:17.600Z
  */
 
 // ============================================================================
@@ -203,13 +203,9 @@ export interface TimelineBlock {
  */
 export interface TranslationBlock {
   examples?: TranslationItem[];
-  source?: StrapiBlock[];
-  translation?: StrapiBlock[];
-  sourceLanguage: string;
+  title?: string;
   translationLanguage: string;
   showLanguageLabel?: boolean;
-  author?: string;
-  alignmentMapping?: Record<string, unknown>;
 }
 
 /**
