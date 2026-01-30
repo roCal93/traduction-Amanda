@@ -203,16 +203,6 @@ export interface TimelineBlock {
 }
 
 /**
- * Component: blocks.translation-block
- */
-export interface TranslationBlock {
-  examples?: TranslationItem[];
-  title?: string;
-  translationLanguage: string;
-  showLanguageLabel?: boolean;
-}
-
-/**
  * Component: blocks.work-block
  */
 export interface WorkBlock {
@@ -280,16 +270,6 @@ export interface TimelineItem {
   date?: string;
   description?: string;
   images?: TimelineImage[];
-}
-
-/**
- * Component: shared.translation-item
- */
-export interface TranslationItem {
-  source: StrapiBlock[];
-  translation: StrapiBlock[];
-  sourceLanguage: string;
-  author?: string;
 }
 
 // ============================================================================

@@ -241,7 +241,7 @@ export interface BlocksTimelineBlock extends Struct.ComponentSchema {
 export interface BlocksTranslationBlock extends Struct.ComponentSchema {
   collectionName: 'components_blocks_translation_blocks';
   info: {
-    description: 'Bloc comparant un texte source et sa traduction (source: EN/IT, traduction: FR)';
+    description: 'Block displaying source + translation pairs';
     displayName: 'Translation Block';
   };
   attributes: {
@@ -371,7 +371,7 @@ export interface SharedTimelineItem extends Struct.ComponentSchema {
 export interface SharedTranslationItem extends Struct.ComponentSchema {
   collectionName: 'components_shared_translation_items';
   info: {
-    description: 'A single source/translation pair';
+    description: 'Pair of source and translation rich-text';
     displayName: 'Translation Item';
   };
   attributes: {

@@ -2,23 +2,30 @@
   "collectionName": "components_blocks_translation_blocks",
   "info": {
     "displayName": "Translation Block",
-    "description": "Bloc comparant un texte source et sa traduction (source: EN/IT, traduction: FR)"
+    "description": "Block displaying source + translation pairs"
   },
   "options": {},
   "attributes": {
-    "examples": {
-      "type": "component",
-      "repeatable": true,
-      "component": "shared.translation-item"
+    "title": {
+      "type": "string",
+      "required": false
     },
-    "title": { "type": "string" },
     "translationLanguage": {
       "type": "enumeration",
       "enum": ["fr"],
       "default": "fr",
       "required": true
     },
-    "showLanguageLabel": { "type": "boolean", "default": true }
+    "showLanguageLabel": {
+      "type": "boolean",
+      "default": true
+    },
+    "examples": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.translation-item",
+      "required": false
+    }
   },
   "config": {}
 }
