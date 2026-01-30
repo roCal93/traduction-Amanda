@@ -375,11 +375,12 @@ export interface SharedTranslationItem extends Struct.ComponentSchema {
     displayName: 'Translation Item';
   };
   attributes: {
-    author: Schema.Attribute.String;
+    description: Schema.Attribute.Blocks;
     source: Schema.Attribute.Blocks & Schema.Attribute.Required;
     sourceLanguage: Schema.Attribute.Enumeration<['en', 'it']> &
       Schema.Attribute.Required &
       Schema.Attribute.DefaultTo<'en'>;
+    theme: Schema.Attribute.String;
     translation: Schema.Attribute.Blocks & Schema.Attribute.Required;
   };
 }

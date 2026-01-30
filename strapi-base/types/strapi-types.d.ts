@@ -4,7 +4,7 @@
  * ⚠️  FICHIER AUTO-GÉNÉRÉ - NE PAS MODIFIER
  * 
  * Pour régénérer: npm run generate:types
- * Généré le: 2026-01-28T14:22:57.185Z
+ * Généré le: 2026-01-30T17:31:21.540Z
  */
 
 // ============================================================================
@@ -199,6 +199,16 @@ export interface TimelineBlock {
 }
 
 /**
+ * Component: blocks.translation-block
+ */
+export interface TranslationBlock {
+  title?: string;
+  translationLanguage: string;
+  showLanguageLabel?: boolean;
+  examples?: TranslationItem[];
+}
+
+/**
  * Component: blocks.work-block
  */
 export interface WorkBlock {
@@ -266,6 +276,17 @@ export interface TimelineItem {
   date?: string;
   description?: string;
   images?: TimelineImage[];
+}
+
+/**
+ * Component: shared.translation-item
+ */
+export interface TranslationItem {
+  source: StrapiBlock[];
+  translation: StrapiBlock[];
+  sourceLanguage: string;
+  theme?: string;
+  description?: StrapiBlock[];
 }
 
 // ============================================================================

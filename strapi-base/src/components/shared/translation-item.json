@@ -20,8 +20,12 @@
       "default": "en",
       "required": true
     },
-    "author": {
+    "theme": {
       "type": "string",
+      "required": false
+    },
+    "description": {
+      "type": "blocks",
       "required": false
     }
   },
