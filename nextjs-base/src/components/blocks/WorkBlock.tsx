@@ -106,9 +106,9 @@ const WorkBlock = ({
   }, [workItems, selectedCategory])
 
   const columnClasses = {
-    '2': 'grid-cols-1 md:grid-cols-2',
-    '3': 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3',
-    '4': 'grid-cols-1 md:grid-cols-2 lg:grid-cols-4',
+    '2': 'grid-cols-2 md:grid-cols-2',
+    '3': 'grid-cols-2 md:grid-cols-2 lg:grid-cols-3',
+    '4': 'grid-cols-2 md:grid-cols-2 lg:grid-cols-4',
   }
 
   if (loading) {
@@ -177,7 +177,7 @@ const WorkBlock = ({
         </div>
       ) : (
         <div
-          className={`grid ${columnClasses[columns]} gap-6 ${
+          className={`grid ${columnClasses[columns]} gap-3 sm:gap-6 ${
             layout === 'masonry' ? 'auto-rows-max' : ''
           }`}
         >

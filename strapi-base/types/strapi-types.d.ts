@@ -4,7 +4,7 @@
  * ⚠️  FICHIER AUTO-GÉNÉRÉ - NE PAS MODIFIER
  * 
  * Pour régénérer: npm run generate:types
- * Généré le: 2026-01-30T17:31:21.540Z
+ * Généré le: 2026-02-02T14:03:45.061Z
  */
 
 // ============================================================================
@@ -130,11 +130,8 @@ export interface CardsBlock {
  * Component: blocks.carousel-block
  */
 export interface CarouselBlock {
-  cards: CarouselCard[];
-  autoplay?: boolean;
-  autoplayDelay?: number;
-  showControls?: boolean;
-  showIndicators?: boolean;
+  workItems?: (WorkItem & StrapiEntity)[];
+  scrollSpeed?: number;
 }
 
 /**
@@ -205,6 +202,7 @@ export interface TranslationBlock {
   title?: string;
   translationLanguage: string;
   showLanguageLabel?: boolean;
+  showCreditImage?: boolean;
   examples?: TranslationItem[];
 }
 
@@ -286,6 +284,9 @@ export interface TranslationItem {
   translation: StrapiBlock[];
   sourceLanguage: string;
   theme?: string;
+  title?: string;
+  author?: string;
+  sourceText?: string;
   description?: StrapiBlock[];
 }
 

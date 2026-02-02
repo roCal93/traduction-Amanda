@@ -183,8 +183,8 @@ const WorkCard = ({
       <div
         className={
           variant === 'list'
-            ? 'relative w-28 h-28 flex-shrink-0 flex items-center justify-center overflow-hidden rounded-lg p-1'
-            : 'relative w-full aspect-[3/2] overflow-hidden flex items-center justify-center p-2'
+            ? 'relative w-14 h-14 sm:w-16 sm:h-16 flex-shrink-0 flex items-center justify-center overflow-hidden rounded-lg p-1'
+            : 'relative w-full aspect-[3/1] overflow-hidden flex items-center justify-center p-0.5 pt-4 sm:pt-3'
         }
       >
         {imageUrl ? (
@@ -230,12 +230,12 @@ const WorkCard = ({
       </div>
 
       {/* Content */}
-      <div className={variant === 'list' ? 'flex-1' : 'p-4'}>
+      <div className={variant === 'list' ? 'flex-1' : 'p-2 sm:p-3'}>
         <h3
           className={
             variant === 'list'
-              ? 'text-xl font-bold group-hover:text-gray-600 transition-colors'
-              : 'text-lg font-bold mb-2 group-hover:text-gray-600 transition-colors'
+              ? 'text-base sm:text-lg font-bold group-hover:text-gray-600 transition-colors mb-1'
+              : 'text-base sm:text-lg font-bold mb-1.5 group-hover:text-gray-600 transition-colors leading-tight'
           }
         >
           {item.title}
@@ -245,8 +245,8 @@ const WorkCard = ({
           <p
             className={
               variant === 'list'
-                ? 'text-gray-600 mb-4 whitespace-pre-line'
-                : 'text-gray-600 text-sm mb-4 line-clamp-2 whitespace-pre-line'
+                ? 'text-sm sm:text-base text-gray-600 mb-2 sm:mb-3 whitespace-pre-line'
+                : 'text-sm sm:text-base text-gray-600 mb-2 line-clamp-2 whitespace-pre-line'
             }
           >
             {item.shortDescription}
@@ -257,8 +257,8 @@ const WorkCard = ({
           <div
             className={
               variant === 'list'
-                ? 'flex flex-wrap gap-2 mb-4'
-                : 'flex flex-wrap gap-2 mb-4'
+                ? 'flex flex-wrap gap-1.5 sm:gap-2 mb-3 sm:mb-4'
+                : 'flex flex-wrap gap-1.5 sm:gap-2 mb-3 sm:mb-4'
             }
           >
             {item.categories.map((category) => (
@@ -266,8 +266,8 @@ const WorkCard = ({
                 key={category.id}
                 className={
                   variant === 'list'
-                    ? 'px-3 py-1 text-sm rounded-full'
-                    : 'px-2 py-1 text-xs rounded-full'
+                    ? 'px-1.5 py-0.5 text-[10px] sm:px-2 sm:py-0.5 sm:text-xs rounded-full'
+                    : 'px-1 py-0.5 text-[9px] sm:px-1.5 sm:py-0.5 sm:text-[10px] rounded-full'
                 }
                 style={{
                   backgroundColor: category.color
@@ -316,7 +316,7 @@ const WorkCard = ({
       <>
         <div
           onClick={() => setIsModalOpen(true)}
-          className="group flex gap-4 p-4 rounded-lg shadow-lg hover:shadow-2xl transition-all duration-300 bg-[#FFE5B3]/60 cursor-pointer"
+          className="group flex gap-2 sm:gap-3 p-2 sm:p-3 rounded-lg shadow-lg hover:shadow-2xl transition-all duration-300 bg-[#FFE5B3]/60 cursor-pointer"
         >
           {renderCardContent('list')}
         </div>

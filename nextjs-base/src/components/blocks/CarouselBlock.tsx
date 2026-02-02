@@ -1,146 +1,176 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
-import CarouselCard from './CarouselCard'
-import { StrapiBlock } from '@/types/strapi'
-
-type CarouselCardData = {
-  id: number
-  frontTitle: string
-  frontContent?: StrapiBlock[]
-  backContent?: StrapiBlock[]
-  image?: { url: string; alternativeText?: string }
-}
+import React, { useEffect, useRef, useState } from 'react'
+import CarouselWorkCard from './CarouselWorkCard'
+import { WorkItem, StrapiEntity } from '@/types/strapi'
 
 type CarouselBlockProps = {
-  cards: CarouselCardData[]
-  autoplay?: boolean
-  autoplayDelay?: number
-  showControls?: boolean
-  showIndicators?: boolean
+  workItems?: (WorkItem & StrapiEntity)[]
+  scrollSpeed?: number
 }
 
 const CarouselBlock = ({
-  cards,
-  autoplay = false,
-  autoplayDelay = 5000,
-  showControls = true,
-  showIndicators = true,
+  workItems = [],
+  scrollSpeed = 5,
 }: CarouselBlockProps) => {
-  const [currentIndex, setCurrentIndex] = useState(0)
+  const scrollRef = useRef<HTMLDivElement>(null)
+  const [isPaused, setIsPaused] = useState(false)
+  const [isDragging, setIsDragging] = useState(false)
+  const [startX, setStartX] = useState(0)
+  const [scrollLeft, setScrollLeft] = useState(0)
 
   useEffect(() => {
-    if (!autoplay || cards.length <= 1) return
+    if (!workItems || workItems.length === 0) return
 
-    const interval = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % cards.length)
-    }, autoplayDelay)
+    // Initialiser le scroll au milieu (2e set) pour avoir de la marge
+    if (scrollRef.current) {
+      const singleSetWidth = scrollRef.current.scrollWidth / 3
+      scrollRef.current.scrollLeft = singleSetWidth
+    }
+  }, [workItems])
 
-    return () => clearInterval(interval)
-  }, [autoplay, autoplayDelay, cards.length])
+  useEffect(() => {
+    if (!workItems || workItems.length === 0 || isPaused || isDragging) return
 
-  const goToPrevious = () => {
-    setCurrentIndex((prev) => (prev - 1 + cards.length) % cards.length)
-  }
+    let animationFrameId: number
+    let lastTimestamp = 0
 
-  const goToNext = () => {
-    setCurrentIndex((prev) => (prev + 1) % cards.length)
-  }
+    const scroll = (timestamp: number) => {
+      if (!scrollRef.current) {
+        animationFrameId = requestAnimationFrame(scroll)
+        return
+      }
 
-  const goToIndex = (index: number) => {
-    setCurrentIndex(index)
-  }
+      // Calculer le temps écoulé depuis la dernière frame
+      const elapsed = timestamp - lastTimestamp
 
-  if (!cards || cards.length === 0) {
+      // Ne mettre à jour que toutes les X millisecondes (scrollSpeed)
+      if (elapsed >= scrollSpeed) {
+        const { scrollLeft, scrollWidth } = scrollRef.current
+
+        // Calculer la largeur d'un set complet (1/3 du total car on a 3 copies)
+        const singleSetWidth = scrollWidth / 3
+
+        // Repositionner quand on atteint le 2e set (évite d'aller trop loin)
+        if (scrollLeft >= singleSetWidth * 2) {
+          scrollRef.current.scrollLeft = singleSetWidth
+        } else {
+          // Défiler de manière fluide
+          scrollRef.current.scrollLeft += 1
+        }
+
+        lastTimestamp = timestamp
+      }
+
+      animationFrameId = requestAnimationFrame(scroll)
+    }
+
+    animationFrameId = requestAnimationFrame(scroll)
+
+    return () => {
+      if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId)
+      }
+    }
+  }, [workItems, scrollSpeed, isPaused, isDragging])
+
+  if (!workItems || workItems.length === 0) {
     return null
   }
 
+  const handleMouseDown = (e: React.MouseEvent) => {
+    if (!scrollRef.current) return
+    setIsDragging(true)
+    setStartX(e.pageX - scrollRef.current.offsetLeft)
+    setScrollLeft(scrollRef.current.scrollLeft)
+  }
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging || !scrollRef.current) return
+    e.preventDefault()
+    const x = e.pageX - scrollRef.current.offsetLeft
+    const walk = (x - startX) * 0.5
+    scrollRef.current.scrollLeft = scrollLeft - walk
+
+    // Gérer la boucle infinie pendant le drag
+    const { scrollLeft: currentScroll, scrollWidth } = scrollRef.current
+    const singleSetWidth = scrollWidth / 3
+
+    if (currentScroll >= singleSetWidth * 2) {
+      scrollRef.current.scrollLeft = singleSetWidth
+      setScrollLeft(singleSetWidth)
+    } else if (currentScroll <= 0) {
+      scrollRef.current.scrollLeft = singleSetWidth
+      setScrollLeft(singleSetWidth)
+    }
+  }
+
+  const handleMouseUpOrLeave = () => {
+    setIsDragging(false)
+  }
+
+  // Gestionnaires tactiles pour mobile
+  const handleTouchStart = (e: React.TouchEvent) => {
+    if (!scrollRef.current) return
+    setIsDragging(true)
+    setStartX(e.touches[0].pageX - scrollRef.current.offsetLeft)
+    setScrollLeft(scrollRef.current.scrollLeft)
+  }
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (!isDragging || !scrollRef.current) return
+    const x = e.touches[0].pageX - scrollRef.current.offsetLeft
+    const walk = (x - startX) * 0.5
+    scrollRef.current.scrollLeft = scrollLeft - walk
+
+    // Gérer la boucle infinie pendant le drag
+    const { scrollLeft: currentScroll, scrollWidth } = scrollRef.current
+    const singleSetWidth = scrollWidth / 3
+
+    if (currentScroll >= singleSetWidth * 2) {
+      scrollRef.current.scrollLeft = singleSetWidth
+      setScrollLeft(singleSetWidth)
+    } else if (currentScroll <= 0) {
+      scrollRef.current.scrollLeft = singleSetWidth
+      setScrollLeft(singleSetWidth)
+    }
+  }
+
+  const handleTouchEnd = () => {
+    setIsDragging(false)
+  }
+
+  // Tripler les items pour une boucle infinie parfaitement fluide
+  const duplicatedItems = [...workItems, ...workItems, ...workItems]
+
   return (
-    <div className="relative w-full max-w-4xl mx-auto my-8">
-      {/* Carousel Content */}
-      <div className="relative overflow-hidden">
-        <div
-          className="flex transition-transform duration-500 ease-in-out"
-          style={{ transform: `translateX(-${currentIndex * 100}%)` }}
-        >
-          {cards.map((card) => (
-            <div key={card.id} className="w-full flex-shrink-0 px-4">
-              <CarouselCard
-                frontTitle={card.frontTitle}
-                frontContent={card.frontContent}
-                backContent={card.backContent}
-                image={card.image}
-              />
-            </div>
-          ))}
-        </div>
+    <div className="relative w-full overflow-hidden my-8">
+      <div
+        ref={scrollRef}
+        className="flex gap-4 overflow-x-hidden select-none"
+        style={{
+          scrollbarWidth: 'none',
+          msOverflowStyle: 'none',
+          cursor: isDragging ? 'grabbing' : 'grab',
+        }}
+        onMouseEnter={() => setIsPaused(true)}
+        onMouseLeave={() => {
+          setIsPaused(false)
+          handleMouseUpOrLeave()
+        }}
+        onMouseDown={handleMouseDown}
+        onMouseMove={handleMouseMove}
+        onMouseUp={handleMouseUpOrLeave}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+      >
+        {duplicatedItems.map((item, index) => (
+          <div key={`${item.id}-${index}`} className="w-[200px] flex-shrink-0">
+            <CarouselWorkCard item={item} />
+          </div>
+        ))}
       </div>
-
-      {/* Controls & Indicators - placed outside the cards */}
-      {(showControls || showIndicators) && cards.length > 1 && (
-        <div className="flex items-center justify-center mt-6 md:mt-8 lg:mt-10 gap-3">
-          {showControls && (
-            <button
-              onClick={goToPrevious}
-              className="group text-[#FADCA3] hover:text-[#F6C87E] mr-10 transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
-              aria-label="Previous slide"
-            >
-              <svg
-                className="w-8 h-6 drop-shadow-sm group-hover:drop-shadow-lg transition-shadow"
-                width="32"
-                height="24"
-                viewBox="0 0 56 45"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M0 22.0837L55.6685 9.15527e-05L55.6685 44.1674L0 22.0837Z"
-                  fill="currentColor"
-                />
-              </svg>
-            </button>
-          )}
-
-          {showIndicators && (
-            <div className="flex items-center gap-2 mx-2">
-              {cards.map((_, index) => (
-                <button
-                  key={index}
-                  onClick={() => goToIndex(index)}
-                  className={`w-3 h-3 rounded-full transition-all cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[#FADCA3] ${
-                    index === currentIndex
-                      ? 'bg-[#F88379] w-8'
-                      : 'bg-[#FADCA3] hover:bg-[#FADCA3]/90'
-                  }`}
-                  aria-label={`Go to slide ${index + 1}`}
-                />
-              ))}
-            </div>
-          )}
-
-          {showControls && (
-            <button
-              onClick={goToNext}
-              className="group text-[#FADCA3] hover:text-[#F6C87E] ml-10 transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
-              aria-label="Next slide"
-            >
-              <svg
-                className="w-8 h-6 drop-shadow-sm group-hover:drop-shadow-lg transform -scale-x-100 transition-shadow"
-                width="32"
-                height="24"
-                viewBox="0 0 56 45"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M0 22.0837L55.6685 9.15527e-05L55.6685 44.1674L0 22.0837Z"
-                  fill="currentColor"
-                />
-              </svg>
-            </button>
-          )}
-        </div>
-      )}
     </div>
   )
 }

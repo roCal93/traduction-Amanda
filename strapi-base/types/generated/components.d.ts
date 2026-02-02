@@ -86,25 +86,19 @@ export interface BlocksCarouselBlock extends Struct.ComponentSchema {
     displayName: 'Carousel Block';
   };
   attributes: {
-    autoplay: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
-    autoplayDelay: Schema.Attribute.Integer &
+    scrollSpeed: Schema.Attribute.Integer &
       Schema.Attribute.SetMinMax<
         {
-          min: 1000;
-        },
-        number
-      > &
-      Schema.Attribute.DefaultTo<5000>;
-    cards: Schema.Attribute.Component<'shared.carousel-card', true> &
-      Schema.Attribute.Required &
-      Schema.Attribute.SetMinMax<
-        {
+          max: 100;
           min: 1;
         },
         number
-      >;
-    showControls: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<true>;
-    showIndicators: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<true>;
+      > &
+      Schema.Attribute.DefaultTo<5>;
+    workItems: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::work-item.work-item'
+    >;
   };
 }
 
@@ -246,6 +240,8 @@ export interface BlocksTranslationBlock extends Struct.ComponentSchema {
   };
   attributes: {
     examples: Schema.Attribute.Component<'shared.translation-item', true>;
+    showCreditImage: Schema.Attribute.Boolean &
+      Schema.Attribute.DefaultTo<false>;
     showLanguageLabel: Schema.Attribute.Boolean &
       Schema.Attribute.DefaultTo<true>;
     title: Schema.Attribute.String;
@@ -375,12 +371,15 @@ export interface SharedTranslationItem extends Struct.ComponentSchema {
     displayName: 'Translation Item';
   };
   attributes: {
+    author: Schema.Attribute.String;
     description: Schema.Attribute.Blocks;
     source: Schema.Attribute.Blocks & Schema.Attribute.Required;
     sourceLanguage: Schema.Attribute.Enumeration<['en', 'it']> &
       Schema.Attribute.Required &
       Schema.Attribute.DefaultTo<'en'>;
+    sourceText: Schema.Attribute.String;
     theme: Schema.Attribute.String;
+    title: Schema.Attribute.String;
     translation: Schema.Attribute.Blocks & Schema.Attribute.Required;
   };
 }

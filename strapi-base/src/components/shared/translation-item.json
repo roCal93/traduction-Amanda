@@ -24,6 +24,18 @@
       "type": "string",
       "required": false
     },
+    "title": {
+      "type": "string",
+      "required": false
+    },
+    "author": {
+      "type": "string",
+      "required": false
+    },
+    "sourceText": {
+      "type": "string",
+      "required": false
+    },
     "description": {
       "type": "blocks",
       "required": false

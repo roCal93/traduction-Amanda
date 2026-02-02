@@ -134,11 +134,8 @@ export interface CardsBlock {
  * Component: blocks.carousel-block
  */
 export interface CarouselBlock {
-  cards: CarouselCard[];
-  autoplay?: boolean;
-  autoplayDelay?: number;
-  showControls?: boolean;
-  showIndicators?: boolean;
+  workItems?: (WorkItem & StrapiEntity)[];
+  scrollSpeed?: number;
 }
 
 /**
@@ -209,6 +206,7 @@ export interface TranslationBlock {
   title?: string;
   translationLanguage: string;
   showLanguageLabel?: boolean;
+  showCreditImage?: boolean;
   examples?: TranslationItem[];
 }
 
@@ -290,6 +288,9 @@ export interface TranslationItem {
   translation: StrapiBlock[];
   sourceLanguage: string;
   theme?: string;
+  title?: string;
+  author?: string;
+  sourceText?: string;
   description?: StrapiBlock[];
 }
 

@@ -6,29 +6,17 @@
   },
   "options": {},
   "attributes": {
-    "cards": {
-      "type": "component",
-      "repeatable": true,
-      "component": "shared.carousel-card",
-      "required": true,
-      "min": 1
+    "workItems": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::work-item.work-item"
     },
-    "autoplay": {
-      "type": "boolean",
-      "default": false
-    },
-    "autoplayDelay": {
+    "scrollSpeed": {
       "type": "integer",
-      "default": 5000,
-      "min": 1000
-    },
-    "showControls": {
-      "type": "boolean",
-      "default": true
-    },
-    "showIndicators": {
-      "type": "boolean",
-      "default": true
+      "default": 5,
+      "min": 1,
+      "max": 100,
+      "required": false
     }
   }
 }

@@ -20,6 +20,11 @@
       "type": "boolean",
       "default": true
     },
+    "showCreditImage": {
+      "type": "boolean",
+      "default": false,
+      "required": false
+    },
     "examples": {
       "type": "component",
       "repeatable": true,

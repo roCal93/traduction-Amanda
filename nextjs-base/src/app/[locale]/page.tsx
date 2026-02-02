@@ -34,7 +34,7 @@ const fetchHomePageData = async (locale: string, isDraft: boolean) => {
       'locale',
     ],
     populate:
-      'sections.blocks.cards.image,sections.blocks.image,sections.blocks.imageDesktop,sections.blocks.buttons.file,sections.blocks.items.images,seoImage,localizations',
+      'sections.blocks.cards.image,sections.blocks.image,sections.blocks.imageDesktop,sections.blocks.buttons.file,sections.blocks.items.images,sections.blocks.workItems.image,sections.blocks.workItems.categories,seoImage,localizations',
     locale,
     publicationState: isDraft ? 'preview' : 'live',
   })
@@ -53,7 +53,7 @@ const fetchHomePageData = async (locale: string, isDraft: boolean) => {
         'locale',
       ],
       populate:
-        'sections.blocks.cards.image,sections.blocks.image,sections.blocks.imageDesktop,sections.blocks.buttons.file,sections.blocks.items.images,seoImage,localizations',
+        'sections.blocks.cards.image,sections.blocks.image,sections.blocks.imageDesktop,sections.blocks.buttons.file,sections.blocks.items.images,sections.blocks.workItems.image,sections.blocks.workItems.categories,seoImage,localizations',
       locale: 'fr',
       publicationState: isDraft ? 'preview' : 'live',
     })
