@@ -1,0 +1,45 @@
+{
+  "collectionName": "components_shared_translation_items",
+  "info": {
+    "displayName": "Translation Item",
+    "description": "Pair of source and translation rich-text"
+  },
+  "options": {},
+  "attributes": {
+    "source": {
+      "type": "blocks",
+      "required": true
+    },
+    "translation": {
+      "type": "blocks",
+      "required": true
+    },
+    "sourceLanguage": {
+      "type": "enumeration",
+      "enum": ["en", "it"],
+      "default": "en",
+      "required": true
+    },
+    "theme": {
+      "type": "string",
+      "required": false
+    },
+    "title": {
+      "type": "string",
+      "required": false
+    },
+    "author": {
+      "type": "string",
+      "required": false
+    },
+    "sourceText": {
+      "type": "string",
+      "required": false
+    },
+    "description": {
+      "type": "blocks",
+      "required": false
+    }
+  },
+  "config": {}
+}

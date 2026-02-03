@@ -1,0 +1,36 @@
+{
+  "collectionName": "components_blocks_translation_blocks",
+  "info": {
+    "displayName": "Translation Block",
+    "description": "Block displaying source + translation pairs"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": false
+    },
+    "translationLanguage": {
+      "type": "enumeration",
+      "enum": ["fr"],
+      "default": "fr",
+      "required": true
+    },
+    "showLanguageLabel": {
+      "type": "boolean",
+      "default": true
+    },
+    "showCreditImage": {
+      "type": "boolean",
+      "default": false,
+      "required": false
+    },
+    "examples": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.translation-item",
+      "required": false
+    }
+  },
+  "config": {}
+}
