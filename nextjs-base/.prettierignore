@@ -1,7 +1,0 @@
-node_modules
-.next
-build
-dist
-*.log
-.env*
-public
