@@ -34,7 +34,7 @@ const fetchHomePageData = async (locale: string, isDraft: boolean) => {
       'locale',
     ],
     populate:
-      'sections.blocks.cards.image,sections.blocks.image,sections.blocks.imageDesktop,sections.blocks.buttons.file,sections.blocks.items.images,seoImage,localizations',
+      'sections.blocks.cards.image,sections.blocks.image,sections.blocks.imageDesktop,sections.blocks.buttons.file,sections.blocks.items.images,sections.blocks.workItems.image,sections.blocks.workItems.categories,sections.blocks.privacyPolicy,seoImage,localizations',
     locale,
     publicationState: isDraft ? 'preview' : 'live',
   })
@@ -53,7 +53,7 @@ const fetchHomePageData = async (locale: string, isDraft: boolean) => {
         'locale',
       ],
       populate:
-        'sections.blocks.cards.image,sections.blocks.image,sections.blocks.imageDesktop,sections.blocks.buttons.file,sections.blocks.items.images,seoImage,localizations',
+        'sections.blocks.cards.image,sections.blocks.image,sections.blocks.imageDesktop,sections.blocks.buttons.file,sections.blocks.items.images,sections.blocks.workItems.image,sections.blocks.workItems.categories,sections.blocks.privacyPolicy,seoImage,localizations',
       locale: 'fr',
       publicationState: isDraft ? 'preview' : 'live',
     })
@@ -107,12 +107,24 @@ export async function generateMetadata({
   const res = await getHomePageData(locale)
   const page = res?.data?.[0]
   const firstBlock = page?.sections?.[0]?.blocks?.[0] as
-    | { image?: { url: string } }
+    | {
+        image?: { url: string }
+        workItems?: Array<{ image?: { url: string } }>
+      }
     | undefined
   const firstImage = firstBlock?.image
 
-  const links: { rel: string; href: string; as?: string }[] = []
+  // Check for carousel workItems images
+  const firstWorkItemImage = firstBlock?.workItems?.[0]?.image
 
+  const links: {
+    rel: string
+    href: string
+    as?: string
+    fetchpriority?: string
+  }[] = []
+
+  // Preload main image
   if (firstImage) {
     const imageUrl = cleanImageUrl(firstImage.url)
     if (imageUrl) {
@@ -123,6 +135,23 @@ export async function generateMetadata({
         rel: 'preload',
         href: fullUrl,
         as: 'image',
+        fetchpriority: 'high',
+      })
+    }
+  }
+
+  // Preload first carousel image if exists
+  if (firstWorkItemImage) {
+    const imageUrl = cleanImageUrl(firstWorkItemImage.url)
+    if (imageUrl) {
+      const fullUrl = imageUrl.startsWith('/')
+        ? `${process.env.NEXT_PUBLIC_STRAPI_URL}${imageUrl}`
+        : imageUrl
+      links.push({
+        rel: 'preload',
+        href: fullUrl,
+        as: 'image',
+        fetchpriority: 'high',
       })
     }
   }

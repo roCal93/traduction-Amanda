@@ -2,31 +2,64 @@
 
 import React, { useState } from 'react'
 import { Button } from '@/components/ui/Button'
+import PrivacyPolicyModal from '@/components/shared/PrivacyPolicyModal'
+import { StrapiEntity, PrivacyPolicy } from '@/types/strapi'
 
 type ContactFormBlockProps = {
   title?: string
   description?: string
   submitButtonText?: string
+  namePlaceholder?: string
+  emailPlaceholder?: string
+  messagePlaceholder?: string
+  nameLabel?: string
+  emailLabel?: string
+  messageLabel?: string
+  consentText?: string
+  policyLinkText?: string
+  successMessage?: string
+  errorMessage?: string
+  submittingText?: string
+  rgpdInfoText?: string
+  consentRequiredText?: string
   blockAlignment?: 'left' | 'center' | 'right' | 'full'
   maxWidth?: 'small' | 'medium' | 'large' | 'full'
+  // Relation vers Privacy Policy
+  privacyPolicy?: PrivacyPolicy & StrapiEntity
 }
 
 const ContactFormBlock = ({
-  title = 'Contactez-nous',
+  title,
   description,
-  submitButtonText = 'Envoyer',
+  submitButtonText,
+  namePlaceholder,
+  emailPlaceholder,
+  messagePlaceholder,
+  nameLabel,
+  emailLabel,
+  messageLabel,
+  consentText,
+  policyLinkText,
+  successMessage,
+  errorMessage,
+  submittingText,
+  rgpdInfoText,
+  consentRequiredText,
   blockAlignment = 'center',
   maxWidth = 'medium',
+  privacyPolicy,
 }: ContactFormBlockProps) => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     message: '',
+    consent: false,
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitStatus, setSubmitStatus] = useState<
     'idle' | 'success' | 'error'
   >('idle')
+  const [isPolicyModalOpen, setIsPolicyModalOpen] = useState(false)
 
   const blockAlignmentClasses = {
     left: 'mr-auto',
@@ -45,8 +78,12 @@ const ContactFormBlock = ({
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    const { name, value } = e.target
-    setFormData((prev) => ({ ...prev, [name]: value }))
+    const { name, value, type } = e.target
+    const checked = (e.target as HTMLInputElement).checked
+    setFormData((prev) => ({
+      ...prev,
+      [name]: type === 'checkbox' ? checked : value,
+    }))
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -55,12 +92,23 @@ const ContactFormBlock = ({
     setSubmitStatus('idle')
 
     try {
-      // TODO: Implémenter l'envoi du formulaire (API route, service email, etc.)
-      await new Promise((resolve) => setTimeout(resolve, 1000))
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      })
 
-      console.log('Form submitted:', formData)
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.error || "Erreur lors de l'envoi")
+      }
+
+      console.log('Form submitted successfully:', data)
       setSubmitStatus('success')
-      setFormData({ name: '', email: '', message: '' })
+      setFormData({ name: '', email: '', message: '', consent: false })
     } catch (error) {
       console.error('Error submitting form:', error)
       setSubmitStatus('error')
@@ -93,7 +141,7 @@ const ContactFormBlock = ({
                 htmlFor="name"
                 className="block text-lg font-medium text-gray-700 mb-2"
               >
-                Votre nom
+                {nameLabel} *
               </label>
               <input
                 type="text"
@@ -103,7 +151,7 @@ const ContactFormBlock = ({
                 onChange={handleChange}
                 required
                 className="w-full px-4 py-2 bg-[#FFFACD]/80 rounded-md focus:ring-2 focus:ring-[#F88379] focus:border-transparent transition-colors"
-                placeholder="Votre nom"
+                placeholder={namePlaceholder}
               />
             </div>
 
@@ -113,7 +161,7 @@ const ContactFormBlock = ({
                 htmlFor="email"
                 className="block text-lg font-medium text-gray-700 mb-2"
               >
-                Votre email
+                {emailLabel} *
               </label>
               <input
                 type="email"
@@ -123,7 +171,7 @@ const ContactFormBlock = ({
                 onChange={handleChange}
                 required
                 className="w-full px-4 py-2 bg-[#FFFACD]/80 rounded-md focus:ring-2 focus:ring-[#F88379] focus:border-transparent transition-colors"
-                placeholder="votre@email.com"
+                placeholder={emailPlaceholder}
               />
             </div>
           </div>
@@ -132,9 +180,9 @@ const ContactFormBlock = ({
           <div>
             <label
               htmlFor="message"
-              className="block text-lg font-medium text-center   text-gray-700 mb-2"
+              className="block text-lg font-medium md:text-center text-gray-700 mb-2"
             >
-              Votre message
+              {messageLabel} *
             </label>
             <textarea
               id="message"
@@ -144,8 +192,40 @@ const ContactFormBlock = ({
               required
               rows={5}
               className="w-full px-4 py-2 bg-[#FFFACD]/80 rounded-md focus:ring-2 focus:ring-[#F88379] focus:border-transparent transition-colors resize-vertical"
-              placeholder="Votre message..."
+              placeholder={messagePlaceholder}
             />
+          </div>
+
+          {/* Consentement RGPD */}
+          <div className="space-y-4">
+            <div className="flex items-start gap-3">
+              <input
+                type="checkbox"
+                id="consent"
+                name="consent"
+                checked={formData.consent}
+                onChange={handleChange}
+                required
+                className="mt-1 w-4 h-4 text-[#F88379] bg-[#FFFACD]/80 border-gray-300 rounded focus:ring-[#F88379] focus:ring-2"
+              />
+              <label htmlFor="consent" className="text-sm text-gray-700">
+                {consentText}{' '}
+                <button
+                  type="button"
+                  onClick={() => setIsPolicyModalOpen(true)}
+                  className="text-[#F88379] underline hover:text-[#e67369] focus:outline-none focus:ring-2 focus:ring-[#F88379] focus:ring-offset-1 rounded"
+                >
+                  {policyLinkText}
+                </button>
+                . *
+              </label>
+            </div>
+
+            {rgpdInfoText && (
+              <div className="bg-[#FFD8D8]/31 rounded-md p-4 text-xs text-gray-600 whitespace-pre-line">
+                {rgpdInfoText}
+              </div>
+            )}
           </div>
 
           {/* Bouton d'envoi */}
@@ -153,31 +233,41 @@ const ContactFormBlock = ({
             <Button
               type="submit"
               variant="primary"
-              disabled={isSubmitting}
+              disabled={isSubmitting || !formData.consent}
               className="px-6 py-3 rounded-full disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-[#F88379] focus:ring-offset-2"
             >
-              {isSubmitting ? 'Envoi en cours...' : submitButtonText}
+              {isSubmitting ? submittingText : submitButtonText}
             </Button>
+            {!formData.consent && consentRequiredText && (
+              <p className="text-xs text-gray-500 mt-4">
+                {consentRequiredText}
+              </p>
+            )}
           </div>
 
           {/* Messages de statut */}
           {submitStatus === 'success' && (
             <div className="p-4 bg-green-50 border border-green-200 rounded-md">
-              <p className="text-green-800 text-sm">
-                ✓ Votre message a été envoyé avec succès !
-              </p>
+              <p className="text-green-800 text-sm">{successMessage}</p>
             </div>
           )}
 
           {submitStatus === 'error' && (
             <div className="p-4 bg-red-50 border border-red-200 rounded-md">
-              <p className="text-red-800 text-sm">
-                ✗ Une erreur est survenue. Veuillez réessayer.
-              </p>
+              <p className="text-red-800 text-sm">{errorMessage}</p>
             </div>
           )}
         </form>
       </div>
+
+      {/* Modal Politique de confidentialité */}
+      <PrivacyPolicyModal
+        isOpen={isPolicyModalOpen}
+        onClose={() => setIsPolicyModalOpen(false)}
+        title={privacyPolicy?.title}
+        content={privacyPolicy?.content}
+        closeButtonText={privacyPolicy?.closeButtonText}
+      />
     </div>
   )
 }

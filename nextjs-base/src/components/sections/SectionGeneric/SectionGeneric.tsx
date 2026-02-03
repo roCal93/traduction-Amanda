@@ -12,6 +12,7 @@ import {
   TimelineBlock as TimelineBlockData,
 } from '@/types/strapi'
 import * as Blocks from '@/components/blocks'
+import { FadeIn } from '@/components/animations'
 
 type BlocksMap = Record<string, React.ComponentType<Record<string, unknown>>>
 const TypedBlocks = Blocks as unknown as BlocksMap
@@ -138,14 +139,16 @@ export const SectionGeneric = ({
       id={identifier}
       className={`${getTopSpacingClass(spacingTop)} ${getBottomSpacingClass(spacingBottom)} px-4`}
     >
-      <div className={`${getContainerWidthClass(containerWidth)} mx-auto`}>
-        {title && (
-          <h2 className="text-3xl font-semibold mb-8 text-center">{title}</h2>
-        )}
-        <div className="space-y-4">
-          {blocks?.map((block, index) => renderBlock(block, index))}
+      <FadeIn>
+        <div className={`${getContainerWidthClass(containerWidth)} mx-auto`}>
+          {title && (
+            <h2 className="text-3xl font-semibold mb-8 text-center">{title}</h2>
+          )}
+          <div className="space-y-4">
+            {blocks?.map((block, index) => renderBlock(block, index))}
+          </div>
         </div>
-      </div>
+      </FadeIn>
     </section>
   )
 }

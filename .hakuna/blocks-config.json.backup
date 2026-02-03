@@ -1,0 +1,21 @@
+{
+  "selectedBlocks": [
+    "TextBlock",
+    "ImageBlock",
+    "ButtonBlock",
+    "HeroBlockSimpleText",
+    "TextImageBlock",
+    "CardsBlock",
+    "CarouselBlock",
+    "CarouselCard",
+    "ContactFormBlock",
+    "WorkBlock",
+    "WorkCard",
+    "TimelineBlock",
+    "timeline-item",
+    "BackgroundBlock"
+  ],
+  "preset": "portfolio",
+  "autoSync": true,
+  "lastSync": "2026-01-22T08:55:56Z"
+}

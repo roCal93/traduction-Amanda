@@ -29,11 +29,6 @@ const WorkBlock = ({
   const [loading, setLoading] = useState(true)
 
   // Fetch work items
-  const filterCategoryIds = React.useMemo(
-    () => filterByCategories.map((c) => c.id).join(','),
-    [filterByCategories]
-  )
-
   React.useEffect(() => {
     const fetchWorkItems = async () => {
       try {
@@ -77,7 +72,13 @@ const WorkBlock = ({
     }
 
     fetchWorkItems()
-  }, [showAllCategories, showFeaturedOnly, limit, filterCategoryIds])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    showAllCategories,
+    showFeaturedOnly,
+    limit,
+    JSON.stringify(filterByCategories.map((c) => c.id)),
+  ])
 
   // Get all unique categories from loaded items
   const availableCategories = useMemo(() => {
@@ -106,15 +107,28 @@ const WorkBlock = ({
   }, [workItems, selectedCategory])
 
   const columnClasses = {
-    '2': 'grid-cols-1 md:grid-cols-2',
-    '3': 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3',
-    '4': 'grid-cols-1 md:grid-cols-2 lg:grid-cols-4',
+    '2': 'grid-cols-2 md:grid-cols-2',
+    '3': 'grid-cols-2 md:grid-cols-2 lg:grid-cols-3',
+    '4': 'grid-cols-2 md:grid-cols-2 lg:grid-cols-4',
   }
 
   if (loading) {
     return (
       <div className="flex items-center justify-center py-12">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900"></div>
+        <div className="flex gap-2">
+          <div
+            className="w-3 h-3 rounded-full animate-bounce"
+            style={{ backgroundColor: '#F88379', animationDelay: '0ms' }}
+          />
+          <div
+            className="w-3 h-3 rounded-full animate-bounce"
+            style={{ backgroundColor: '#C5E1A5', animationDelay: '150ms' }}
+          />
+          <div
+            className="w-3 h-3 rounded-full animate-bounce"
+            style={{ backgroundColor: '#FFFACD', animationDelay: '300ms' }}
+          />
+        </div>
       </div>
     )
   }
@@ -177,7 +191,7 @@ const WorkBlock = ({
         </div>
       ) : (
         <div
-          className={`grid ${columnClasses[columns]} gap-6 ${
+          className={`grid ${columnClasses[columns]} gap-3 sm:gap-6 ${
             layout === 'masonry' ? 'auto-rows-max' : ''
           }`}
         >

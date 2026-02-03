@@ -86,25 +86,19 @@ export interface BlocksCarouselBlock extends Struct.ComponentSchema {
     displayName: 'Carousel Block';
   };
   attributes: {
-    autoplay: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
-    autoplayDelay: Schema.Attribute.Integer &
+    scrollSpeed: Schema.Attribute.Integer &
       Schema.Attribute.SetMinMax<
         {
-          min: 1000;
-        },
-        number
-      > &
-      Schema.Attribute.DefaultTo<5000>;
-    cards: Schema.Attribute.Component<'shared.carousel-card', true> &
-      Schema.Attribute.Required &
-      Schema.Attribute.SetMinMax<
-        {
+          max: 100;
           min: 1;
         },
         number
-      >;
-    showControls: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<true>;
-    showIndicators: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<true>;
+      > &
+      Schema.Attribute.DefaultTo<5>;
+    workItems: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::work-item.work-item'
+    >;
   };
 }
 
@@ -119,16 +113,134 @@ export interface BlocksContactFormBlock extends Struct.ComponentSchema {
       ['left', 'center', 'right', 'full']
     > &
       Schema.Attribute.Required &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: false;
+        };
+      }> &
       Schema.Attribute.DefaultTo<'center'>;
-    description: Schema.Attribute.Text;
+    consentRequiredText: Schema.Attribute.String &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    consentText: Schema.Attribute.Text &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }> &
+      Schema.Attribute.DefaultTo<"J'accepte que mes donn\u00E9es personnelles soient trait\u00E9es conform\u00E9ment \u00E0 la">;
+    description: Schema.Attribute.Text &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    emailLabel: Schema.Attribute.String &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }> &
+      Schema.Attribute.DefaultTo<'Votre email'>;
+    emailPlaceholder: Schema.Attribute.String &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }> &
+      Schema.Attribute.DefaultTo<'votre@email.com'>;
+    errorMessage: Schema.Attribute.String &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }> &
+      Schema.Attribute.DefaultTo<'\u2717 Une erreur est survenue. Veuillez r\u00E9essayer.'>;
     maxWidth: Schema.Attribute.Enumeration<
       ['small', 'medium', 'large', 'full']
     > &
       Schema.Attribute.Required &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: false;
+        };
+      }> &
       Schema.Attribute.DefaultTo<'medium'>;
+    messageLabel: Schema.Attribute.String &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }> &
+      Schema.Attribute.DefaultTo<'Votre message'>;
+    messagePlaceholder: Schema.Attribute.String &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }> &
+      Schema.Attribute.DefaultTo<'Votre message...'>;
+    nameLabel: Schema.Attribute.String &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }> &
+      Schema.Attribute.DefaultTo<'Votre nom'>;
+    namePlaceholder: Schema.Attribute.String &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }> &
+      Schema.Attribute.DefaultTo<'Votre nom'>;
+    policyLinkText: Schema.Attribute.String &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }> &
+      Schema.Attribute.DefaultTo<'politique de confidentialit\u00E9'>;
+    privacyPolicy: Schema.Attribute.Relation<
+      'oneToOne',
+      'api::privacy-policy.privacy-policy'
+    >;
+    rgpdInfoText: Schema.Attribute.Text &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
     submitButtonText: Schema.Attribute.String &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }> &
       Schema.Attribute.DefaultTo<'Envoyer'>;
+    submittingText: Schema.Attribute.String &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }> &
+      Schema.Attribute.DefaultTo<'Envoi en cours...'>;
+    successMessage: Schema.Attribute.String &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }> &
+      Schema.Attribute.DefaultTo<'\u2713 Votre message a \u00E9t\u00E9 envoy\u00E9 avec succ\u00E8s !'>;
     title: Schema.Attribute.String &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }> &
       Schema.Attribute.DefaultTo<'Contactez-nous'>;
   };
 }
@@ -241,20 +353,16 @@ export interface BlocksTimelineBlock extends Struct.ComponentSchema {
 export interface BlocksTranslationBlock extends Struct.ComponentSchema {
   collectionName: 'components_blocks_translation_blocks';
   info: {
-    description: 'Bloc comparant un texte source et sa traduction (source: EN/IT, traduction: FR)';
+    description: 'Block displaying source + translation pairs';
     displayName: 'Translation Block';
   };
   attributes: {
-    alignmentMapping: Schema.Attribute.JSON & Schema.Attribute.DefaultTo<{}>;
-    author: Schema.Attribute.String;
     examples: Schema.Attribute.Component<'shared.translation-item', true>;
+    showCreditImage: Schema.Attribute.Boolean &
+      Schema.Attribute.DefaultTo<false>;
     showLanguageLabel: Schema.Attribute.Boolean &
       Schema.Attribute.DefaultTo<true>;
-    source: Schema.Attribute.Blocks;
-    sourceLanguage: Schema.Attribute.Enumeration<['en', 'it']> &
-      Schema.Attribute.Required &
-      Schema.Attribute.DefaultTo<'en'>;
-    translation: Schema.Attribute.Blocks;
+    title: Schema.Attribute.String;
     translationLanguage: Schema.Attribute.Enumeration<['fr']> &
       Schema.Attribute.Required &
       Schema.Attribute.DefaultTo<'fr'>;
@@ -377,15 +485,19 @@ export interface SharedTimelineItem extends Struct.ComponentSchema {
 export interface SharedTranslationItem extends Struct.ComponentSchema {
   collectionName: 'components_shared_translation_items';
   info: {
-    description: 'A single source/translation pair';
+    description: 'Pair of source and translation rich-text';
     displayName: 'Translation Item';
   };
   attributes: {
     author: Schema.Attribute.String;
+    description: Schema.Attribute.Blocks;
     source: Schema.Attribute.Blocks & Schema.Attribute.Required;
     sourceLanguage: Schema.Attribute.Enumeration<['en', 'it']> &
       Schema.Attribute.Required &
       Schema.Attribute.DefaultTo<'en'>;
+    sourceText: Schema.Attribute.String;
+    theme: Schema.Attribute.String;
+    title: Schema.Attribute.String;
     translation: Schema.Attribute.Blocks & Schema.Attribute.Required;
   };
 }

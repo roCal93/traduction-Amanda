@@ -134,11 +134,8 @@ export interface CardsBlock {
  * Component: blocks.carousel-block
  */
 export interface CarouselBlock {
-  cards: CarouselCard[];
-  autoplay?: boolean;
-  autoplayDelay?: number;
-  showControls?: boolean;
-  showIndicators?: boolean;
+  workItems?: (WorkItem & StrapiEntity)[];
+  scrollSpeed?: number;
 }
 
 /**
@@ -148,6 +145,20 @@ export interface ContactFormBlock {
   title?: string;
   description?: string;
   submitButtonText?: string;
+  namePlaceholder?: string;
+  emailPlaceholder?: string;
+  messagePlaceholder?: string;
+  nameLabel?: string;
+  emailLabel?: string;
+  messageLabel?: string;
+  consentText?: string;
+  policyLinkText?: string;
+  successMessage?: string;
+  errorMessage?: string;
+  submittingText?: string;
+  rgpdInfoText?: string;
+  consentRequiredText?: string;
+  privacyPolicy?: (PrivacyPolicy & StrapiEntity);
   blockAlignment: string;
   maxWidth: string;
 }
@@ -206,14 +217,11 @@ export interface TimelineBlock {
  * Component: blocks.translation-block
  */
 export interface TranslationBlock {
-  examples?: TranslationItem[];
-  source?: StrapiBlock[];
-  translation?: StrapiBlock[];
-  sourceLanguage: string;
+  title?: string;
   translationLanguage: string;
   showLanguageLabel?: boolean;
-  author?: string;
-  alignmentMapping?: Record<string, unknown>;
+  showCreditImage?: boolean;
+  examples?: TranslationItem[];
 }
 
 /**
@@ -293,7 +301,11 @@ export interface TranslationItem {
   source: StrapiBlock[];
   translation: StrapiBlock[];
   sourceLanguage: string;
+  theme?: string;
+  title?: string;
   author?: string;
+  sourceText?: string;
+  description?: StrapiBlock[];
 }
 
 // ============================================================================
@@ -344,6 +356,20 @@ export interface Page {
 }
 export type PageResponse = StrapiResponse<Page>;
 export type PageCollectionResponse = StrapiCollectionResponse<Page>;
+
+/**
+ * Privacy Policy
+ */
+export interface PrivacyPolicy {
+  title: string;
+  content: string;
+  closeButtonText?: string;
+  lastUpdated?: string;
+  locale?: string;
+  localizations?: (PrivacyPolicy & StrapiEntity)[];
+}
+export type PrivacyPolicyResponse = StrapiResponse<PrivacyPolicy>;
+export type PrivacyPolicyCollectionResponse = StrapiCollectionResponse<PrivacyPolicy>;
 
 /**
  * section

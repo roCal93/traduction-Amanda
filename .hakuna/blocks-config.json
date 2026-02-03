@@ -1,22 +1,23 @@
 {
-  "selectedBlocks": [
-    "TextBlock",
-    "ImageBlock",
-    "ButtonBlock",
-    "HeroBlockSimpleText",
-    "TextImageBlock",
-    "CardsBlock",
-    "CarouselBlock",
-    "CarouselCard",
-    "ContactFormBlock",
-    "WorkBlock",
-    "WorkCard",
-    "TimelineBlock",
-    "timeline-item",
-    "BackgroundBlock",
-    "TranslationBlock"
-  ],
+  "starterVersion": "2.0.0",
+  "blockLibraryVersion": "1.0.0",
+  "selectedBlocks": {
+    "TextBlock": "1.0.0",
+    "ImageBlock": "1.0.0",
+    "ButtonBlock": "1.0.0",
+    "HeroBlockSimpleText": "1.0.0",
+    "TextImageBlock": "1.0.0",
+    "CardsBlock": "1.0.0",
+    "CarouselBlock": "1.0.0",
+    "CarouselCard": "1.0.0",
+    "ContactFormBlock": "1.0.0",
+    "WorkBlock": "1.0.0",
+    "WorkCard": "1.0.0",
+    "TimelineBlock": "1.0.0",
+    "TimelineItem": "1.0.0",
+    "BackgroundBlock": "1.0.0"
+  },
   "preset": "portfolio",
-  "autoSync": true,
-  "lastSync": "2026-01-29T13:37:41Z"
+  "createdAt": "2026-02-03T06:29:45Z",
+  "lastSync": "2026-01-22T08:55:56Z"
 }
