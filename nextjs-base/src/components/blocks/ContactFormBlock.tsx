@@ -132,7 +132,7 @@ const ContactFormBlock = ({
           <div>
             <label
               htmlFor="message"
-              className="block text-lg font-medium text-center   text-gray-700 mb-2"
+              className="block text-lg font-medium md:text-center text-gray-700 mb-2"
             >
               Votre message
             </label>

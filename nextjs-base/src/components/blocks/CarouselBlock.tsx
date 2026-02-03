@@ -167,7 +167,7 @@ const CarouselBlock = ({
       >
         {duplicatedItems.map((item, index) => (
           <div key={`${item.id}-${index}`} className="w-[200px] flex-shrink-0">
-            <CarouselWorkCard item={item} />
+            <CarouselWorkCard item={item} isPriority={index < 6} />
           </div>
         ))}
       </div>
