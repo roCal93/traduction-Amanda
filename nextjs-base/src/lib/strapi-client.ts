@@ -165,13 +165,9 @@ export class StrapiClient {
       params.set('locale', options.locale);
     }
 
-    // Publication state (Strapi v5 uses 'status' instead of 'publicationState')
+    // Publication state
     if (options.publicationState) {
-      if (options.publicationState === 'preview') {
-        params.set('status', 'draft');
-      } else {
-        params.set('status', 'published');
-      }
+      params.set('publicationState', options.publicationState);
     }
 
     url.search = params.toString();

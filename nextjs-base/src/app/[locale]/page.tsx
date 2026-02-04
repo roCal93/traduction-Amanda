@@ -33,11 +33,7 @@ const fetchHomePageData = async (locale: string, isDraft: boolean) => {
       'noIndex',
       'locale',
     ],
-    populate: {
-      sections: { populate: { blocks: { populate: '*' } } },
-      seoImage: { populate: '*' },
-      localizations: '*',
-    },
+    populate: 'sections.blocks,seoImage,localizations',
     locale,
     publicationState: isDraft ? 'preview' : 'live',
   })
@@ -55,11 +51,7 @@ const fetchHomePageData = async (locale: string, isDraft: boolean) => {
         'noIndex',
         'locale',
       ],
-      populate: {
-        sections: { populate: { blocks: { populate: '*' } } },
-        seoImage: { populate: '*' },
-        localizations: '*',
-      },
+      populate: 'sections.blocks,seoImage,localizations',
       locale: 'fr',
       publicationState: isDraft ? 'preview' : 'live',
     })
