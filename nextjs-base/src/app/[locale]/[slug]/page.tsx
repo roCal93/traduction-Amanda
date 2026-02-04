@@ -41,8 +41,11 @@ const fetchPageData = async (
       'noIndex',
       'locale',
     ],
-    populate:
-      'sections.blocks.cards.image,sections.blocks.image,sections.blocks.imageDesktop,sections.blocks.buttons.file,sections.blocks.items.images.image,sections.blocks.items.images.link,sections.blocks.examples,sections.blocks.workItems.image,sections.blocks.workItems.categories,sections.blocks.privacyPolicy,seoImage,localizations',
+    populate: {
+      sections: { populate: { blocks: { populate: '*' } } },
+      seoImage: true,
+      localizations: true,
+    },
     locale,
     publicationState: isDraft ? 'preview' : 'live',
   })

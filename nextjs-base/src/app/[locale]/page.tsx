@@ -34,7 +34,7 @@ const fetchHomePageData = async (locale: string, isDraft: boolean) => {
       'locale',
     ],
     populate: {
-      sections: { populate: 'blocks' },
+      sections: { populate: { blocks: { populate: '*' } } },
       seoImage: true,
       localizations: true,
     },
@@ -56,7 +56,7 @@ const fetchHomePageData = async (locale: string, isDraft: boolean) => {
         'locale',
       ],
       populate: {
-        sections: { populate: 'blocks' },
+        sections: { populate: { blocks: { populate: '*' } } },
         seoImage: true,
         localizations: true,
       },
