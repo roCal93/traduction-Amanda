@@ -2,7 +2,10 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Source_Serif_4, Caveat } from "next/font/google";
 import "./globals.css";
 import { cookies, headers } from 'next/headers'
-import { defaultLocale } from '@/lib/locales' 
+import { defaultLocale } from '@/lib/locales'
+
+// Mark the root layout as dynamic since we read cookies/headers to pick the locale.
+export const dynamic = 'force-dynamic'
 
 const geistSans = Geist({
   variable: "--font-geist-sans",

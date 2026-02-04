@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useMemo } from 'react'
+import React, { useState, useMemo, useRef } from 'react'
 import { WorkItem, WorkCategory, StrapiEntity } from '@/types/strapi'
 import WorkCard from './WorkCard'
 
@@ -27,9 +27,25 @@ const WorkBlock = ({
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
   const [workItems, setWorkItems] = useState<(WorkItem & StrapiEntity)[]>([])
   const [loading, setLoading] = useState(true)
+  const lastFetchKeyRef = useRef<string>('')
+
+  // Stable list/key for dependencies to avoid complex expressions in the effect array
+  const categoryIds = useMemo(
+    () => filterByCategories.map((c) => c.id),
+    [filterByCategories]
+  )
+  const categoryIdsKey = useMemo(() => categoryIds.join(','), [categoryIds])
+  const fetchKey = useMemo(
+    () => [showAllCategories, showFeaturedOnly, limit, categoryIdsKey].join('|'),
+    [showAllCategories, showFeaturedOnly, limit, categoryIdsKey]
+  )
 
   // Fetch work items
   React.useEffect(() => {
+    // Avoid duplicate fetches in Strict Mode by skipping if the key hasn't changed
+    if (lastFetchKeyRef.current === fetchKey) return
+    lastFetchKeyRef.current = fetchKey
+
     const fetchWorkItems = async () => {
       try {
         setLoading(true)
@@ -50,12 +66,9 @@ const WorkBlock = ({
           params.append('filters[featured][$eq]', 'true')
         }
 
-        if (!showAllCategories && filterByCategories.length > 0) {
-          filterByCategories.forEach((category, index) => {
-            params.append(
-              `filters[categories][id][$in][${index}]`,
-              category.id.toString()
-            )
+        if (!showAllCategories && categoryIds.length > 0) {
+          categoryIds.forEach((categoryId, index) => {
+            params.append(`filters[categories][id][$in][${index}]`, categoryId.toString())
           })
         }
 
@@ -72,13 +85,7 @@ const WorkBlock = ({
     }
 
     fetchWorkItems()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    showAllCategories,
-    showFeaturedOnly,
-    limit,
-    JSON.stringify(filterByCategories.map((c) => c.id)),
-  ])
+  }, [fetchKey, categoryIds, showAllCategories, showFeaturedOnly, limit])
 
   // Get all unique categories from loaded items
   const availableCategories = useMemo(() => {
