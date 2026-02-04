@@ -286,3 +286,4 @@ Configurez les mêmes variables dans l'interface Vercel :
 ⚠️ **Ne jamais modifier ce template directement**  
 Pour un nouveau projet : copiez le dossier complet dans `/projects/clients/`
 
+# Build cache clear
