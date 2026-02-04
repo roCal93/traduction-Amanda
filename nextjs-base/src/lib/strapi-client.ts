@@ -118,8 +118,9 @@ export class StrapiClient {
     if (options.populate) {
       if (typeof options.populate === 'string') {
         const p = options.populate.trim();
-        if (p === '*' || p === '') {
-          params.set('populate', '*');
+        if (p === '*' || p === '' || p === 'deep') {
+          // Support for populate=* and populate=deep (Strapi deep populate)
+          params.set('populate', p);
         } else if (p.includes(',')) {
           // Pour les chemins multiples séparés par virgules (ex: "sections.blocks.cards.image,seoImage")
           // on les passe directement dans un seul paramètre populate
