@@ -15,6 +15,7 @@ export default ({ env }) => {
   const previewSecret = env('PREVIEW_SECRET')
 
   return {
+    url: env('ADMIN_URL', '/admin'),
     auth: {
       secret: env('ADMIN_JWT_SECRET'),
     },
