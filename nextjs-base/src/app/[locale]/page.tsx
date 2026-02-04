@@ -10,7 +10,7 @@ import { draftMode } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { defaultLocale } from '@/lib/locales'
 
-export const revalidate = 3600 // Revalidate every hour as fallback
+export const revalidate = 60 // Revalidate every minute for faster updates
 
 const fetchHomePageData = async (locale: string, isDraft: boolean) => {
   const apiToken = isDraft
@@ -33,8 +33,21 @@ const fetchHomePageData = async (locale: string, isDraft: boolean) => {
       'noIndex',
       'locale',
     ],
-    populate:
-      'sections.blocks.cards.image,sections.blocks.image,sections.blocks.imageDesktop,sections.blocks.buttons.file,sections.blocks.items.images,sections.blocks.workItems.image,sections.blocks.workItems.categories,sections.blocks.privacyPolicy,seoImage,localizations',
+    populate: {
+      sections: {
+        populate: {
+          blocks: {
+            populate: '*',
+          },
+        },
+      },
+      seoImage: {
+        populate: '*',
+      },
+      localizations: {
+        populate: '*',
+      },
+    },
     locale,
     publicationState: isDraft ? 'preview' : 'live',
   })
@@ -52,8 +65,21 @@ const fetchHomePageData = async (locale: string, isDraft: boolean) => {
         'noIndex',
         'locale',
       ],
-      populate:
-        'sections.blocks.cards.image,sections.blocks.image,sections.blocks.imageDesktop,sections.blocks.buttons.file,sections.blocks.items.images,sections.blocks.workItems.image,sections.blocks.workItems.categories,sections.blocks.privacyPolicy,seoImage,localizations',
+      populate: {
+        sections: {
+          populate: {
+            blocks: {
+              populate: '*',
+            },
+          },
+        },
+        seoImage: {
+          populate: '*',
+        },
+        localizations: {
+          populate: '*',
+        },
+      },
       locale: 'fr',
       publicationState: isDraft ? 'preview' : 'live',
     })
