@@ -1,8 +1,7 @@
 import { NextResponse } from 'next/server'
-import { getSupportedLocales, defaultLocale } from '@/lib/supported-locales'
+import { locales, defaultLocale } from '@/lib/locales'
 
 export async function GET() {
-  const locales = await getSupportedLocales()
 
   return NextResponse.json(
     { locales, defaultLocale },
