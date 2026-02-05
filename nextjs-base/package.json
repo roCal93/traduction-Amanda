@@ -37,6 +37,6 @@
     "strapi-to-typescript": "^2.0.15",
     "tailwindcss": "^4",
     "typescript": "^5",
-    "vitest": "^4.0.17"
+    "vitest": "^4.0.18"
   }
 }
