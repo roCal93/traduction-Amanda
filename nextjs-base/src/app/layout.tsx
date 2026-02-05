@@ -3,6 +3,7 @@ import { Geist, Geist_Mono, Source_Serif_4, Caveat } from "next/font/google";
 import "./globals.css";
 import { cookies, headers } from 'next/headers'
 import { defaultLocale } from '@/lib/locales'
+import { isDisableDark } from '@/lib/theme' 
 
 // Mark the root layout as dynamic since we read cookies/headers to pick the locale.
 export const dynamic = 'force-dynamic'
@@ -66,8 +67,10 @@ export default async function RootLayout({
     }
   }
 
+  const disableDark = isDisableDark();
+
   return (
-    <html lang={locale} suppressHydrationWarning>
+    <html lang={locale} suppressHydrationWarning data-disable-dark={disableDark ? 'true' : undefined}>
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${sourceSerif.variable} ${caveat.variable} antialiased`}
       >
