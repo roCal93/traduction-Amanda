@@ -27,13 +27,13 @@
     },
     "slug": {
       "type": "uid",
-      "targetField": "name",
-      "required": true,
       "pluginOptions": {
         "i18n": {
           "localized": false
         }
-      }
+      },
+      "targetField": "name",
+      "required": true
     },
     "description": {
       "type": "text",

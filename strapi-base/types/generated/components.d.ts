@@ -10,7 +10,7 @@ export interface BlocksBackgroundBlock extends Struct.ComponentSchema {
     color: Schema.Attribute.String;
     fixed: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
     gradient: Schema.Attribute.String;
-    image: Schema.Attribute.Media<'images' | 'videos' | 'audios' | 'files'>;
+    image: Schema.Attribute.Media<'images' | 'files'>;
     imageDesktop: Schema.Attribute.Media<
       'images' | 'videos' | 'audios' | 'files'
     >;
@@ -464,7 +464,7 @@ export interface SharedTimelineImage extends Struct.ComponentSchema {
     icon: 'image';
   };
   attributes: {
-    image: Schema.Attribute.Media & Schema.Attribute.Required;
+    image: Schema.Attribute.Media<'images'> & Schema.Attribute.Required;
     link: Schema.Attribute.Component<'shared.external-link', false>;
   };
 }
