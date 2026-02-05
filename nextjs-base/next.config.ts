@@ -9,6 +9,11 @@ const nextConfig: NextConfig = {
         port: '1337',
         pathname: '/uploads/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'res.cloudinary.com',
+        pathname: '/**',
+      },
       // Pour la production, ajoutez votre domaine Strapi ici :
       // IMPORTANT: Décommenter et configurer pour la production pour activer l'optimisation d'images
       // {
