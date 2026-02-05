@@ -12,6 +12,15 @@ Template de base pour tous les projets frontend.
 - Prévu pour Vercel
 - Variables d'environnement via `.env.local`
 
+**Contrôle du mode sombre**: Vous pouvez désactiver le mode sombre globalement pour ce projet en ajoutant dans `.env.local` :
+
+```env
+# Désactive le mode sombre pour ce site (forcé en clair)
+NEXT_PUBLIC_DISABLE_DARK=true
+```
+
+Quand cette variable est définie (`true` ou `1`), le projet ajoute un attribut `data-disable-dark` sur la balise `<html>` pour empêcher l'application des règles CSS `@media (prefers-color-scheme: dark)`.
+
 ## Utilisation
 
 ### 1. Initialisation
