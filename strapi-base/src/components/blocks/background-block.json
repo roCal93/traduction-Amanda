@@ -8,37 +8,88 @@
   "attributes": {
     "type": {
       "type": "enumeration",
-      "enum": ["color", "image", "gradient"],
+      "required": true,
       "default": "color",
-      "required": true
+      "enum": [
+        "color",
+        "image",
+        "gradient"
+      ]
     },
-    "color": { "type": "string" },
-    "gradient": { "type": "string" },
-    "image": { "type": "media", "multiple": false },
-    "imageDesktop": { "type": "media", "multiple": false },
+    "color": {
+      "type": "string"
+    },
+    "gradient": {
+      "type": "string"
+    },
+    "image": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images",
+        "videos",
+        "audios",
+        "files"
+      ]
+    },
+    "imageDesktop": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images",
+        "videos",
+        "audios",
+        "files"
+      ]
+    },
     "position": {
       "type": "enumeration",
-      "enum": ["center center", "top center", "bottom center", "left center", "right center"],
-      "default": "center center"
+      "default": "center center",
+      "enum": [
+        "center center",
+        "top center",
+        "bottom center",
+        "left center",
+        "right center"
+      ]
     },
     "size": {
       "type": "enumeration",
-      "enum": ["cover", "contain", "auto"],
-      "default": "cover"
+      "default": "cover",
+      "enum": [
+        "cover",
+        "contain",
+        "auto"
+      ]
     },
     "repeat": {
       "type": "enumeration",
-      "enum": ["no-repeat", "repeat", "repeat-x", "repeat-y"],
-      "default": "no-repeat"
+      "default": "no-repeat",
+      "enum": [
+        "no-repeat",
+        "repeat",
+        "repeat-x",
+        "repeat-y"
+      ]
     },
-    "fixed": { "type": "boolean", "default": false },
-    "overlayColor": { "type": "string" },
-    "overlayOpacity": { "type": "decimal", "default": 0 },
+    "fixed": {
+      "type": "boolean",
+      "default": false
+    },
+    "overlayColor": {
+      "type": "string"
+    },
+    "overlayOpacity": {
+      "type": "decimal",
+      "default": 0
+    },
     "scope": {
       "type": "enumeration",
-      "enum": ["section", "global"],
       "default": "section",
-      "description": "Appliquer le fond seulement à la section ou à tout le site (global)."
+      "enum": [
+        "section",
+        "global"
+      ]
     }
   },
   "config": {}

@@ -10,8 +10,10 @@ export interface BlocksBackgroundBlock extends Struct.ComponentSchema {
     color: Schema.Attribute.String;
     fixed: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
     gradient: Schema.Attribute.String;
-    image: Schema.Attribute.Media;
-    imageDesktop: Schema.Attribute.Media;
+    image: Schema.Attribute.Media<'images' | 'videos' | 'audios' | 'files'>;
+    imageDesktop: Schema.Attribute.Media<
+      'images' | 'videos' | 'audios' | 'files'
+    >;
     overlayColor: Schema.Attribute.String;
     overlayOpacity: Schema.Attribute.Decimal & Schema.Attribute.DefaultTo<0>;
     position: Schema.Attribute.Enumeration<
