@@ -1,4 +1,9 @@
 export default [
+  // Append Cloudinary to any CSP header returned by Strapi (helps ensure admin loads remote images)
+  {
+    name: 'global::append-cloudinary-csp',
+    config: {},
+  },
   'strapi::logger',
   'strapi::errors',
   // Security middleware with relaxed CSP for local preview & dev tooling
