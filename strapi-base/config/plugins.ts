@@ -21,14 +21,22 @@ export default ({ env }) => ({
           })
           const localePath = locale && locale !== 'fr' ? `/${locale}` : ''
 
-          // Prefer slug-based paths for frontend preview routes when possible
-          const slug =
-            // direct field
+          // Extract slug from various possible shapes sent by Strapi admin
+          const maybeSlug =
+            // common shapes: document.slug, document.attributes.slug
             (document && (document.slug || (document as any)?.attributes?.slug)) ||
-            // fallback to id if no slug available
-            documentId
+            // sometimes wrapped in data: document.data.attributes.slug
+            (document && (document as any)?.data && (document as any).data.attributes && (document as any).data.attributes.slug) ||
+            // older/other shapes
+            (document && (document as any)?.data && (document as any).data.slug) ||
+            null
 
-          return `${frontendUrl}/api/preview?${params.toString()}&url=${localePath}/${slug}`
+          const slug = maybeSlug || documentId
+
+          // ensure no double slashes and encode slug
+          const pathPart = `${localePath}/${encodeURIComponent(String(slug))}`.replace(/\/\/+/, '/')
+
+          return `${frontendUrl}/api/preview?${params.toString()}&url=${pathPart}`
         },
       },
     },
