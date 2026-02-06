@@ -12,7 +12,7 @@ export default ({ env }) => ({
     preview: {
       enabled: true,
       config: {
-        handler: (uid, { documentId, locale, status }) => {
+        handler: (uid, { documentId, document, locale, status }) => {
           const frontendUrl = env('CLIENT_URL', 'http://localhost:3000')
           const previewSecret = env('PREVIEW_SECRET', 'dev-preview-secret')
           const params = new URLSearchParams({
@@ -20,7 +20,15 @@ export default ({ env }) => ({
             status: status || 'draft',
           })
           const localePath = locale && locale !== 'fr' ? `/${locale}` : ''
-          return `${frontendUrl}/api/preview?${params.toString()}&url=${localePath}/${uid.split('.')[1]}/${documentId}`
+
+          // Prefer slug-based paths for frontend preview routes when possible
+          const slug =
+            // direct field
+            (document && (document.slug || (document as any)?.attributes?.slug)) ||
+            // fallback to id if no slug available
+            documentId
+
+          return `${frontendUrl}/api/preview?${params.toString()}&url=${localePath}/${slug}`
         },
       },
     },
