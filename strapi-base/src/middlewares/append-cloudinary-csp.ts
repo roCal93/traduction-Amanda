@@ -107,5 +107,5 @@ export default () => {
     ctx.set(headerName, newCsp)
     console.info(`[strapi:csp] patched CSP; added origins: ${origins.join(',')}`)
   }
-  }
 }
+
