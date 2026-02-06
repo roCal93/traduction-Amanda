@@ -1,5 +1,32 @@
 import type { NextConfig } from 'next'
 
+function getAllowedOrigins() {
+  const allowedEnv =
+    process.env.ALLOWED_ORIGINS || process.env.NEXT_PUBLIC_ALLOWED_ORIGINS
+  const strapiOrigin =
+    process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1337'
+  const set = new Set<string>()
+
+  if (allowedEnv) {
+    allowedEnv
+      .split(',')
+      .map((s) => s.trim())
+      .filter(Boolean)
+      .forEach((u) => set.add(u))
+  } else {
+    set.add(strapiOrigin)
+    if (!strapiOrigin.includes('localhost')) {
+      const host = strapiOrigin.replace(/^https?:\/\//, '').replace(/\/$/, '')
+      const base = host.replace(/^www\./, '')
+      set.add(`https://${base}`)
+      set.add(`https://www.${base}`)
+      set.add(`https://*.${base}`)
+    }
+  }
+
+  return Array.from(set)
+}
+
 const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
@@ -55,7 +82,7 @@ const nextConfig: NextConfig = {
       "style-src 'self' 'unsafe-inline';",
       `connect-src 'self' ${strapiOrigin} https://*.railway.app https://*.vercel.app;`,
       "font-src 'self' data:;",
-      `frame-ancestors 'self' ${strapiOrigin};`,
+      `frame-ancestors 'self' ${getAllowedOrigins().join(' ')};`,
     ].join(' ')
 
     const securityHeaders: { key: string; value: string }[] = [
