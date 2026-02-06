@@ -12,7 +12,7 @@ export default ({ env }) => ({
     preview: {
       enabled: true,
       config: {
-        handler: (uid, { documentId, document, locale, status }) => {
+        handler: async (uid, { documentId, document, locale, status }) => {
           const frontendUrl = env('CLIENT_URL', 'http://localhost:3000')
           const previewSecret = env('PREVIEW_SECRET', 'dev-preview-secret')
           const params = new URLSearchParams({
@@ -21,17 +21,32 @@ export default ({ env }) => ({
           })
           const localePath = locale && locale !== 'fr' ? `/${locale}` : ''
 
-          // Extract slug from various possible shapes sent by Strapi admin
-          const maybeSlug =
-            // common shapes: document.slug, document.attributes.slug
-            (document && (document.slug || (document as any)?.attributes?.slug)) ||
-            // sometimes wrapped in data: document.data.attributes.slug
-            (document && (document as any)?.data && (document as any).data.attributes && (document as any).data.attributes.slug) ||
-            // older/other shapes
-            (document && (document as any)?.data && (document as any).data.slug) ||
-            null
+          // Try to resolve a slug server-side using Strapi entity service (handles i18n properly)
+          let slug = null
+          try {
+            if (typeof strapi !== 'undefined' && strapi.entityService) {
+              const entry = await strapi.entityService.findOne(uid, documentId, {
+                fields: ['slug'],
+                locale: locale || null,
+              })
+              if (entry && entry.slug) {
+                slug = entry.slug
+              }
+            }
+          } catch (e) {
+            // ignore lookup errors and fallback to whatever we have
+          }
 
-          const slug = maybeSlug || documentId
+          // Fallbacks: document payload or documentId
+          if (!slug) {
+            const maybeSlug =
+              (document && (document.slug || (document as any)?.attributes?.slug)) ||
+              (document && (document as any)?.data && (document as any).data.attributes && (document as any).data.attributes.slug) ||
+              (document && (document as any)?.data && (document as any).data.slug) ||
+              null
+
+            slug = maybeSlug || documentId
+          }
 
           // ensure no double slashes and encode slug
           const pathPart = `${localePath}/${encodeURIComponent(String(slug))}`.replace(/\/\/+/, '/')
