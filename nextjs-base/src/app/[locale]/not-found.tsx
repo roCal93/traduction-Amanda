@@ -1,7 +1,5 @@
 'use client'
 
-export const metadata = { robots: 'noindex' }
-
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { defaultLocale as STATIC_DEFAULT_LOCALE, locales as STATIC_LOCALES } from '@/lib/locales'
@@ -9,6 +7,17 @@ import { defaultLocale as STATIC_DEFAULT_LOCALE, locales as STATIC_LOCALES } fro
 type LocalesResponse = {
   locales: string[]
   defaultLocale: string
+}
+
+function getCookieLocale(): string | undefined {
+  try {
+    const match = document.cookie.match(/(?:^|; )locale=([^;]+)/)
+    if (!match) return undefined
+    const value = decodeURIComponent(match[1])
+    return value || undefined
+  } catch {
+    return undefined
+  }
 }
 
 export default function NotFound() {
@@ -20,13 +29,21 @@ export default function NotFound() {
 
   useEffect(() => {
     try {
-      const docLang = document.documentElement.lang
-      const parts = window.location.pathname.split('/').filter(Boolean)
+      const cookieLocale = getCookieLocale()
+      if (cookieLocale) {
+        queueMicrotask(() => setRawLang(cookieLocale))
+        return
+      }
 
+      const docLang = document.documentElement.lang
       if (typeof docLang === 'string' && docLang.length > 0) {
-        setTimeout(() => setRawLang(docLang), 0)
-      } else if (parts[0]) {
-        setTimeout(() => setRawLang(parts[0]), 0)
+        queueMicrotask(() => setRawLang(docLang))
+        return
+      }
+
+      const parts = window.location.pathname.split('/').filter(Boolean)
+      if (parts[0]) {
+        queueMicrotask(() => setRawLang(parts[0]))
       }
     } catch {
       // noop
