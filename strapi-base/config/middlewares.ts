@@ -36,6 +36,10 @@ export default [
 
       const clientUrls = Array.from(clientUrlsSet);
 
+      // Debug: print allowed origins at startup to help verify env in production
+      // (safe: only prints origins, not secrets)
+      console.info(`[strapi:csp] ALLOWED_ORIGINS=${allowedEnv} => computed allowed origins: ${clientUrls.join(',')}`);
+
       return {
         contentSecurityPolicy: {
           useDefaults: true,
