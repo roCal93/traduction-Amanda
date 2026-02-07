@@ -34,6 +34,19 @@ export async function fetchAPI<T = unknown>(
     headers.Authorization = `Bearer ${STRAPI_TOKEN}`
   }
 
+  // Diagnostic (non-sensitive): when requesting draft, log presence of preview token/secret
+  if (draft) {
+    const previewTokenPresent = !!process.env.STRAPI_PREVIEW_TOKEN
+    const previewSecretPresent = !!process.env.PREVIEW_SECRET
+    const tokenLen = process.env.STRAPI_PREVIEW_TOKEN ? process.env.STRAPI_PREVIEW_TOKEN.length : 0
+    try {
+      // Keep output non-sensitive: do NOT print token or secret values
+      console.info(`[diag] Strapi preview request — draft=true — previewTokenPresent=${previewTokenPresent} tokenLen=${tokenLen} previewSecretPresent=${previewSecretPresent} path=${path}`)
+    } catch {
+      // swallow any logging errors in runtime
+    }
+  }
+
   // Locale: si fournie, ajouter le paramètre locale
   if (locale) {
     const sep = url.includes('?') ? '&' : '?'
