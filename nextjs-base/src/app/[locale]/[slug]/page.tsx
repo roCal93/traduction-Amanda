@@ -156,6 +156,8 @@ export async function generateMetadata({
   const page = res?.data?.[0]
   if (!page) return {}
 
+  console.info(`[diag] generateMetadata received: title="${page.title}", seoTitle="${page.seoTitle}"`)
+
   const siteBase = (
     process.env.NEXT_PUBLIC_SITE_URL ??
     process.env.SITE_URL ??
