@@ -191,7 +191,7 @@ const WorkCard = ({
         className={
           variant === 'list'
             ? 'relative w-14 h-14 sm:w-16 sm:h-16 flex-shrink-0 flex items-center justify-center overflow-hidden rounded-lg p-1'
-            : 'relative w-full aspect-[3/1] overflow-hidden flex items-center justify-center p-2'
+            : 'relative w-full aspect-[3/1] overflow-hidden flex items-center justify-center pt-3 px-3 pb-2'
         }
       >
         {imageUrl ? (
@@ -207,10 +207,10 @@ const WorkCard = ({
             <Image
               src={imageUrl}
               alt={item.image?.alternativeText || item.title}
-              width={300}
-              height={100}
+              width={240}
+              height={80}
               className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-110"
-              sizes="(max-width: 640px) 180px, (max-width: 1024px) 280px, 420px"
+              sizes="(max-width: 640px) 150px, (max-width: 1024px) 240px, 350px"
             />
           )
         ) : (
