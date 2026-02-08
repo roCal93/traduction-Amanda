@@ -250,7 +250,7 @@ export default async function Page({
     (a, b) => (a.order || 0) - (b.order || 0)
   )
 
-  console.log(`[diag] Page data: title=${page.title}, updatedAt=${page.updatedAt}, publishedAt=${page.publishedAt}, seoTitle=${page.seoTitle}`)
+  console.log(`[diag] Page data: title=${page.title}, updatedAt=${(page as any).updatedAt}, publishedAt=${(page as any).publishedAt}, seoTitle=${page.seoTitle}`)
 
   return (
     <Layout locale={locale}>
