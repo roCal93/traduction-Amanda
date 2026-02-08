@@ -33,7 +33,8 @@ const fetchHomePageData = async (locale: string, isDraft: boolean) => {
       'noIndex',
       'locale',
     ],
-    populate: 'deep',
+    populate:
+      'sections.blocks.image,sections.blocks.workItems.image,sections.blocks.workItems.categories,seoImage,localizations',
     locale,
     publicationState: isDraft ? 'preview' : 'live',
   })
@@ -51,7 +52,8 @@ const fetchHomePageData = async (locale: string, isDraft: boolean) => {
         'noIndex',
         'locale',
       ],
-      populate: 'deep',
+      populate:
+        'sections.blocks.image,sections.blocks.workItems.image,sections.blocks.workItems.categories,seoImage,localizations',
       locale: 'fr',
       publicationState: isDraft ? 'preview' : 'live',
     })

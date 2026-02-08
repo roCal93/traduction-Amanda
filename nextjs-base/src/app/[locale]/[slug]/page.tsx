@@ -41,7 +41,8 @@ const fetchPageData = async (
       'noIndex',
       'locale',
     ],
-    populate: 'deep',
+    populate:
+      'sections.blocks.image,sections.blocks.workItems.image,sections.blocks.workItems.categories,seoImage,localizations',
     locale,
     publicationState: isDraft ? 'preview' : 'live',
   })
