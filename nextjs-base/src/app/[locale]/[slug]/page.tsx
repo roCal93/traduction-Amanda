@@ -41,31 +41,7 @@ const fetchPageData = async (
       'noIndex',
       'locale',
     ],
-    populate: {
-      sections: {
-        populate: {
-          blocks: {
-            populate: {
-              image: {
-                fields: ['url', 'alternativeText', 'width', 'height'],
-              },
-              workItems: {
-                populate: {
-                  image: {
-                    fields: ['url', 'alternativeText', 'width', 'height'],
-                  },
-                  categories: {
-                    fields: ['id', 'name', 'slug', 'color'],
-                  },
-                },
-              },
-            },
-          },
-        },
-      },
-      seoImage: true,
-      localizations: true,
-    },
+    populate: 'deep',
     locale,
     publicationState: isDraft ? 'preview' : 'live',
   })

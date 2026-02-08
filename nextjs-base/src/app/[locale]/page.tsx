@@ -33,31 +33,7 @@ const fetchHomePageData = async (locale: string, isDraft: boolean) => {
       'noIndex',
       'locale',
     ],
-    populate: {
-      sections: {
-        populate: {
-          blocks: {
-            populate: {
-              image: {
-                fields: ['url', 'alternativeText', 'width', 'height'],
-              },
-              workItems: {
-                populate: {
-                  image: {
-                    fields: ['url', 'alternativeText', 'width', 'height'],
-                  },
-                  categories: {
-                    fields: ['id', 'name', 'slug', 'color'],
-                  },
-                },
-              },
-            },
-          },
-        },
-      },
-      seoImage: true,
-      localizations: true,
-    },
+    populate: 'deep',
     locale,
     publicationState: isDraft ? 'preview' : 'live',
   })
@@ -75,31 +51,7 @@ const fetchHomePageData = async (locale: string, isDraft: boolean) => {
         'noIndex',
         'locale',
       ],
-      populate: {
-        sections: {
-          populate: {
-            blocks: {
-              populate: {
-                image: {
-                  fields: ['url', 'alternativeText', 'width', 'height'],
-                },
-                workItems: {
-                  populate: {
-                    image: {
-                      fields: ['url', 'alternativeText', 'width', 'height'],
-                    },
-                    categories: {
-                      fields: ['id', 'name', 'slug', 'color'],
-                    },
-                  },
-                },
-              },
-            },
-          },
-        },
-        seoImage: true,
-        localizations: true,
-      },
+      populate: 'deep',
       locale: 'fr',
       publicationState: isDraft ? 'preview' : 'live',
     })
