@@ -56,7 +56,20 @@ const fetchHomePageData = async (locale: string, isDraft: boolean) => {
         'locale',
       ],
       populate: {
-        sections: { populate: { blocks: { populate: '*' } } },
+        sections: {
+          populate: {
+            blocks: {
+              populate: {
+                workItems: {
+                  populate: {
+                    image: { fields: ['url', 'alternativeText', 'width', 'height'] },
+                    categories: { fields: ['id', 'name', 'slug', 'color'] }
+                  }
+                }
+              }
+            }
+          }
+        },
         seoImage: true,
         localizations: true,
       },
