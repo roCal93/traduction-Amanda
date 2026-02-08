@@ -24,7 +24,7 @@ const CarouselWorkCard = ({
       className="relative w-full h-45 mb-4 overflow-hidden rounded-lg shadow-lg hover:shadow-2xl transition-all duration-300 bg-[#FFE5B3]/60 flex-shrink-0 select-none focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
     >
       {/* Image */}
-      <div className="relative w-full aspect-[2/1] overflow-hidden flex items-center justify-center p-0.5 pt-4 sm:pt-3">
+      <div className="relative w-full aspect-[2/1] overflow-hidden flex items-center justify-center p-1 sm:p-2">
         {imageUrl ? (
           <Image
             src={imageUrl}
@@ -35,7 +35,7 @@ const CarouselWorkCard = ({
             loading={isPriority ? undefined : 'lazy'}
             quality={85}
             className="max-w-full max-h-full object-contain select-none pointer-events-none"
-            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 400px"
+            sizes="(max-width: 640px) 200px, (max-width: 1024px) 300px, 400px"
             draggable={false}
           />
         ) : (
