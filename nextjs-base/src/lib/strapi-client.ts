@@ -212,7 +212,17 @@ export class StrapiClient {
           }
         }
         try {
-          return JSON.parse(text) as StrapiCollectionResponse<T>
+          const parsed = JSON.parse(text) as StrapiCollectionResponse<T>
+          // Non-sensitive diagnostic: when previewing pages, log the returned title if present
+          try {
+            if (contentType === 'pages' && options?.publicationState === 'preview') {
+              const first = (parsed as any)?.data?.[0]
+              if (first && first.title) {
+                console.info(`[diag] Strapi preview payload title=${first.title}`)
+              }
+            }
+          } catch {}
+          return parsed
         } catch {
           console.warn('Réponse non JSON depuis Strapi')
           return {} as StrapiCollectionResponse<T>
@@ -267,7 +277,16 @@ export class StrapiClient {
           }
         }
         try {
-          return JSON.parse(text) as StrapiResponse<T>
+          const parsed = JSON.parse(text) as StrapiResponse<T>
+          try {
+            if (contentType === 'pages' && options?.publicationState === 'preview') {
+              const first = (parsed as any)?.data
+              if (first && first.title) {
+                console.info(`[diag] Strapi preview payload title=${first.title}`)
+              }
+            }
+          } catch {}
+          return parsed
         } catch {
           console.warn('Réponse non JSON depuis Strapi')
           return { data: null, meta: {} } as StrapiResponse<T>
