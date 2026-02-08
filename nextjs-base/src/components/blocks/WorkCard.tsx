@@ -191,7 +191,7 @@ const WorkCard = ({
         className={
           variant === 'list'
             ? 'relative w-14 h-14 sm:w-16 sm:h-16 flex-shrink-0 flex items-center justify-center overflow-hidden rounded-lg p-1'
-            : 'relative w-full aspect-[3/1] overflow-hidden flex items-center justify-center p-1 sm:p-2'
+            : 'relative w-full aspect-[3/1] overflow-hidden flex items-center justify-center p-2'
         }
       >
         {imageUrl ? (
@@ -199,18 +199,18 @@ const WorkCard = ({
             <Image
               src={imageUrl}
               alt={item.image?.alternativeText || item.title}
-              width={112}
-              height={112}
-              className="max-w-full max-h-full object-contain transition-transform duration-300 group-hover:scale-110"
+              width={64}
+              height={64}
+              className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-110"
             />
           ) : (
             <Image
               src={imageUrl}
               alt={item.image?.alternativeText || item.title}
-              width={420}
-              height={280}
-              className="max-w-full max-h-full object-contain transition-transform duration-300 group-hover:scale-110"
-              sizes="(max-width: 640px) 200px, (max-width: 1024px) 300px, 420px"
+              width={300}
+              height={100}
+              className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-110"
+              sizes="(max-width: 640px) 180px, (max-width: 1024px) 280px, 420px"
             />
           )
         ) : (
