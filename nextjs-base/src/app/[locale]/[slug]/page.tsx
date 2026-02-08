@@ -125,8 +125,6 @@ export async function generateMetadata({
     ? process.env.STRAPI_PREVIEW_TOKEN || process.env.STRAPI_API_TOKEN
     : process.env.STRAPI_API_TOKEN
 
-  console.info(`[diag] generateMetadata: isDraft=${isEnabled}, slug=${slug}, locale=${locale}`)
-
   const client = createStrapiClient({
     apiUrl: process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1337',
     apiToken,
@@ -155,8 +153,6 @@ export async function generateMetadata({
 
   const page = res?.data?.[0]
   if (!page) return {}
-
-  console.info(`[diag] generateMetadata received: title="${page.title}", seoTitle="${page.seoTitle}"`)
 
   const siteBase = (
     process.env.NEXT_PUBLIC_SITE_URL ??
@@ -220,8 +216,6 @@ export default async function Page({
   // Fallback to URL parameter for backwards compatibility
   const isDraft = isEnabled || sparams?.draft === 'true'
 
-  console.log(`[diag] Page render: isDraft=${isDraft}, slug=${slug}, locale=${locale}, isEnabled=${isEnabled}`)
-
   // Bypass cache when Draft Mode is enabled (preview mode) regardless of draft/published status
   const pageRes = isDraft
     ? await fetchPageData(slug, locale, isDraft)
@@ -259,8 +253,6 @@ export default async function Page({
   const sections = (page.sections || []).sort(
     (a, b) => (a.order || 0) - (b.order || 0)
   )
-
-  console.log(`[diag] Page data: title=${page.title}, updatedAt=${(page as any).updatedAt}, publishedAt=${(page as any).publishedAt}, seoTitle=${page.seoTitle}`)
 
   return (
     <Layout locale={locale}>
