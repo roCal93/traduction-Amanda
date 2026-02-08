@@ -199,12 +199,28 @@ export class StrapiClient {
         next: options?.publicationState === 'preview' ? undefined : (options?.next ?? { revalidate: 3600 }),
       });
 
-      if (!response.ok) {
-        const error: StrapiErrorResponse = await response.json();
-        throw new Error(error.error.message);
+      // Diagnostic: capture response status and body length
+      try {
+        const text = await response.text()
+        console.info(`[diag] StrapiClient response — contentType=${contentType} status=${response.status} contentLength=${text.length} url=${url}`)
+        if (!response.ok) {
+          try {
+            const error: StrapiErrorResponse = JSON.parse(text)
+            throw new Error(error.error?.message || `Strapi error ${response.status}`)
+          } catch (e) {
+            throw new Error(`Strapi non OK: ${response.status}`)
+          }
+        }
+        try {
+          return JSON.parse(text) as StrapiCollectionResponse<T>
+        } catch {
+          console.warn('Réponse non JSON depuis Strapi')
+          return {} as StrapiCollectionResponse<T>
+        }
+      } catch (e) {
+        // If logging/parsing fails, rethrow a generic error to preserve behavior
+        throw e
       }
-
-      return response.json();
     } catch (error) {
       const message = error && typeof error === 'object' && 'message' in error ? (error as Error).message : String(error);
       console.warn(`Erreur lors de la récupération de ${contentType}: ${message}`);
@@ -238,12 +254,27 @@ export class StrapiClient {
         next: options?.publicationState === 'preview' ? undefined : (options?.next ?? { revalidate: 3600 }),
       });
 
-      if (!response.ok) {
-        const error: StrapiErrorResponse = await response.json();
-        throw new Error(error.error.message);
+      // Diagnostic: capture response status and body length
+      try {
+        const text = await response.text()
+        console.info(`[diag] StrapiClient response — contentType=${contentType} id=${id} status=${response.status} contentLength=${text.length} url=${url}`)
+        if (!response.ok) {
+          try {
+            const error: StrapiErrorResponse = JSON.parse(text)
+            throw new Error(error.error?.message || `Strapi error ${response.status}`)
+          } catch (e) {
+            throw new Error(`Strapi non OK: ${response.status}`)
+          }
+        }
+        try {
+          return JSON.parse(text) as StrapiResponse<T>
+        } catch {
+          console.warn('Réponse non JSON depuis Strapi')
+          return { data: null, meta: {} } as StrapiResponse<T>
+        }
+      } catch (e) {
+        throw e
       }
-
-      return response.json();
     } catch (error) {
       const message = error && typeof error === 'object' && 'message' in error ? (error as Error).message : String(error);
       console.warn(`Erreur lors de la récupération de ${contentType}/${id}: ${message}`);
