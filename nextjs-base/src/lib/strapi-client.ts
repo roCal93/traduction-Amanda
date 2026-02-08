@@ -303,7 +303,7 @@ export class StrapiClient {
             throw new Error(
               error.error?.message || `Strapi error ${response.status}`
             )
-          } catch (e) {
+          } catch (_) {
             throw new Error(`Strapi non OK: ${response.status}`)
           }
         }
@@ -314,10 +314,10 @@ export class StrapiClient {
               contentType === 'pages' &&
               options?.publicationState === 'preview'
             ) {
-              const first = (parsed as any)?.data
-              if (first && first.title) {
+              const first = (parsed as StrapiResponse<T>)?.data
+              if (first && typeof first === 'object' && 'title' in first) {
                 console.info(
-                  `[diag] Strapi preview payload title=${first.title}`
+                  `[diag] Strapi preview payload title=${(first as Record<string, unknown>).title}`
                 )
               }
             }
