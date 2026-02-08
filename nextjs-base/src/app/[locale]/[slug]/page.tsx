@@ -214,23 +214,23 @@ export default async function Page({
 
   const sparams = searchParams ? await Promise.resolve(searchParams) : undefined
   const { isEnabled } = await draftMode()
-  const isDraft = sparams?.draft === 'true' || false
+  // Use Draft Mode state (isEnabled) as the source of truth for preview mode
+  // Fallback to URL parameter for backwards compatibility
+  const isDraft = isEnabled || sparams?.draft === 'true'
 
   console.log(`[diag] Page render: isDraft=${isDraft}, slug=${slug}, locale=${locale}, isEnabled=${isEnabled}`)
 
   // Bypass cache when Draft Mode is enabled (preview mode) regardless of draft/published status
-  const pageRes =
-    isEnabled || isDraft
-      ? await fetchPageData(slug, locale, isDraft)
-      : await getPageData(slug, locale)
+  const pageRes = isDraft
+    ? await fetchPageData(slug, locale, isDraft)
+    : await getPageData(slug, locale)
 
   if (!pageRes.data.length) {
     // Prefer redirecting to the default locale when the page doesn't exist in the requested locale.
     if (locale !== defaultLocale) {
-      const defaultRes =
-        isEnabled || isDraft
-          ? await fetchPageData(slug, defaultLocale, isDraft)
-          : await getPageData(slug, defaultLocale)
+      const defaultRes = isDraft
+        ? await fetchPageData(slug, defaultLocale, isDraft)
+        : await getPageData(slug, defaultLocale)
 
       if (defaultRes.data.length) {
         redirect(`/${defaultLocale}/${slug}`)
@@ -238,10 +238,9 @@ export default async function Page({
     }
 
     // Fallback: try without locale (global)
-    const fallbackRes =
-      isEnabled || isDraft
-        ? await fetchPageDataFallback(slug, isDraft)
-        : await getPageDataFallback(slug)
+    const fallbackRes = isDraft
+      ? await fetchPageDataFallback(slug, isDraft)
+      : await getPageDataFallback(slug)
 
     if (!fallbackRes.data.length) {
       // Nothing found in any locale → show 404 page
