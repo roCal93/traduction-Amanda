@@ -207,6 +207,8 @@ export default async function Page({
   const { isEnabled } = await draftMode()
   const isDraft = sparams?.draft === 'true' || false
 
+  console.log(`[diag] Page render: isDraft=${isDraft}, slug=${slug}, locale=${locale}, isEnabled=${isEnabled}`)
+
   // Bypass cache when Draft Mode is enabled (preview mode) regardless of draft/published status
   const pageRes =
     isEnabled || isDraft
@@ -247,6 +249,8 @@ export default async function Page({
   const sections = (page.sections || []).sort(
     (a, b) => (a.order || 0) - (b.order || 0)
   )
+
+  console.log(`[diag] Page data: title=${page.title}, updatedAt=${page.updatedAt}, publishedAt=${page.publishedAt}, seoTitle=${page.seoTitle}`)
 
   return (
     <Layout locale={locale}>
