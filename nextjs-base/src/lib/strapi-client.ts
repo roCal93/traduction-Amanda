@@ -184,6 +184,14 @@ export class StrapiClient {
   ): Promise<StrapiCollectionResponse<T>> {
     try {
       const url = this.buildUrl(`/api/${contentType}`, options);
+      // Diagnostic: when requesting preview, log non-sensitive presence of token
+      if (options?.publicationState === 'preview') {
+        try {
+          const tokenPresent = !!this.config.apiToken
+          const tokenLen = this.config.apiToken ? this.config.apiToken.length : 0
+          console.info(`[diag] StrapiClient preview request — contentType=${contentType} preview=true apiTokenPresent=${tokenPresent} tokenLen=${tokenLen} url=${url}`)
+        } catch {}
+      }
 
       const response = await fetch(url, {
         method: 'GET',
@@ -215,6 +223,14 @@ export class StrapiClient {
   ): Promise<StrapiResponse<T>> {
     try {
       const url = this.buildUrl(`/api/${contentType}/${id}`, options);
+      // Diagnostic: when requesting preview, log non-sensitive presence of token
+      if (options?.publicationState === 'preview') {
+        try {
+          const tokenPresent = !!this.config.apiToken
+          const tokenLen = this.config.apiToken ? this.config.apiToken.length : 0
+          console.info(`[diag] StrapiClient preview request — contentType=${contentType} id=${id} preview=true apiTokenPresent=${tokenPresent} tokenLen=${tokenLen} url=${url}`)
+        } catch {}
+      }
 
       const response = await fetch(url, {
         method: 'GET',
