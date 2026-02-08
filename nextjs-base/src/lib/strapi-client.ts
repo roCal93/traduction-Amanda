@@ -25,6 +25,7 @@ export interface StrapiQueryOptions {
   fields?: string[];
   locale?: string;
   publicationState?: 'live' | 'preview';
+  status?: 'draft' | 'published';
   next?: { revalidate?: number };
 }
 
@@ -165,9 +166,13 @@ export class StrapiClient {
       params.set('locale', options.locale);
     }
 
-    // Publication state
-    if (options.publicationState) {
-      params.set('publicationState', options.publicationState);
+    // Publication state (Strapi v5: use 'status' parameter instead of 'publicationState')
+    if (options.status) {
+      params.set('status', options.status);
+    } else if (options.publicationState) {
+      // Auto-convert publicationState to status for Strapi v5 compatibility
+      const status = options.publicationState === 'preview' ? 'draft' : 'published';
+      params.set('status', status);
     }
 
     url.search = params.toString();
@@ -184,8 +189,9 @@ export class StrapiClient {
   ): Promise<StrapiCollectionResponse<T>> {
     try {
       const url = this.buildUrl(`/api/${contentType}`, options);
-      // Diagnostic: when requesting preview, log non-sensitive presence of token
-      if (options?.publicationState === 'preview') {
+      // Diagnostic: when requesting preview/draft, log non-sensitive presence of token
+      const isDraftRequest = options?.publicationState === 'preview' || options?.status === 'draft';
+      if (isDraftRequest) {
         try {
           const tokenPresent = !!this.config.apiToken
           const tokenLen = this.config.apiToken ? this.config.apiToken.length : 0
@@ -196,7 +202,7 @@ export class StrapiClient {
       const response = await fetch(url, {
         method: 'GET',
         headers: this.getHeaders(),
-        next: options?.publicationState === 'preview' ? undefined : (options?.next ?? { revalidate: 3600 }),
+        next: isDraftRequest ? undefined : (options?.next ?? { revalidate: 3600 }),
       });
 
       // Diagnostic: capture response status and body length
@@ -213,9 +219,10 @@ export class StrapiClient {
         }
         try {
           const parsed = JSON.parse(text) as StrapiCollectionResponse<T>
-          // Non-sensitive diagnostic: when previewing pages, log the returned title if present
+          // Non-sensitive diagnostic: when previewing/drafting pages, log the returned title if present
           try {
-            if (contentType === 'pages' && options?.publicationState === 'preview') {
+            const isDraftRequest = options?.publicationState === 'preview' || options?.status === 'draft';
+            if (contentType === 'pages' && isDraftRequest) {
               const first = (parsed as any)?.data?.[0]
               if (first && first.title) {
                 console.info(`[diag] Strapi preview payload title=${first.title}`)
