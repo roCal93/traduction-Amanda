@@ -42,7 +42,27 @@ const fetchPageData = async (
       'locale',
     ],
     populate: {
-      sections: { populate: { blocks: { populate: '*' } } },
+      sections: {
+        populate: {
+          blocks: {
+            populate: {
+              image: {
+                fields: ['url', 'alternativeText', 'width', 'height'],
+              },
+              workItems: {
+                populate: {
+                  image: {
+                    fields: ['url', 'alternativeText', 'width', 'height'],
+                  },
+                  categories: {
+                    fields: ['id', 'name', 'slug', 'color'],
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
       seoImage: true,
       localizations: true,
     },

@@ -34,7 +34,27 @@ const fetchHomePageData = async (locale: string, isDraft: boolean) => {
       'locale',
     ],
     populate: {
-      sections: { populate: { blocks: { populate: '*' } } },
+      sections: {
+        populate: {
+          blocks: {
+            populate: {
+              image: {
+                fields: ['url', 'alternativeText', 'width', 'height'],
+              },
+              workItems: {
+                populate: {
+                  image: {
+                    fields: ['url', 'alternativeText', 'width', 'height'],
+                  },
+                  categories: {
+                    fields: ['id', 'name', 'slug', 'color'],
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
       seoImage: true,
       localizations: true,
     },
@@ -60,15 +80,22 @@ const fetchHomePageData = async (locale: string, isDraft: boolean) => {
           populate: {
             blocks: {
               populate: {
+                image: {
+                  fields: ['url', 'alternativeText', 'width', 'height'],
+                },
                 workItems: {
                   populate: {
-                    image: { fields: ['url', 'alternativeText', 'width', 'height'] },
-                    categories: { fields: ['id', 'name', 'slug', 'color'] }
-                  }
-                }
-              }
-            }
-          }
+                    image: {
+                      fields: ['url', 'alternativeText', 'width', 'height'],
+                    },
+                    categories: {
+                      fields: ['id', 'name', 'slug', 'color'],
+                    },
+                  },
+                },
+              },
+            },
+          },
         },
         seoImage: true,
         localizations: true,
