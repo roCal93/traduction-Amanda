@@ -41,7 +41,6 @@ export const metadata: Metadata = {
 }
 
 import DevPerfProtector from '@/components/dev/DevPerfProtector'
-import { DraftModeIndicator } from '@/components/DraftModeIndicator'
 
 export default async function RootLayout({
   children,
@@ -86,7 +85,6 @@ export default async function RootLayout({
       >
         {/* Dev-only protective wrapper to avoid dev tooling throwing on performance.measure */}
         <DevPerfProtector />
-        <DraftModeIndicator />
         {children}
       </body>
     </html>
