@@ -303,7 +303,7 @@ export class StrapiClient {
             throw new Error(
               error.error?.message || `Strapi error ${response.status}`
             )
-          } catch (_) {
+          } catch {
             throw new Error(`Strapi non OK: ${response.status}`)
           }
         }

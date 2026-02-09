@@ -41,13 +41,11 @@ const nextConfig: NextConfig = {
         hostname: 'res.cloudinary.com',
         pathname: '/**',
       },
-      // Pour la production, ajoutez votre domaine Strapi ici :
-      // IMPORTANT: Décommenter et configurer pour la production pour activer l'optimisation d'images
-      // {
-      //   protocol: 'https',
-      //   hostname: 'votre-strapi.com',
-      //   pathname: '/uploads/**',
-      // },
+      {
+        protocol: 'https',
+        hostname: 'traduction-amanda-production.up.railway.app',
+        pathname: '/uploads/**',
+      },
     ],
     unoptimized: process.env.NODE_ENV === 'development', // Activer l'optimisation en production
     formats: ['image/webp', 'image/avif'], // Formats modernes pour réduire la taille

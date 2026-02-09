@@ -8,16 +8,18 @@ export function PageTransition({ children }: { children: React.ReactNode }) {
   const [isMounted, setIsMounted] = useState(false)
 
   useEffect(() => {
-    const raf = requestAnimationFrame(() => setIsMounted(true))
-    return () => cancelAnimationFrame(raf)
+    // Set mounted only once after first client-side render
+    setIsMounted(true)
   }, [])
 
-  // Don't animate on initial server render for better LCP
-  const initialProps = isMounted ? { opacity: 0, y: 10 } : { opacity: 1, y: 0 }
+  // Don't animate on initial server render or first client mount for better LCP
+  if (!isMounted) {
+    return <div>{children}</div>
+  }
 
   return (
     <motion.div
-      initial={initialProps}
+      initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -10 }}
       transition={

@@ -32,6 +32,7 @@ const CarouselWorkCard = ({
             width={260}
             height={104}
             priority={isPriority}
+            fetchPriority={isPriority ? 'high' : 'low'}
             loading={isPriority ? undefined : 'lazy'}
             quality={85}
             className="w-full h-full object-contain select-none pointer-events-none"

@@ -78,6 +78,26 @@ export const SectionGeneric = ({
       | undefined
 
     if (BlockComponent) {
+      // Lazy load CarouselBlock if not first block (above-the-fold)
+      const isCarousel = componentName === 'CarouselBlock'
+      const shouldLazyLoad = isCarousel && index > 0
+
+      if (shouldLazyLoad) {
+        return (
+          <div key={index} style={{ minHeight: '300px' }}>
+            <React.Suspense
+              fallback={
+                <div className="h-72 bg-gray-100 animate-pulse rounded-lg" />
+              }
+            >
+              <BlockComponent
+                {...(block as unknown as Record<string, unknown>)}
+              />
+            </React.Suspense>
+          </div>
+        )
+      }
+
       return (
         <BlockComponent
           key={index}
@@ -134,12 +154,17 @@ export const SectionGeneric = ({
     }
   }
 
+  // Detect if first block is critical for LCP (hero)
+  const hasHeroFirst =
+    blocks?.[0]?.__component === 'blocks.hero-block-simple-text'
+
   return (
     <section
       id={identifier}
       className={`${getTopSpacingClass(spacingTop)} ${getBottomSpacingClass(spacingBottom)} px-4`}
     >
-      <FadeIn>
+      {/* Skip FadeIn animation for first hero block to improve LCP */}
+      {hasHeroFirst ? (
         <div className={`${getContainerWidthClass(containerWidth)} mx-auto`}>
           {title && (
             <h2 className="text-3xl font-semibold mb-8 text-center">{title}</h2>
@@ -148,7 +173,20 @@ export const SectionGeneric = ({
             {blocks?.map((block, index) => renderBlock(block, index))}
           </div>
         </div>
-      </FadeIn>
+      ) : (
+        <FadeIn>
+          <div className={`${getContainerWidthClass(containerWidth)} mx-auto`}>
+            {title && (
+              <h2 className="text-3xl font-semibold mb-8 text-center">
+                {title}
+              </h2>
+            )}
+            <div className="space-y-4">
+              {blocks?.map((block, index) => renderBlock(block, index))}
+            </div>
+          </div>
+        </FadeIn>
+      )}
     </section>
   )
 }
