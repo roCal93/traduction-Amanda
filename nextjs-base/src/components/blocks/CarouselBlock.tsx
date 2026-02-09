@@ -147,7 +147,7 @@ const CarouselBlock = ({
     <div className="relative w-full overflow-hidden my-8">
       <div
         ref={scrollRef}
-        className="flex gap-4 overflow-x-hidden select-none"
+        className="flex gap-6 overflow-x-hidden select-none py-6"
         style={{
           scrollbarWidth: 'none',
           msOverflowStyle: 'none',

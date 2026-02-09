@@ -21,10 +21,10 @@ const CarouselWorkCard = ({
       tabIndex={0}
       role="article"
       aria-label={item.title}
-      className="relative w-full m-6 rounded-lg shadow-lg hover:shadow-2xl transition-all duration-300 bg-[#FFE5B3]/60 flex-shrink-0 select-none focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+      className="relative w-full rounded-lg shadow-lg hover:shadow-2xl transition-all duration-300 bg-[#FFE5B3]/60 flex-shrink-0 select-none focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 overflow-hidden"
     >
       {/* Image */}
-      <div className="relative w-full m-2 aspect-[5/2] overflow-hidden flex items-center justify-center pt-4 ">
+      <div className="relative w-full aspect-[5/2] overflow-hidden flex items-center justify-center p-2">
         {imageUrl ? (
           <Image
             src={imageUrl}
