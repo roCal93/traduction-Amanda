@@ -75,6 +75,7 @@ export default [
           'https://www.amandatraduction.com',
           'https://amandatraduction.com',
           'https://traduction-amanda-production.up.railway.app',
+          'http://localhost:3000',
         ];
 
         const vercelPreview = /^https:\/\/.*\.vercel\.app$/;
