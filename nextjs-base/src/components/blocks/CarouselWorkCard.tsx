@@ -24,7 +24,7 @@ const CarouselWorkCard = ({
       className="relative w-full m-6 rounded-lg shadow-lg hover:shadow-2xl transition-all duration-300 bg-[#FFE5B3]/60 flex-shrink-0 select-none focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
     >
       {/* Image */}
-      <div className="relative w-full aspect-[5/2] overflow-hidden flex items-center justify-center pt-4 ">
+      <div className="relative w-full m-1 aspect-[5/2] overflow-hidden flex items-center justify-center pt-4 ">
         {imageUrl ? (
           <Image
             src={imageUrl}
@@ -51,7 +51,7 @@ const CarouselWorkCard = ({
       </div>
 
       {/* Content */}
-      <div className="px-4 pt-2 pb-3 sm:px-5 sm:pt-2 sm:pb-4 flex items-center justify-center min-h-[70px]">
+      <div className="px-4 pt-1 pb-1 sm:px-4 sm:pt-2 sm:pb-4 flex items-center justify-center min-h-[50px]">
         <h3 className="text-sm text-center font-bold leading-tight line-clamp-3">
           {item.title}
         </h3>
