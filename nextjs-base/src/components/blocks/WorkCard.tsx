@@ -190,8 +190,8 @@ const WorkCard = ({
       <div
         className={
           variant === 'list'
-            ? 'relative w-14 h-14 sm:w-16 sm:h-16 flex-shrink-0 flex items-center justify-center overflow-hidden rounded-lg '
-            : 'relative w-full aspect-[3/1] overflow-hidden flex items-center justify-center pt-3 px-3 pb-2'
+            ? 'relative w-14 h-14 sm:w-16 sm:h-16 flex-shrink-0 flex items-center justify-center overflow-hidden rounded-lg p-1'
+            : 'relative w-full aspect-[3/1] overflow-hidden flex items-center justify-center p-2'
         }
       >
         {imageUrl ? (
