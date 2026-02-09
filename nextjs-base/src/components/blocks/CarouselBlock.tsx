@@ -166,7 +166,7 @@ const CarouselBlock = ({
         onTouchEnd={handleTouchEnd}
       >
         {duplicatedItems.map((item, index) => (
-          <div key={`${item.id}-${index}`} className="w-[200px] flex-shrink-0">
+          <div key={`${item.id}-${index}`} className="w-[220px] flex-shrink-0">
             <CarouselWorkCard item={item} isPriority={index < 6} />
           </div>
         ))}
