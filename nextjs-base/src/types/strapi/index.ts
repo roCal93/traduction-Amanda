@@ -333,6 +333,7 @@ export interface Header {
   logo?: StrapiMedia;
   title?: string;
   navigation?: PageLink[];
+  hideLanguageSwitcher?: boolean;
   locale?: string;
   localizations?: (Header & StrapiEntity)[];
 }

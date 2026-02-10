@@ -212,6 +212,7 @@ export const Layout = async ({ children, locale }: LayoutProps) => {
         logo={headerData?.logo}
         title={headerData?.title}
         navigation={headerData?.navigation}
+        hideLanguageSwitcher={headerData?.hideLanguageSwitcher}
       />
       <main className="flex-1">{children}</main>
       <Footer siteName={headerData?.title} />

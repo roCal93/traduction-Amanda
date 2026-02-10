@@ -4,7 +4,7 @@
  * ⚠️  FICHIER AUTO-GÉNÉRÉ - NE PAS MODIFIER
  * 
  * Pour régénérer: npm run generate:types
- * Généré le: 2026-02-03T13:22:10.813Z
+ * Généré le: 2026-02-10T09:20:35.113Z
  */
 
 // ============================================================================
@@ -329,6 +329,7 @@ export interface Header {
   logo?: StrapiMedia;
   title?: string;
   navigation?: PageLink[];
+  hideLanguageSwitcher?: boolean;
   locale?: string;
   localizations?: (Header & StrapiEntity)[];
 }

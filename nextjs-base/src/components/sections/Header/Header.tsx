@@ -25,10 +25,11 @@ export interface HeaderProps {
   logo?: StrapiMedia
   title?: string
   navigation?: PageLink[]
+  hideLanguageSwitcher?: boolean
 }
 
 export const Header = memo(
-  ({ logo, title = 'My Website', navigation = [] }: HeaderProps) => {
+  ({ logo, title = 'My Website', navigation = [], hideLanguageSwitcher = false }: HeaderProps) => {
     const rawPathname = usePathname() ?? '/'
     const pathname = useDeferredValue(rawPathname)
     const segments = pathname.split('/')
@@ -244,9 +245,11 @@ export const Header = memo(
               )
             })}
           </nav>
-          <div className="hidden min-[850px]:block">
-            <LanguageSwitcher />
-          </div>
+          {!hideLanguageSwitcher && (
+            <div className="hidden min-[850px]:block">
+              <LanguageSwitcher />
+            </div>
+          )}
         </div>
         <div className="min-[850px]:hidden absolute right-6">
           <BurgerMenu links={links} currentLocale={currentLocale} />
