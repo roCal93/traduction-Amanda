@@ -8,8 +8,10 @@ export function PageTransition({ children }: { children: React.ReactNode }) {
   const [isMounted, setIsMounted] = useState(false)
 
   useEffect(() => {
-    // Set mounted only once after first client-side render
-    setIsMounted(true)
+    // Set mounted only once after first client-side render.
+    // Defer to next macrotask to avoid synchronous setState in effect (prevents cascading renders).
+    const t = setTimeout(() => setIsMounted(true), 0)
+    return () => clearTimeout(t)
   }, [])
 
   // Don't animate on initial server render or first client mount for better LCP

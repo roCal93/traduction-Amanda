@@ -255,3 +255,6 @@ export const Header = memo(
     )
   }
 )
+
+// Ensure ESLint/react DevTools can identify this component
+Header.displayName = 'Header'
