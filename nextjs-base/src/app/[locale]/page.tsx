@@ -164,7 +164,10 @@ export async function generateMetadata({
   const localizations = page?.localizations || []
   const allLocales = [
     { locale: page?.locale || locale, slug: 'home' },
-    ...localizations,
+    ...localizations.map((loc) => ({
+      locale: loc.locale || 'fr',
+      slug: 'home',
+    })),
   ]
   const alternates = getHreflangAlternates('home', allLocales)
 
