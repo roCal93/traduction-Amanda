@@ -73,6 +73,9 @@ const nextConfig: NextConfig = {
 
     // Note: we rely on CSP `frame-ancestors` for iframe control (X-Frame-Options
     // cannot express multiple allowed origins and would break Strapi preview embeds).
+    // 
+    // ⚠️ Security note: 'unsafe-inline' is kept for compatibility with Next.js inline scripts
+    // For production, consider implementing nonces or moving to Next.js App Router with CSP support
     const csp = [
       "default-src 'self';",
       `img-src 'self' data: https: ${strapiOrigin};`,
@@ -80,6 +83,10 @@ const nextConfig: NextConfig = {
       "style-src 'self' 'unsafe-inline';",
       `connect-src 'self' ${strapiOrigin} https://*.railway.app https://*.vercel.app;`,
       "font-src 'self' data:;",
+      "object-src 'none';",
+      "base-uri 'self';",
+      "form-action 'self';",
+      "upgrade-insecure-requests;",
       `frame-ancestors 'self' ${getAllowedOrigins().join(' ')};`,
     ].join(' ')
 
