@@ -56,6 +56,10 @@ export default [
             'img-src': env('NODE_ENV') === 'production'
               ? ["'self'", 'data:', 'https://res.cloudinary.com', 'https://market-assets.strapi.io']
               : ["'self'", 'data:', 'blob:', 'http://localhost:5173', 'https://res.cloudinary.com', 'https://market-assets.strapi.io'],
+            // Media (videos, PDFs): allow Cloudinary
+            'media-src': ["'self'", 'data:', 'blob:', 'https://res.cloudinary.com'],
+            // Objects (PDFs embeds): allow Cloudinary
+            'object-src': ["'self'", 'https://res.cloudinary.com'],
           },
         },
       };
