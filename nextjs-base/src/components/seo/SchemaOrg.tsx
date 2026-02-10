@@ -22,7 +22,7 @@ export const SchemaOrg = ({
   telephone,
   email,
   address,
-  areaServed = 'France, Suisse, Italie',
+  areaServed = 'France, Suisse, Italie, Canada',
   priceRange,
 }: SchemaOrgProps) => {
   const siteUrl =
