@@ -172,7 +172,10 @@ export const BurgerMenu = ({ links = [], currentLocale }: BurgerMenuProps) => {
       <button
         onClick={toggleMenu}
         className="relative flex justify-center items-center w-8 h-8 cursor-pointer group hover:bg-gray-100/60 hover:scale-105 transition transform duration-150"
-        aria-label="Toggle menu"
+        aria-label={isOpen ? 'Close navigation menu' : 'Open navigation menu'}
+        aria-expanded={isOpen}
+        aria-controls="mobile-menu"
+        aria-haspopup="true"
       >
         <span
           className={`absolute left-1 w-6 h-1 bg-gray-800 rounded-full origin-center transition-all duration-200 ease-in-out ${isOpen ? 'rotate-45' : '-translate-y-2.5'}`}
@@ -191,9 +194,19 @@ export const BurgerMenu = ({ links = [], currentLocale }: BurgerMenuProps) => {
           <div
             className="fixed inset-0 z-40 cursor-pointer"
             onClick={toggleMenu}
+            aria-hidden="true"
           ></div>
-          <div className="absolute right-0 top-22 w-64 bg-[rgba(255,241,241,0.9)] shadow-lg rounded-lg z-50 border border-gray-200">
-            <nav className="flex flex-col p-4 space-y-2">
+          <div
+            id="mobile-menu"
+            className="absolute right-0 top-22 w-64 bg-[rgba(255,241,241,0.9)] shadow-lg rounded-lg z-50 border border-gray-200"
+            role="dialog"
+            aria-label="Mobile navigation menu"
+          >
+            <nav
+              className="flex flex-col p-4 space-y-2"
+              role="navigation"
+              aria-label="Mobile navigation"
+            >
               {links.map((link, index) => {
                 const active = isActive(link.slug, link.isHome, link.anchor)
                 return (
@@ -202,6 +215,10 @@ export const BurgerMenu = ({ links = [], currentLocale }: BurgerMenuProps) => {
                     href={getLocalizedHref(link.slug, link.isHome, link.anchor)}
                     prefetch
                     onClick={(e) => handleMenuNavClick(e, link)}
+                    aria-current={active ? 'page' : undefined}
+                    aria-label={
+                      link.anchor ? `${link.label} section` : link.label
+                    }
                   >
                     <Button
                       variant={active ? 'primary' : 'secondary'}

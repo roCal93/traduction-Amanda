@@ -132,7 +132,11 @@ const ContactFormBlock = ({
           <p className="text-gray-600 mb-8 text-center">{description}</p>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-12">
+        <form
+          onSubmit={handleSubmit}
+          className="space-y-12"
+          aria-label={title || 'Contact form'}
+        >
           {/* Champs Nom et Email côte à côte */}
           <div className="grid grid-cols-1 md:grid-cols-2 md:gap-32 gap-8">
             {/* Champ Nom */}
@@ -150,6 +154,8 @@ const ContactFormBlock = ({
                 value={formData.name}
                 onChange={handleChange}
                 required
+                aria-required="true"
+                aria-label={nameLabel || 'Name'}
                 className="w-full px-4 py-2 bg-[#FFFACD]/80 rounded-md focus:ring-2 focus:ring-[#F88379] focus:border-transparent transition-colors"
                 placeholder={namePlaceholder}
               />
@@ -170,6 +176,8 @@ const ContactFormBlock = ({
                 value={formData.email}
                 onChange={handleChange}
                 required
+                aria-required="true"
+                aria-label={emailLabel || 'Email'}
                 className="w-full px-4 py-2 bg-[#FFFACD]/80 rounded-md focus:ring-2 focus:ring-[#F88379] focus:border-transparent transition-colors"
                 placeholder={emailPlaceholder}
               />
@@ -190,6 +198,8 @@ const ContactFormBlock = ({
               value={formData.message}
               onChange={handleChange}
               required
+              aria-required="true"
+              aria-label={messageLabel || 'Message'}
               rows={5}
               className="w-full px-4 py-2 bg-[#FFFACD]/80 rounded-md focus:ring-2 focus:ring-[#F88379] focus:border-transparent transition-colors resize-vertical"
               placeholder={messagePlaceholder}
@@ -206,9 +216,15 @@ const ContactFormBlock = ({
                 checked={formData.consent}
                 onChange={handleChange}
                 required
+                aria-required="true"
+                aria-describedby="consent-description"
                 className="mt-1 w-4 h-4 text-[#F88379] bg-[#FFFACD]/80 border-gray-300 rounded focus:ring-[#F88379] focus:ring-2"
               />
-              <label htmlFor="consent" className="text-sm text-gray-700">
+              <label
+                htmlFor="consent"
+                id="consent-description"
+                className="text-sm text-gray-700"
+              >
                 {consentText}{' '}
                 <button
                   type="button"
@@ -234,6 +250,8 @@ const ContactFormBlock = ({
               type="submit"
               variant="primary"
               disabled={isSubmitting || !formData.consent}
+              aria-disabled={isSubmitting || !formData.consent}
+              aria-label={isSubmitting ? submittingText : submitButtonText}
               className="px-6 py-3 rounded-full disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-[#F88379] focus:ring-offset-2"
             >
               {isSubmitting ? submittingText : submitButtonText}
@@ -247,13 +265,21 @@ const ContactFormBlock = ({
 
           {/* Messages de statut */}
           {submitStatus === 'success' && (
-            <div className="p-4 bg-green-50 border border-green-200 rounded-md">
+            <div
+              className="p-4 bg-green-50 border border-green-200 rounded-md"
+              role="status"
+              aria-live="polite"
+            >
               <p className="text-green-800 text-sm">{successMessage}</p>
             </div>
           )}
 
           {submitStatus === 'error' && (
-            <div className="p-4 bg-red-50 border border-red-200 rounded-md">
+            <div
+              className="p-4 bg-red-50 border border-red-200 rounded-md"
+              role="alert"
+              aria-live="assertive"
+            >
               <p className="text-red-800 text-sm">{errorMessage}</p>
             </div>
           )}

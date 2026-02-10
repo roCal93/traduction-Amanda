@@ -152,6 +152,8 @@ export async function getPageSEO(
         hreflang: l.locale || 'fr',
         href: `${siteBase}/${l.locale || 'fr'}/${slug}`,
       })),
+      // x-default for unmatched locales
+      { hreflang: 'x-default', href: `${siteBase}/fr/${slug}` },
     ]
 
     return buildMetadata({

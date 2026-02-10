@@ -29,7 +29,12 @@ export interface HeaderProps {
 }
 
 export const Header = memo(
-  ({ logo, title = 'My Website', navigation = [], hideLanguageSwitcher = false }: HeaderProps) => {
+  ({
+    logo,
+    title = 'My Website',
+    navigation = [],
+    hideLanguageSwitcher = false,
+  }: HeaderProps) => {
     const rawPathname = usePathname() ?? '/'
     const pathname = useDeferredValue(rawPathname)
     const segments = pathname.split('/')
@@ -174,11 +179,14 @@ export const Header = memo(
     return (
       <header
         id="site-header"
+        role="banner"
+        aria-label="Site header"
         className="sticky top-0 z-50 backdrop-blur-sm bg-white/10 border-b border-gray-200 flex justify-center min-[850px]:justify-between items-center p-6"
       >
         <Link
           href={`/${currentLocale}`}
           prefetch
+          aria-label={`${title} - Return to homepage`}
           className="flex-none min-[850px]:flex-1"
         >
           {logo ? (
@@ -202,7 +210,11 @@ export const Header = memo(
           )}
         </Link>
         <div className="hidden min-[850px]:flex items-center space-x-12">
-          <nav className="hidden min-[850px]:flex min-[850px]:flex-nowrap min-[850px]:space-x-6">
+          <nav
+            role="navigation"
+            aria-label="Main navigation"
+            className="hidden min-[850px]:flex min-[850px]:flex-nowrap min-[850px]:space-x-6"
+          >
             {links.map((link, index) => {
               const active = isActive(link.slug, link.isHome, link.anchor)
               const hovered = hoveredIndex === index
@@ -214,6 +226,10 @@ export const Header = memo(
                   onClick={(e) => handleNavClick(e, link)}
                   onMouseEnter={() => setHoveredIndex(index)}
                   onMouseLeave={() => setHoveredIndex(null)}
+                  aria-current={active ? 'page' : undefined}
+                  aria-label={
+                    link.anchor ? `${link.label} section` : link.label
+                  }
                   // Relative container for absolute animated underline
                   className={`relative inline-flex items-center h-9 text-lg transition-colors hover:text-gray-600 whitespace-nowrap flex-none ${
                     active ? 'font-semibold text-black' : 'text-gray-700'

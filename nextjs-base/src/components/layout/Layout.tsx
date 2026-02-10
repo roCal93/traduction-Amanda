@@ -1,6 +1,7 @@
 import React, { ReactNode } from 'react'
 import { Header } from '@/components/sections/Header'
 import { Footer } from '@/components/sections/Footer'
+import { SkipToContent } from '@/components/ui/SkipToContent'
 import { fetchAPI } from '@/lib/strapi'
 import type {
   HeaderResponse,
@@ -208,13 +209,21 @@ export const Layout = async ({ children, locale }: LayoutProps) => {
 
   return (
     <div className="flex flex-col min-h-screen">
+      <SkipToContent />
       <Header
         logo={headerData?.logo}
         title={headerData?.title}
         navigation={headerData?.navigation}
         hideLanguageSwitcher={headerData?.hideLanguageSwitcher}
       />
-      <main className="flex-1">{children}</main>
+      <main
+        id="main-content"
+        role="main"
+        aria-label="Main content"
+        className="flex-1"
+      >
+        {children}
+      </main>
       <Footer siteName={headerData?.title} />
     </div>
   )
