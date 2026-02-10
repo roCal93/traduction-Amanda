@@ -76,7 +76,7 @@ const nextConfig: NextConfig = {
     const csp = [
       "default-src 'self';",
       `img-src 'self' data: https: ${strapiOrigin};`,
-      `script-src 'self' 'unsafe-inline'${isProd ? '' : " 'unsafe-eval' https://vercel.live"};`,
+      `script-src 'self' 'unsafe-inline'${isProd ? '' : " 'unsafe-eval'"};`,
       "style-src 'self' 'unsafe-inline';",
       `connect-src 'self' ${strapiOrigin} https://*.railway.app https://*.vercel.app;`,
       "font-src 'self' data:;",
