@@ -23,6 +23,7 @@ export default ({ env }) => ({
         upload: {
           folder: env('CLOUDINARY_FOLDER', 'amanda-traduction'),
           resource_type: 'auto',
+          access_mode: 'public',
         },
         delete: {},
       },
