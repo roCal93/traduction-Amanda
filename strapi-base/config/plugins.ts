@@ -4,7 +4,7 @@ export default ({ env }) => ({
     enabled: true,
     config: {
       defaultLocale: 'fr',
-      locales: ['fr', 'en'],
+      locales: ['fr', 'en', 'it'],
     },
   },
   upload: {
