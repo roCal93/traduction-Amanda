@@ -22,6 +22,7 @@ export default ({ env }) => ({
       actionOptions: {
         upload: {
           folder: env('CLOUDINARY_FOLDER', 'amanda-traduction'),
+          resource_type: 'auto',
         },
         delete: {},
       },
