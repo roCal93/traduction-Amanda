@@ -49,6 +49,23 @@ export const metadata: Metadata = {
   metadataBase: new URL(
     process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
   ),
+  openGraph: {
+    title: 'Amanda Traduction - Traduction professionnelle',
+    description:
+      "Services de traduction professionnelle de l'anglais et de l'italien vers le français pour les entreprises et les particuliers.",
+    url: process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000',
+    siteName: 'Amanda Traduction',
+    locale: 'fr_FR',
+    type: 'website',
+    images: [
+      {
+        url: '/images/logo.png',
+        width: 800,
+        height: 600,
+        alt: 'Amanda Traduction Logo',
+      },
+    ],
+  },
 }
 
 import DevPerfProtector from '@/components/dev/DevPerfProtector'
