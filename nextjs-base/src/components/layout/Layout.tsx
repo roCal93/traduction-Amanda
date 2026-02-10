@@ -17,7 +17,7 @@ type LayoutProps = {
 
 async function getHeaderData(locale: string) {
   // Validate locale to avoid API calls with invalid locales
-  if (locale !== 'fr' && locale !== 'en') {
+  if (locale !== 'fr' && locale !== 'en' && locale !== 'it') {
     return null
   }
 

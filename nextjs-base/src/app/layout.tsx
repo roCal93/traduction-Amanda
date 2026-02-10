@@ -64,7 +64,11 @@ export default async function RootLayout({
   try {
     const cookieStore = await cookies()
     const cookieLocale = cookieStore.get('locale')?.value
-    if (cookieLocale === 'fr' || cookieLocale === 'en') {
+    if (
+      cookieLocale === 'fr' ||
+      cookieLocale === 'en' ||
+      cookieLocale === 'it'
+    ) {
       locale = cookieLocale
     } else {
       locale = defaultLocale
@@ -76,7 +80,7 @@ export default async function RootLayout({
       const match = cookieHeader.match(/(?:^|; )locale=([^;]+)/)
       const parsedLocale = match ? decodeURIComponent(match[1]) : defaultLocale
       locale =
-        parsedLocale === 'fr' || parsedLocale === 'en'
+        parsedLocale === 'fr' || parsedLocale === 'en' || parsedLocale === 'it'
           ? parsedLocale
           : defaultLocale
     } catch {
