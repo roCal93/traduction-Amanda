@@ -73,7 +73,7 @@ const nextConfig: NextConfig = {
 
     // Note: we rely on CSP `frame-ancestors` for iframe control (X-Frame-Options
     // cannot express multiple allowed origins and would break Strapi preview embeds).
-    // 
+    //
     // ⚠️ Security note: 'unsafe-inline' is kept for compatibility with Next.js inline scripts
     // For production, consider implementing nonces or moving to Next.js App Router with CSP support
     const csp = [
@@ -86,7 +86,7 @@ const nextConfig: NextConfig = {
       "object-src 'none';",
       "base-uri 'self';",
       "form-action 'self';",
-      "upgrade-insecure-requests;",
+      'upgrade-insecure-requests;',
       `frame-ancestors 'self' ${getAllowedOrigins().join(' ')};`,
     ].join(' ')
 

@@ -25,32 +25,38 @@ const PrivacyPolicyModal = ({
 
     return (
       text
+        // Convertir ## en <h2>
+        .replace(
+          /^## (.+?)$/gm,
+          '<h2 class="text-2xl font-bold mt-8 mb-4 text-gray-900">$1</h2>'
+        )
         // Convertir ### en <h3>
         .replace(
-          /### (.+?)(?=\n|$)/g,
-          '<h3 class="text-xl font-bold mt-6 mb-3">$1</h3>'
+          /^### (.+?)$/gm,
+          '<h3 class="text-xl font-semibold mt-6 mb-3 text-gray-800">$1</h3>'
         )
         // Convertir ** en <strong>
-        .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+        .replace(/\*\*(.+?)\*\*/g, '<strong class="font-semibold">$1</strong>')
         // Convertir les URLs en liens
         .replace(
           /(https?:\/\/[^\s]+)/g,
-          '<a href="$1" target="_blank" rel="noopener noreferrer" class="text-[#F88379] underline hover:text-[#e67369]">$1</a>'
+          '<a href="$1" target="_blank" rel="noopener noreferrer" class="text-[#F88379] underline hover:text-[#e67369] break-words">$1</a>'
         )
         // Convertir les listes à puces (- item)
-        .replace(/^- (.+)$/gm, '<li>$1</li>')
+        .replace(/^- (.+)$/gm, '<li class="ml-4">$1</li>')
         // Entourer les <li> de <ul>
         .replace(
-          /(<li>.*<\/li>\n?)+/g,
-          '<ul class="list-disc list-inside mb-4 space-y-1">$&</ul>'
+          /(<li class="ml-4">.*?<\/li>\n?)+/g,
+          '<ul class="list-disc list-outside mb-4 space-y-2 text-gray-700">$&</ul>'
         )
         // Convertir les doubles sauts de ligne en paragraphes
-        .replace(/\n\n/g, '</p><p class="mb-4">')
+        .replace(/\n\n+/g, '</p><p class="mb-4 text-gray-700 leading-relaxed">')
         // Ajouter les balises <p> de début et fin
-        .replace(/^(.+)/, '<p class="mb-4">$1')
+        .replace(/^(.+)/, '<p class="mb-4 text-gray-700 leading-relaxed">$1')
         .replace(/(.+)$/, '$1</p>')
-        // Nettoyer les <p> vides
-        .replace(/<p class="mb-4"><\/p>/g, '')
+        // Nettoyer les <p> vides et ceux qui contiennent déjà des titres
+        .replace(/<p class="[^"]*">(<h[23][^>]*>.*?<\/h[23]>)<\/p>/g, '$1')
+        .replace(/<p class="[^"]*"><\/p>/g, '')
     )
   }
 
@@ -83,7 +89,7 @@ const PrivacyPolicyModal = ({
         </div>
 
         <div
-          className="p-6 prose prose-sm max-w-none"
+          className="p-6 md:p-8 prose prose-sm md:prose-base max-w-none [&_h2]:scroll-mt-20 [&_h3]:scroll-mt-20"
           dangerouslySetInnerHTML={{ __html: formatContent(content || '') }}
         />
 
