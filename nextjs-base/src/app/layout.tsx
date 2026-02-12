@@ -4,6 +4,8 @@ import './globals.css'
 import { cookies, headers } from 'next/headers'
 import { defaultLocale } from '@/lib/locales'
 import { isDisableDark } from '@/lib/theme'
+import { Analytics } from '@vercel/analytics/react'
+import { SpeedInsights } from '@vercel/speed-insights/next'
 
 // Mark the root layout as dynamic since we read cookies/headers to pick the locale.
 export const dynamic = 'force-dynamic'
@@ -121,6 +123,8 @@ export default async function RootLayout({
         {/* Dev-only protective wrapper to avoid dev tooling throwing on performance.measure */}
         <DevPerfProtector />
         {children}
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   )
