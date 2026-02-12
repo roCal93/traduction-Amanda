@@ -4,6 +4,7 @@ import React, { useState } from 'react'
 import { Button } from '@/components/ui/Button'
 import PrivacyPolicyModal from '@/components/shared/PrivacyPolicyModal'
 import { StrapiEntity, PrivacyPolicy } from '@/types/strapi'
+import Cookies from 'js-cookie'
 
 type ContactFormBlockProps = {
   title?: string
@@ -54,6 +55,8 @@ const ContactFormBlock = ({
     email: '',
     message: '',
     consent: false,
+    // Honeypot - champ invisible pour piéger les bots
+    website: '',
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitStatus, setSubmitStatus] = useState<
@@ -92,12 +95,15 @@ const ContactFormBlock = ({
     setSubmitStatus('idle')
 
     try {
+      // Récupérer la locale depuis le cookie
+      const locale = Cookies.get('locale') || 'fr'
+
       const response = await fetch('/api/contact', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({ ...formData, locale }),
       })
 
       const data = await response.json()
@@ -108,7 +114,13 @@ const ContactFormBlock = ({
 
       console.log('Form submitted successfully:', data)
       setSubmitStatus('success')
-      setFormData({ name: '', email: '', message: '', consent: false })
+      setFormData({
+        name: '',
+        email: '',
+        message: '',
+        consent: false,
+        website: '',
+      })
     } catch (error) {
       console.error('Error submitting form:', error)
       setSubmitStatus('error')
@@ -183,6 +195,23 @@ const ContactFormBlock = ({
               />
             </div>
           </div>
+
+          {/* Honeypot - Champ invisible pour les bots */}
+          <input
+            type="text"
+            name="website"
+            value={formData.website}
+            onChange={handleChange}
+            autoComplete="off"
+            tabIndex={-1}
+            aria-hidden="true"
+            style={{
+              position: 'absolute',
+              left: '-9999px',
+              width: '1px',
+              height: '1px',
+            }}
+          />
 
           {/* Champ Message */}
           <div>
