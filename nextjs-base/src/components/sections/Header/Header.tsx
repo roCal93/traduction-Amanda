@@ -178,7 +178,10 @@ export const Header = memo(
 
     const handleLogoClick = (e: React.MouseEvent) => {
       // If we're already on the home page, scroll to top instead of navigating
-      if (pathname === `/${currentLocale}` || pathname === `/${currentLocale}/`) {
+      if (
+        pathname === `/${currentLocale}` ||
+        pathname === `/${currentLocale}/`
+      ) {
         e.preventDefault()
         window.scrollTo({ top: 0, behavior: 'smooth' })
       }
