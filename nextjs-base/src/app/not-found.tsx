@@ -1,15 +1,31 @@
 'use client'
 
-import { usePathname } from 'next/navigation'
+import { useEffect } from 'react'
+import { useRouter, usePathname } from 'next/navigation'
 import { Button } from '@/components/ui/Button'
+import { locales, defaultLocale } from '@/lib/locales'
 
-export default function NotFound() {
+export default function RootNotFound() {
+  const router = useRouter()
   const pathname = usePathname()
-  const segments = pathname?.split('/').filter(Boolean) || []
-  const locale =
-    segments[0] === 'en' || segments[0] === 'fr' || segments[0] === 'it'
-      ? segments[0]
-      : 'fr'
+
+  useEffect(() => {
+    // Check if the first segment looks like an invalid locale
+    const segments = pathname?.split('/').filter(Boolean) || []
+    const firstSegment = segments[0]
+
+    // If first segment exists but is not a valid locale, redirect to default locale
+    if (
+      firstSegment &&
+      !(locales as readonly string[]).includes(firstSegment)
+    ) {
+      const remainingPath = segments.slice(1).join('/')
+      const newPath = remainingPath
+        ? `/${defaultLocale}/${remainingPath}`
+        : `/${defaultLocale}`
+      router.replace(newPath)
+    }
+  }, [pathname, router])
 
   const content = {
     fr: {
@@ -29,7 +45,7 @@ export default function NotFound() {
     },
   }
 
-  const text = content[locale as 'fr' | 'en' | 'it']
+  const text = content[defaultLocale]
 
   return (
     <main
@@ -54,7 +70,7 @@ export default function NotFound() {
 
       <p style={{ marginBottom: '1.5rem', color: '#374151' }}>{text.message}</p>
 
-      <Button href={`/${locale}`}>{text.button}</Button>
+      <Button href={`/${defaultLocale}`}>{text.button}</Button>
     </main>
   )
 }
