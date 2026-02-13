@@ -1,80 +1,35 @@
 'use client'
 
-import Link from 'next/link'
-import { useEffect, useState } from 'react'
-import { defaultLocale as STATIC_DEFAULT_LOCALE, locales as STATIC_LOCALES } from '@/lib/locales'
-
-type LocalesResponse = {
-  locales: string[]
-  defaultLocale: string
-}
-
-function getCookieLocale(): string | undefined {
-  try {
-    const match = document.cookie.match(/(?:^|; )locale=([^;]+)/)
-    if (!match) return undefined
-    const value = decodeURIComponent(match[1])
-    return value || undefined
-  } catch {
-    return undefined
-  }
-}
+import { usePathname } from 'next/navigation'
+import { Button } from '@/components/ui/Button'
 
 export default function NotFound() {
-  const [supportedLocales, setSupportedLocales] = useState<string[]>([...(STATIC_LOCALES as readonly string[])])
-  const [defaultLocale, setDefaultLocale] = useState<string>(STATIC_DEFAULT_LOCALE)
-  const [rawLang, setRawLang] = useState<string | undefined>(undefined)
+  const pathname = usePathname()
+  const segments = pathname?.split('/').filter(Boolean) || []
+  const locale =
+    segments[0] === 'en' || segments[0] === 'fr' || segments[0] === 'it'
+      ? segments[0]
+      : 'fr'
 
-  const lang = rawLang && supportedLocales.includes(rawLang) ? rawLang : defaultLocale
+  const content = {
+    fr: {
+      title: '404',
+      message: "Cette page n'existe pas.",
+      button: "Retour à l'accueil",
+    },
+    en: {
+      title: '404',
+      message: "This page doesn't exist.",
+      button: 'Back to home',
+    },
+    it: {
+      title: '404',
+      message: 'Questa pagina non esiste.',
+      button: 'Torna alla home',
+    },
+  }
 
-  useEffect(() => {
-    try {
-      const cookieLocale = getCookieLocale()
-      if (cookieLocale) {
-        queueMicrotask(() => setRawLang(cookieLocale))
-        return
-      }
-
-      const docLang = document.documentElement.lang
-      if (typeof docLang === 'string' && docLang.length > 0) {
-        queueMicrotask(() => setRawLang(docLang))
-        return
-      }
-
-      const parts = window.location.pathname.split('/').filter(Boolean)
-      if (parts[0]) {
-        queueMicrotask(() => setRawLang(parts[0]))
-      }
-    } catch {
-      // noop
-    }
-  }, [])
-
-  useEffect(() => {
-    let isMounted = true
-
-    ;(async () => {
-      try {
-        const res = await fetch('/api/locales')
-        if (!res.ok) return
-        const json = (await res.json()) as Partial<LocalesResponse>
-
-        const locales = Array.isArray(json.locales)
-          ? json.locales.filter((l): l is string => typeof l === 'string' && l.length > 0)
-          : []
-
-        if (!isMounted) return
-        if (locales.length > 0) setSupportedLocales(locales)
-        if (typeof json.defaultLocale === 'string' && json.defaultLocale.length > 0) setDefaultLocale(json.defaultLocale)
-      } catch {
-        // ignore: fallback to static locales
-      }
-    })()
-
-    return () => {
-      isMounted = false
-    }
-  }, [])
+  const text = content[locale as 'fr' | 'en' | 'it']
 
   return (
     <main
@@ -86,31 +41,20 @@ export default function NotFound() {
         alignItems: 'center',
         textAlign: 'center',
         padding: '2rem',
+        backgroundColor: '#FFF1F1',
       }}
       aria-labelledby="notfound-title"
     >
-      <h1 id="notfound-title" style={{ fontSize: '3rem', marginBottom: '1rem' }}>
-        404
+      <h1
+        id="notfound-title"
+        style={{ fontSize: '3rem', marginBottom: '1rem' }}
+      >
+        {text.title}
       </h1>
 
-      <p style={{ marginBottom: '1.5rem', color: '#374151' }}>
-        {!rawLang ? "Cette page n'existe pas. / This page doesn't exist." : lang === 'en' ? "This page doesn't exist." : 'Cette page n\'existe pas.'}
-      </p>
+      <p style={{ marginBottom: '1.5rem', color: '#374151' }}>{text.message}</p>
 
-      <div style={{ display: 'flex', justifyContent: 'center' }}>
-        <Link
-          href={`/${lang}`}
-          style={{
-            padding: '12px 24px',
-            background: '#000',
-            color: '#fff',
-            borderRadius: '6px',
-            textDecoration: 'none',
-          }}
-        >
-          {lang === 'en' ? 'Home' : "Retour à l’accueil"}
-        </Link>
-      </div>
+      <Button href={`/${locale}`}>{text.button}</Button>
     </main>
   )
 }

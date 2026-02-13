@@ -68,7 +68,6 @@ export default [
   {
     name: 'strapi::cors',
     config: {
-      enabled: true,
       // Allow a set of known origins in production, plus Vercel preview domains.
       // We prefer an allow-list coming from ALLOWED_ORIGINS env var when present.
       origin: (ctx: any) => {

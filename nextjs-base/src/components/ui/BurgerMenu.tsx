@@ -18,9 +18,14 @@ interface ProcessedLink {
 interface BurgerMenuProps {
   links?: ProcessedLink[]
   currentLocale: string
+  hideLanguageSwitcher?: boolean
 }
 
-export const BurgerMenu = ({ links = [], currentLocale }: BurgerMenuProps) => {
+export const BurgerMenu = ({
+  links = [],
+  currentLocale,
+  hideLanguageSwitcher = false,
+}: BurgerMenuProps) => {
   const [isOpen, setIsOpen] = useState(false)
   const [langOpen, setLangOpen] = useState(false)
   const pathname = usePathname() ?? '/'
@@ -229,25 +234,27 @@ export const BurgerMenu = ({ links = [], currentLocale }: BurgerMenuProps) => {
                   </Link>
                 )
               })}
-              <motion.div
-                layout
-                initial={false}
-                animate={{ opacity: langOpen ? 1 : 0.9 }}
-                transition={motionTransition}
-                className={`pt-2 border-t border-gray-200 flex ${langOpen ? 'justify-start' : 'justify-center'}`}
-              >
+              {!hideLanguageSwitcher && (
                 <motion.div
+                  layout
                   initial={false}
-                  animate={{ x: langOpen ? -8 : 0 }}
+                  animate={{ opacity: langOpen ? 1 : 0.9 }}
                   transition={motionTransition}
-                  className="inline-flex"
+                  className={`pt-2 border-t border-gray-200 flex ${langOpen ? 'justify-start' : 'justify-center'}`}
                 >
-                  <LanguageSwitcher
-                    side="right"
-                    onOpenChange={(v) => setLangOpen(v)}
-                  />
+                  <motion.div
+                    initial={false}
+                    animate={{ x: langOpen ? -8 : 0 }}
+                    transition={motionTransition}
+                    className="inline-flex"
+                  >
+                    <LanguageSwitcher
+                      side="right"
+                      onOpenChange={(v) => setLangOpen(v)}
+                    />
+                  </motion.div>
                 </motion.div>
-              </motion.div>
+              )}
             </nav>
           </div>
         </>

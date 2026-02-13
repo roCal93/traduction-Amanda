@@ -176,6 +176,14 @@ export const Header = memo(
       }
     }, [pathname, links, getLocalizedHref])
 
+    const handleLogoClick = (e: React.MouseEvent) => {
+      // If we're already on the home page, scroll to top instead of navigating
+      if (pathname === `/${currentLocale}` || pathname === `/${currentLocale}/`) {
+        e.preventDefault()
+        window.scrollTo({ top: 0, behavior: 'smooth' })
+      }
+    }
+
     return (
       <header
         id="site-header"
@@ -186,6 +194,7 @@ export const Header = memo(
         <Link
           href={`/${currentLocale}`}
           prefetch
+          onClick={handleLogoClick}
           aria-label={`${title} - Return to homepage`}
           className="flex-none min-[850px]:flex-1"
         >
@@ -268,7 +277,11 @@ export const Header = memo(
           )}
         </div>
         <div className="min-[850px]:hidden absolute right-6">
-          <BurgerMenu links={links} currentLocale={currentLocale} />
+          <BurgerMenu
+            links={links}
+            currentLocale={currentLocale}
+            hideLanguageSwitcher={hideLanguageSwitcher}
+          />
         </div>
       </header>
     )
