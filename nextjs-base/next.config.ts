@@ -1,4 +1,5 @@
 import type { NextConfig } from 'next'
+import path from 'node:path'
 
 function getAllowedOrigins() {
   const allowedEnv =
@@ -62,7 +63,9 @@ const nextConfig: NextConfig = {
   // module resolution issues when the repo contains multiple lockfiles.
   // See https://nextjs.org/docs/app/api-reference/config/next-config-js/turbopack#root-directory
   turbopack: {
-    root: __dirname,
+    // On Vercel the build runs from a subdirectory (nextjs-base) but Next also
+    // sets outputFileTracingRoot to the repo root. Those two values must match.
+    root: process.env.VERCEL ? path.resolve(__dirname, '..') : __dirname,
   } as const,
 
   // Autoriser l'admin Strapi à intégrer le site en iframe pour la Preview
