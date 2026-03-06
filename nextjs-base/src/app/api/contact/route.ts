@@ -191,6 +191,7 @@ export async function POST(request: NextRequest) {
     const sanitizedName = escapeHtml(name.trim())
     const sanitizedEmail = escapeHtml(email.trim())
     const sanitizedMessage = escapeHtml(message.trim())
+    const companyName = process.env.COMPANY_NAME || 'Amanda Traduction'
 
     // Vérifier si Resend est configuré
     if (!resend) {
@@ -207,13 +208,13 @@ export async function POST(request: NextRequest) {
 
     // Envoi de l'email avec Resend
     const { data, error } = await resend.emails.send({
-      from: process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev',
+      from: `${companyName} <${process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev'}>`,
       to: process.env.CONTACT_EMAIL || 'contact@votre-domaine.com',
       replyTo: sanitizedEmail,
       subject: `Nouveau message de contact de ${sanitizedName}`,
       headers: {
         'X-Priority': '3',
-        'X-Mailer': 'Amanda Traduction Contact Form',
+        'X-Mailer': `${companyName} Contact Form`,
       },
       html: `
         <!DOCTYPE html>
@@ -310,7 +311,7 @@ export async function POST(request: NextRequest) {
 
     // Email de confirmation automatique à l'expéditeur (multilingue)
     await resend.emails.send({
-      from: `Amanda Traduction <${process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev'}>`,
+      from: `${companyName} <${process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev'}>`,
       to: sanitizedEmail,
       subject: template.subject,
       html: `
