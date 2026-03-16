@@ -36,6 +36,7 @@ type SectionGenericProps = {
   spacingTop?: 'none' | 'small' | 'medium' | 'large'
   spacingBottom?: 'none' | 'small' | 'medium' | 'large'
   containerWidth?: 'small' | 'medium' | 'large' | 'full'
+  isFirstSection?: boolean
 }
 
 export const SectionGeneric = ({
@@ -45,7 +46,23 @@ export const SectionGeneric = ({
   spacingTop = 'medium',
   spacingBottom = 'medium',
   containerWidth = 'medium',
+  isFirstSection = false,
 }: SectionGenericProps) => {
+  const toPascalStatic = (s: string) =>
+    s
+      .split('-')
+      .map((p) => p.charAt(0).toUpperCase() + p.slice(1))
+      .join('')
+
+  // Pre-compute the index of the first ImageBlock for LCP priority (only needed in first section)
+  const firstImageBlockIndex = isFirstSection
+    ? (blocks || []).findIndex((b) => {
+        const raw = (b as { __component?: string }).__component ?? ''
+        const key = raw.split('.').pop() || raw
+        return toPascalStatic(key) === 'ImageBlock'
+      })
+    : -1
+
   const getContainerWidthClass = (
     width: 'small' | 'medium' | 'large' | 'full'
   ) => {
@@ -102,6 +119,7 @@ export const SectionGeneric = ({
         <BlockComponent
           key={index}
           {...(block as unknown as Record<string, unknown>)}
+          {...(index === firstImageBlockIndex ? { priority: true, fetchPriority: 'high' } : {})}
         />
       )
     }

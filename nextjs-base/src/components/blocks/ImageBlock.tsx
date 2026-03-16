@@ -7,9 +7,10 @@ type ImageBlockProps = {
   caption?: string
   alignment: 'left' | 'center' | 'right' | 'full'
   size: 'small' | 'medium' | 'large' | 'full'
+  priority?: boolean
 }
 
-const ImageBlock = ({ image, caption, alignment, size }: ImageBlockProps) => {
+const ImageBlock = ({ image, caption, alignment, size, priority }: ImageBlockProps) => {
   const imageSrc = cleanImageUrl(image.url)
   const finalImageSrc = imageSrc && imageSrc.startsWith('/') 
     ? `${process.env.NEXT_PUBLIC_STRAPI_URL}${imageSrc}` 
@@ -39,6 +40,8 @@ const ImageBlock = ({ image, caption, alignment, size }: ImageBlockProps) => {
         className="w-full h-auto object-cover rounded-lg"
         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 70vw"
         unoptimized={true}
+        priority={priority}
+        fetchPriority={priority ? 'high' : undefined}
       />
       {caption && (
         <figcaption className="text-sm text-gray-600 mt-2 text-center italic">

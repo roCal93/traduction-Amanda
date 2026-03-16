@@ -230,12 +230,13 @@ export default async function HomeLocale({
     <Layout locale={locale}>
       {!page.hideTitle && <Hero title={getText(page.title)} />}
 
-      {page.sections?.map((section) => (
+      {page.sections?.map((section, sectionIndex) => (
         <SectionGeneric
           key={section.id}
           identifier={section.identifier}
           title={section.hideTitle ? undefined : section.title}
           blocks={section.blocks as DynamicBlock[]}
+          isFirstSection={sectionIndex === 0}
           spacingTop={
             section.spacingTop as
               | 'none'
