@@ -119,7 +119,9 @@ export const SectionGeneric = ({
         <BlockComponent
           key={index}
           {...(block as unknown as Record<string, unknown>)}
-          {...(index === firstImageBlockIndex ? { priority: true, fetchPriority: 'high' } : {})}
+          {...(index === firstImageBlockIndex
+            ? { priority: true, fetchPriority: 'high' }
+            : {})}
         />
       )
     }

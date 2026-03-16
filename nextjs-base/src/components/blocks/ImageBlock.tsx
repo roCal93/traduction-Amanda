@@ -10,11 +10,18 @@ type ImageBlockProps = {
   priority?: boolean
 }
 
-const ImageBlock = ({ image, caption, alignment, size, priority }: ImageBlockProps) => {
+const ImageBlock = ({
+  image,
+  caption,
+  alignment,
+  size,
+  priority,
+}: ImageBlockProps) => {
   const imageSrc = cleanImageUrl(image.url)
-  const finalImageSrc = imageSrc && imageSrc.startsWith('/') 
-    ? `${process.env.NEXT_PUBLIC_STRAPI_URL}${imageSrc}` 
-    : imageSrc || ''
+  const finalImageSrc =
+    imageSrc && imageSrc.startsWith('/')
+      ? `${process.env.NEXT_PUBLIC_STRAPI_URL}${imageSrc}`
+      : imageSrc || ''
 
   const alignmentClasses = {
     left: 'mr-auto',
@@ -31,7 +38,9 @@ const ImageBlock = ({ image, caption, alignment, size, priority }: ImageBlockPro
   }
 
   return (
-    <figure className={`my-6 ${alignmentClasses[alignment]} ${sizeClasses[size]}`}>
+    <figure
+      className={`my-6 ${alignmentClasses[alignment]} ${sizeClasses[size]}`}
+    >
       <Image
         src={finalImageSrc}
         alt={image.alternativeText || caption || 'Image'}
