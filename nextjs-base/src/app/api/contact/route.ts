@@ -116,10 +116,10 @@ type Locale = keyof typeof emailTemplates
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { name, email, message, consent, locale = 'fr', website } = body
+    const { name, email, message, consent, locale = 'fr', _hp_trap } = body
 
-    // 1. Protection Honeypot - Si le champ 'website' est rempli, c'est un bot
-    if (website) {
+    // 1. Protection Honeypot - Si le champ honeypot est rempli, c'est un bot
+    if (_hp_trap) {
       console.warn('Bot detected via honeypot')
       // Réponse normale pour ne pas alerter le bot
       return NextResponse.json(

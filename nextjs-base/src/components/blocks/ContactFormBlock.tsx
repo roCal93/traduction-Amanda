@@ -56,7 +56,7 @@ const ContactFormBlock = ({
     message: '',
     consent: false,
     // Honeypot - champ invisible pour piéger les bots
-    website: '',
+    _hp_trap: '',
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitStatus, setSubmitStatus] = useState<
@@ -119,7 +119,7 @@ const ContactFormBlock = ({
         email: '',
         message: '',
         consent: false,
-        website: '',
+        _hp_trap: '',
       })
     } catch (error) {
       console.error('Error submitting form:', error)
@@ -199,10 +199,10 @@ const ContactFormBlock = ({
           {/* Honeypot - Champ invisible pour les bots */}
           <input
             type="text"
-            name="website"
-            value={formData.website}
+            name="_hp_trap"
+            value={formData._hp_trap}
             onChange={handleChange}
-            autoComplete="off"
+            autoComplete="new-password"
             tabIndex={-1}
             aria-hidden="true"
             style={{
