@@ -45,11 +45,15 @@ export default () => {
       return
     }
 
+    // Helper: check if a CSP directive string already contains an exact host token
+    const hasCloudinary = (directive: string) =>
+      /(^|\s)https:\/\/res\.cloudinary\.com(\s|$)/.test(directive)
+
     // Ensure img-src contains Cloudinary
     let newCsp = csp
     if (newCsp.includes('img-src')) {
       newCsp = newCsp.replace(/img-src([^;]*)/, (match: string, group: string) => {
-        if (match.includes('res.cloudinary.com')) return match
+        if (hasCloudinary(match)) return match
         return `img-src${group} https://res.cloudinary.com`
       })
     } else {
