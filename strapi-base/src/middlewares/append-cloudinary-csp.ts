@@ -18,7 +18,14 @@ export default () => {
         .forEach((u) => clientUrlsSet.add(u))
     } else {
       clientUrlsSet.add(clientUrl)
-      if (!clientUrl.includes('localhost')) {
+      let isLocalUrl = true
+      try {
+        const { hostname } = new URL(clientUrl)
+        isLocalUrl = hostname === 'localhost' || hostname === '127.0.0.1' || hostname === '::1'
+      } catch {
+        isLocalUrl = true
+      }
+      if (!isLocalUrl) {
         const host = clientUrl.replace(/^https?:\/\//, '').replace(/\/$/, '')
         const base = host.replace(/^www\./, '')
         clientUrlsSet.add(`https://${base}`)
