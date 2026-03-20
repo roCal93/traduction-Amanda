@@ -1,4 +1,4 @@
-import { existsSync } from 'node:fs';
+import { existsSync, readdirSync } from 'node:fs';
 import { execSync } from 'node:child_process';
 import { createRequire } from 'node:module';
 
@@ -73,9 +73,31 @@ function isPackageDirPresent(pkgName) {
     return existsSync(path);
 }
 
+// pnpm may keep transitive optional deps only inside node_modules/.pnpm,
+// without a direct node_modules/<pkg> symlink at the workspace root.
+function isPackagePresentInPnpmStore(pkgName) {
+    if (!pkgName) return true;
+
+    const storeDir = new URL('../node_modules/.pnpm', import.meta.url);
+    if (!existsSync(storeDir)) return false;
+
+    try {
+        const entries = readdirSync(storeDir, { withFileTypes: true });
+        for (const entry of entries) {
+            if (!entry.isDirectory()) continue;
+            const candidate = new URL(`../node_modules/.pnpm/${entry.name}/node_modules/${pkgName}/package.json`, import.meta.url);
+            if (existsSync(candidate)) return true;
+        }
+    } catch {
+        return false;
+    }
+
+    return false;
+}
+
 const missing = [];
-if (!isModulePresent(rollupPackage) && !isPackageDirPresent(rollupPackage)) missing.push(rollupPackage);
-if (!isModulePresent(swcPackage) && !isPackageDirPresent(swcPackage)) missing.push(swcPackage);
+if (!isModulePresent(rollupPackage) && !isPackageDirPresent(rollupPackage) && !isPackagePresentInPnpmStore(rollupPackage)) missing.push(rollupPackage);
+if (!isModulePresent(swcPackage) && !isPackageDirPresent(swcPackage) && !isPackagePresentInPnpmStore(swcPackage)) missing.push(swcPackage);
 
 if (missing.length === 0) {
     process.exit(0);
@@ -96,8 +118,8 @@ if (hasPnpmLock) {
 }
 
 const stillMissing = [];
-if (!isModulePresent(rollupPackage) && !isPackageDirPresent(rollupPackage)) stillMissing.push(rollupPackage);
-if (!isModulePresent(swcPackage) && !isPackageDirPresent(swcPackage)) stillMissing.push(swcPackage);
+if (!isModulePresent(rollupPackage) && !isPackageDirPresent(rollupPackage) && !isPackagePresentInPnpmStore(rollupPackage)) stillMissing.push(rollupPackage);
+if (!isModulePresent(swcPackage) && !isPackageDirPresent(swcPackage) && !isPackagePresentInPnpmStore(swcPackage)) stillMissing.push(swcPackage);
 
 if (stillMissing.length === 0) {
     process.exit(0);
@@ -114,8 +136,8 @@ if (hasPnpmLock) {
 }
 
 const finalMissing = [];
-if (!isModulePresent(rollupPackage) && !isPackageDirPresent(rollupPackage)) finalMissing.push(rollupPackage);
-if (!isModulePresent(swcPackage) && !isPackageDirPresent(swcPackage)) finalMissing.push(swcPackage);
+if (!isModulePresent(rollupPackage) && !isPackageDirPresent(rollupPackage) && !isPackagePresentInPnpmStore(rollupPackage)) finalMissing.push(rollupPackage);
+if (!isModulePresent(swcPackage) && !isPackageDirPresent(swcPackage) && !isPackagePresentInPnpmStore(swcPackage)) finalMissing.push(swcPackage);
 
 if (finalMissing.length > 0) {
     console.error(`[ensure-native-deps] Still missing after repair: ${finalMissing.join(', ')}`);
