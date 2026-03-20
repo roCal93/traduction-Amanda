@@ -8,13 +8,13 @@ NPM_CONFIG_OPTIONAL = "true"
 
 [phases.install]
 cmds = [
-  "npm install --include=optional"
+  "pnpm install --frozen-lockfile --prefer-offline"
 ]
 
 [phases.build]
 cmds = [
-  "npm run build"
+  "pnpm run build"
 ]
 
 [start]
-cmd = "npm start"
+cmd = "pnpm run start"

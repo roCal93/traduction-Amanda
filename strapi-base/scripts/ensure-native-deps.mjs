@@ -15,6 +15,17 @@ if (process.platform !== 'linux') {
 }
 
 const arch = process.arch;
+const hasPnpmLock = existsSync(new URL('../pnpm-lock.yaml', import.meta.url));
+
+function run(cmd, extraEnv = {}) {
+    execSync(cmd, {
+        stdio: 'inherit',
+        env: {
+            ...process.env,
+            ...extraEnv,
+        },
+    });
+}
 
 function isMusl() {
     try {
@@ -45,14 +56,6 @@ const swcPackage =
             ? (musl ? '@swc/core-linux-arm64-musl' : '@swc/core-linux-arm64-gnu')
             : null;
 
-function getInstalledVersion(pkgName) {
-    try {
-        return require(`${pkgName}/package.json`).version;
-    } catch {
-        return null;
-    }
-}
-
 function isModulePresent(pkgName) {
     if (!pkgName) return true;
     try {
@@ -79,16 +82,18 @@ if (missing.length === 0) {
 }
 
 console.log(`[ensure-native-deps] Missing native optional deps on linux/${arch}: ${missing.join(', ')}`);
-console.log('[ensure-native-deps] Running npm install --include=optional to repair...');
+const baseEnv = {
+    // Ensure optional deps are not omitted.
+    NPM_CONFIG_OPTIONAL: 'true',
+};
 
-execSync('npm install --include=optional --no-audit --no-fund', {
-    stdio: 'inherit',
-    env: {
-        ...process.env,
-        // Ensure optional deps are not omitted.
-        NPM_CONFIG_OPTIONAL: 'true',
-    },
-});
+if (hasPnpmLock) {
+    console.log('[ensure-native-deps] Running pnpm install to repair optional native deps...');
+    run('pnpm install --no-frozen-lockfile --prefer-offline', baseEnv);
+} else {
+    console.log('[ensure-native-deps] Running npm install to repair optional native deps...');
+    run('npm install --no-audit --no-fund', baseEnv);
+}
 
 const stillMissing = [];
 if (!isModulePresent(rollupPackage) && !isPackageDirPresent(rollupPackage)) stillMissing.push(rollupPackage);
@@ -98,22 +103,14 @@ if (stillMissing.length === 0) {
     process.exit(0);
 }
 
-// npm can sometimes keep optional deps missing in CI/container environments.
-// If that happens, install the required platform packages explicitly.
-const rollupVersion = getInstalledVersion('rollup');
-const swcCoreVersion = getInstalledVersion('@swc/core');
-
-for (const pkgName of stillMissing) {
-    const version = pkgName.startsWith('@rollup/') ? rollupVersion : swcCoreVersion;
-    const spec = version ? `${pkgName}@${version}` : pkgName;
-    console.log(`[ensure-native-deps] Forcing install: ${spec}`);
-    execSync(`npm install --no-save --no-package-lock --no-audit --no-fund ${spec}`, {
-        stdio: 'inherit',
-        env: {
-            ...process.env,
-            NPM_CONFIG_OPTIONAL: 'true',
-        },
-    });
+// Some CI/container caches keep optional deps missing after a regular install.
+// Retry once with a forced reinstall using the same package manager.
+if (hasPnpmLock) {
+    console.log('[ensure-native-deps] Retrying with pnpm install --force...');
+    run('pnpm install --force --no-frozen-lockfile --prefer-offline', baseEnv);
+} else {
+    console.log('[ensure-native-deps] Retrying with npm install --force...');
+    run('npm install --force --no-audit --no-fund', baseEnv);
 }
 
 const finalMissing = [];
