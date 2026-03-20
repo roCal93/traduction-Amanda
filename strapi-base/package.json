@@ -40,6 +40,18 @@
     "node": "20.x",
     "npm": ">=6.0.0"
   },
+  "pnpm": {
+    "overrides": {
+      "tar": "7.5.11",
+      "minimatch": ">=10.2.3",
+      "undici": ">=6.24.0",
+      "file-type": ">=21.3.2",
+      "ajv": ">=8.18.0",
+      "esbuild": ">=0.25.0",
+      "markdown-it": ">=14.1.1",
+      "tmp": ">=0.2.4"
+    }
+  },
   "strapi": {
     "uuid": "c79a9989-682a-4e19-90a0-c972f948a014",
     "installId": "f352f7d117768cdb3569f1e63a7b7183bff8f70943c2dff25e1ce9bda87b48d9"
