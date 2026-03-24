@@ -242,8 +242,8 @@ const WorkCard = ({
         <h3
           className={
             variant === 'list'
-              ? 'text-base sm:text-lg font-bold group-hover:text-gray-600 transition-colors mb-1'
-              : 'text-center md:text-left text-base sm:text-lg font-bold mb-1.5 group-hover:text-gray-600 transition-colors leading-tight'
+              ? 'text-center text-base sm:text-lg font-bold group-hover:text-gray-600 transition-colors mb-1'
+              : 'text-center text-base sm:text-lg font-bold mb-1.5 group-hover:text-gray-600 transition-colors leading-tight'
           }
         >
           {item.title}

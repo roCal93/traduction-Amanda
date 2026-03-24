@@ -36,7 +36,8 @@ const WorkBlock = ({
   )
   const categoryIdsKey = useMemo(() => categoryIds.join(','), [categoryIds])
   const fetchKey = useMemo(
-    () => [showAllCategories, showFeaturedOnly, limit, categoryIdsKey].join('|'),
+    () =>
+      [showAllCategories, showFeaturedOnly, limit, categoryIdsKey].join('|'),
     [showAllCategories, showFeaturedOnly, limit, categoryIdsKey]
   )
 
@@ -68,7 +69,10 @@ const WorkBlock = ({
 
         if (!showAllCategories && categoryIds.length > 0) {
           categoryIds.forEach((categoryId, index) => {
-            params.append(`filters[categories][id][$in][${index}]`, categoryId.toString())
+            params.append(
+              `filters[categories][id][$in][${index}]`,
+              categoryId.toString()
+            )
           })
         }
 
@@ -149,7 +153,7 @@ const WorkBlock = ({
   }
 
   return (
-    <div className="w-full">
+    <div className="w-full mb-8 sm:mb-12">
       {/* Category filters */}
       {showFilters && availableCategories.length > 0 && (
         <div className="flex flex-wrap gap-2 mb-8 justify-center">
