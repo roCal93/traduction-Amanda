@@ -21,7 +21,7 @@ const CarouselWorkCard = ({
       tabIndex={0}
       role="article"
       aria-label={item.title}
-      className="relative w-full rounded-lg shadow-lg hover:shadow-2xl transition-all duration-300 bg-[#FFE5B3]/60 flex-shrink-0 select-none focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 overflow-hidden"
+      className="relative w-full h-full rounded-lg shadow-lg hover:shadow-2xl transition-all duration-300 bg-[#FFE5B3]/60 flex-shrink-0 flex flex-col select-none focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 overflow-hidden"
     >
       {/* Image */}
       <div className="relative w-full aspect-[5/2] overflow-hidden flex items-center justify-center p-2">

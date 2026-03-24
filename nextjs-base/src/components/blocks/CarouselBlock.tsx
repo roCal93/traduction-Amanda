@@ -147,7 +147,7 @@ const CarouselBlock = ({
     <div className="relative w-full overflow-hidden my-8">
       <div
         ref={scrollRef}
-        className="flex gap-6 overflow-x-hidden select-none py-6"
+        className="flex items-stretch gap-6 overflow-x-hidden select-none py-6"
         style={{
           scrollbarWidth: 'none',
           msOverflowStyle: 'none',
@@ -166,7 +166,10 @@ const CarouselBlock = ({
         onTouchEnd={handleTouchEnd}
       >
         {duplicatedItems.map((item, index) => (
-          <div key={`${item.id}-${index}`} className="w-[220px] flex-shrink-0">
+          <div
+            key={`${item.id}-${index}`}
+            className="w-[220px] flex-shrink-0 flex"
+          >
             <CarouselWorkCard item={item} isPriority={index < 6} />
           </div>
         ))}
