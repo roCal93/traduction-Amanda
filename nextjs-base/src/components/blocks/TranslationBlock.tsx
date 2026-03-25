@@ -148,7 +148,14 @@ const languageName = (lang: string, siteLocale: SiteLocale) => {
 const renderInlineTextNode = (node: StrapiTextNode, key: React.Key) => {
   if (node.type !== 'text') return null
 
-  let content: React.ReactNode = node.text ?? ''
+  const textWithBreaks = (node.text ?? '').split('\n').map((line, index) => (
+    <React.Fragment key={index}>
+      {index > 0 && <br />}
+      {line}
+    </React.Fragment>
+  ))
+
+  let content: React.ReactNode = textWithBreaks
 
   if (node.code) {
     content = (

@@ -27,7 +27,14 @@ const TextBlock = ({
   const renderInlineTextNode = (node: StrapiTextNode, key: React.Key) => {
     if (node.type !== 'text') return null
 
-    let rendered: React.ReactNode = node.text ?? ''
+    const textWithBreaks = (node.text ?? '').split('\n').map((line, index) => (
+      <React.Fragment key={index}>
+        {index > 0 && <br />}
+        {line}
+      </React.Fragment>
+    ))
+
+    let rendered: React.ReactNode = textWithBreaks
     if (node.code) {
       rendered = (
         <code className="px-1 py-0.5 rounded bg-black/5 font-mono text-[0.95em]">
