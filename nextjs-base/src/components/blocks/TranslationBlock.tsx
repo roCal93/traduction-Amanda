@@ -106,7 +106,7 @@ type TranslationBlockProps = {
 type SiteLocale = 'fr' | 'en' | 'it'
 
 type StrapiTextNode = {
-  type?: string
+  type: string
   text?: string
   value?: string
   bold?: boolean
@@ -323,10 +323,18 @@ const TranslationBlock = ({
               if (
                 subChild.type === 'paragraph' ||
                 subChild.type === 'heading' ||
-                subChild.type === 'list'
+                subChild.type === 'list' ||
+                subChild.type === 'list-item'
               ) {
+                let listNode = subChild as StrapiBlock
+                if (subChild.type === 'list-item') {
+                  listNode = {
+                    type: 'paragraph',
+                    children: getBlockChildren(subChild as StrapiBlock),
+                  }
+                }
                 return renderBlocks(
-                  [subChild as unknown as StrapiBlock],
+                  [listNode],
                   ctx,
                   undefined,
                   false,
@@ -364,7 +372,13 @@ const TranslationBlock = ({
           )
         }
         default:
-          return null
+          return (
+            <div key={index} className={`${textColor || 'text-gray-700'} mb-4`}>
+              {getBlockChildren(block).map((child, childIndex) =>
+                renderInlineTextNode(child, childIndex)
+              )}
+            </div>
+          )
       }
     })
   }

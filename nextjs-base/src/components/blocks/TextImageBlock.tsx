@@ -14,7 +14,7 @@ type TextImageBlockProps = {
 }
 
 type StrapiTextNode = {
-  type?: string
+  type: string
   text?: string
   value?: string
   bold?: boolean
@@ -190,9 +190,17 @@ const TextImageBlock = ({
               if (
                 subChild.type === 'paragraph' ||
                 subChild.type === 'heading' ||
-                subChild.type === 'list'
+                subChild.type === 'list' ||
+                subChild.type === 'list-item'
               ) {
-                return renderBlocks([subChild as StrapiBlock])
+                let listNode = subChild as StrapiBlock
+                if (subChild.type === 'list-item') {
+                  listNode = {
+                    type: 'paragraph',
+                    children: getBlockChildren(subChild as StrapiBlock),
+                  }
+                }
+                return renderBlocks([listNode])
               }
 
               const nested = subChild as unknown as StrapiBlock
@@ -221,7 +229,13 @@ const TextImageBlock = ({
           )
         }
         default:
-          return null
+          return (
+            <div key={index} className="text-gray-700 mb-4">
+              {getBlockChildren(block).map((child, childIndex) =>
+                renderInlineTextNode(child, childIndex)
+              )}
+            </div>
+          )
       }
     })
   }

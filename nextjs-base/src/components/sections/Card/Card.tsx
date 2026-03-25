@@ -11,7 +11,7 @@ type CardProps = {
 }
 
 type StrapiTextNode = {
-  type?: string
+  type: string
   text?: string
   value?: string
   bold?: boolean
@@ -121,9 +121,17 @@ export const Card = ({ title, subtitle, content, image }: CardProps) => {
               if (
                 subChild.type === 'paragraph' ||
                 subChild.type === 'heading' ||
-                subChild.type === 'list'
+                subChild.type === 'list' ||
+                subChild.type === 'list-item'
               ) {
-                return renderBlocks([subChild as StrapiBlock])
+                let listNode = subChild as StrapiBlock
+                if (subChild.type === 'list-item') {
+                  listNode = {
+                    type: 'paragraph',
+                    children: getBlockChildren(subChild as StrapiBlock),
+                  }
+                }
+                return renderBlocks([listNode])
               }
 
               const nested = subChild as unknown as StrapiBlock
@@ -152,7 +160,13 @@ export const Card = ({ title, subtitle, content, image }: CardProps) => {
           )
         }
         default:
-          return null
+          return (
+            <div key={index} className="text-gray-600 mb-2">
+              {getBlockChildren(block).map((child, childIndex) =>
+                renderInlineTextNode(child, childIndex)
+              )}
+            </div>
+          )
       }
     })
   }
