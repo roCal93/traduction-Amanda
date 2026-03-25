@@ -322,7 +322,8 @@ const TranslationBlock = ({
 
               if (
                 subChild.type === 'paragraph' ||
-                subChild.type === 'heading'
+                subChild.type === 'heading' ||
+                subChild.type === 'list'
               ) {
                 return renderBlocks(
                   [subChild as unknown as StrapiBlock],

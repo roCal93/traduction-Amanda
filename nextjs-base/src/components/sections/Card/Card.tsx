@@ -118,6 +118,14 @@ export const Card = ({ title, subtitle, content, image }: CardProps) => {
                 return renderInlineTextNode(subChild, subChildIndex)
               }
 
+              if (
+                subChild.type === 'paragraph' ||
+                subChild.type === 'heading' ||
+                subChild.type === 'list'
+              ) {
+                return renderBlocks([subChild as StrapiBlock])
+              }
+
               const nested = subChild as unknown as StrapiBlock
               if (
                 Array.isArray(nested.children) ||
