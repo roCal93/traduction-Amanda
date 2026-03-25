@@ -11,11 +11,26 @@ type TextBlockProps = {
 type StrapiTextNode = {
   type?: string
   text?: string
+  value?: string
   bold?: boolean
   italic?: boolean
   underline?: boolean
   strikethrough?: boolean
   code?: boolean
+  children?: StrapiTextNode[]
+  content?: StrapiTextNode[]
+}
+
+const getStrapiNodeText = (node: StrapiTextNode): string => {
+  if (typeof node.text === 'string') return node.text
+  if (typeof node.value === 'string') return node.value
+  return ''
+}
+
+const getBlockChildren = (block: StrapiBlock): StrapiTextNode[] => {
+  if (Array.isArray(block.children)) return block.children as StrapiTextNode[]
+  if (Array.isArray(block.content)) return block.content as StrapiTextNode[]
+  return []
 }
 
 const TextBlock = ({
@@ -32,9 +47,11 @@ const TextBlock = ({
       node.type === 'hard_break'
     )
       return <br key={key} />
-    if (node.type !== 'text') return null
 
-    const textWithBreaks = (node.text ?? '')
+    const text = getStrapiNodeText(node)
+    if (!text) return null
+
+    const textWithBreaks = text
       .split(/\r?\n/)
       .map((line, index) => (
         <React.Fragment key={index}>
@@ -90,15 +107,9 @@ const TextBlock = ({
               key={index}
               className={`text-gray-700 mb-4 ${alignmentClasses[textAlignment]}`}
             >
-              {block.children?.map((child, childIndex) => {
-                if (child.type === 'text' || child.type === 'hardBreak') {
-                  return renderInlineTextNode(
-                    child as StrapiTextNode,
-                    childIndex
-                  )
-                }
-                return null
-              })}
+              {getBlockChildren(block).map((child, childIndex) =>
+                renderInlineTextNode(child, childIndex)
+              )}
             </p>
           )
         case 'heading':
@@ -117,15 +128,9 @@ const TextBlock = ({
               key={index}
               className={`${headingClasses[level as keyof typeof headingClasses]} ${alignmentClasses[textAlignment]}`}
             >
-              {block.children?.map((child, childIndex) => {
-                if (child.type === 'text' || child.type === 'hardBreak') {
-                  return renderInlineTextNode(
-                    child as StrapiTextNode,
-                    childIndex
-                  )
-                }
-                return null
-              })}
+              {getBlockChildren(block).map((child, childIndex) =>
+                renderInlineTextNode(child, childIndex)
+              )}
             </HeadingTag>
           )
         case 'list': {
@@ -136,8 +141,11 @@ const TextBlock = ({
           const renderListItemContent = (
             item: StrapiBlock
           ): React.ReactNode => {
-            if (!item || !Array.isArray(item.children)) return null
-            return item.children.map((subChild, subChildIndex) => {
+            if (!item) return null
+            const children = getBlockChildren(item)
+            if (!children.length) return null
+
+            return children.map((subChild, subChildIndex) => {
               if (
                 subChild.type === 'text' ||
                 subChild.type === 'hardBreak' ||
@@ -145,14 +153,12 @@ const TextBlock = ({
                 subChild.type === 'break' ||
                 subChild.type === 'hard_break'
               ) {
-                return renderInlineTextNode(
-                  subChild as StrapiTextNode,
-                  subChildIndex
-                )
+                return renderInlineTextNode(subChild, subChildIndex)
               }
 
-              if (Array.isArray((subChild as StrapiBlock).children)) {
-                return renderListItemContent(subChild as StrapiBlock)
+              const nested = subChild as unknown as StrapiBlock
+              if (Array.isArray(nested.children) || Array.isArray(nested.content)) {
+                return renderListItemContent(nested)
               }
 
               return null
@@ -164,9 +170,9 @@ const TextBlock = ({
               key={index}
               className={`${listClass} ml-6 mb-4 text-gray-700 ${alignmentClasses[textAlignment]}`}
             >
-              {block.children?.map((child, childIndex) => (
+              {getBlockChildren(block).map((child, childIndex) => (
                 <li key={childIndex} className="mb-2">
-                  {renderListItemContent(child)}
+                  {renderListItemContent(child as StrapiBlock)}
                 </li>
               ))}
             </ListTag>

@@ -108,11 +108,26 @@ type SiteLocale = 'fr' | 'en' | 'it'
 type StrapiTextNode = {
   type?: string
   text?: string
+  value?: string
   bold?: boolean
   italic?: boolean
   underline?: boolean
   strikethrough?: boolean
   code?: boolean
+  children?: StrapiTextNode[]
+  content?: StrapiTextNode[]
+}
+
+const getStrapiNodeText = (node: StrapiTextNode): string => {
+  if (typeof node.text === 'string') return node.text
+  if (typeof node.value === 'string') return node.value
+  return ''
+}
+
+const getBlockChildren = (block: StrapiBlock): StrapiTextNode[] => {
+  if (Array.isArray(block.children)) return block.children as StrapiTextNode[]
+  if (Array.isArray(block.content)) return block.content as StrapiTextNode[]
+  return []
 }
 
 const getSiteLocale = (pathname: string | null): SiteLocale => {
@@ -154,9 +169,11 @@ const renderInlineTextNode = (node: StrapiTextNode, key: React.Key) => {
   ) {
     return <br key={key} />
   }
-  if (node.type !== 'text') return null
 
-  const textWithBreaks = (node.text ?? '').split(/\r?\n/).map((line, index) => (
+  const text = getStrapiNodeText(node)
+  if (!text) return null
+
+  const textWithBreaks = text.split(/\r?\n/).map((line, index) => (
     <React.Fragment key={index}>
       {index > 0 && <br />}
       {line}
@@ -248,14 +265,9 @@ const TranslationBlock = ({
               onClick={enableInteractivity ? handleClick : undefined}
               className={`${textColor || 'text-gray-700'} mb-4 ${textAlignmentClasses[alignment]} ${isHighlighted ? 'bg-yellow-100' : ''}`}
             >
-              {block.children?.map((child, childIndex) => {
-                if (child.type === 'text' || child.type === 'hardBreak')
-                  return renderInlineTextNode(
-                    child as StrapiTextNode,
-                    childIndex
-                  )
-                return null
-              })}
+              {getBlockChildren(block).map((child, childIndex) =>
+                renderInlineTextNode(child, childIndex)
+              )}
             </p>
           )
         }
@@ -279,14 +291,9 @@ const TranslationBlock = ({
               onClick={enableInteractivity ? handleClick : undefined}
               className={`${headingClasses[level as keyof typeof headingClasses]} ${textAlignmentClasses.left} ${isHighlighted ? 'bg-yellow-100 rounded px-1' : ''}`}
             >
-              {block.children?.map((child, childIndex) => {
-                if (child.type === 'text' || child.type === 'hardBreak')
-                  return renderInlineTextNode(
-                    child as StrapiTextNode,
-                    childIndex
-                  )
-                return null
-              })}
+              {getBlockChildren(block).map((child, childIndex) =>
+                renderInlineTextNode(child, childIndex)
+              )}
             </HeadingTag>
           )
         }
@@ -298,8 +305,11 @@ const TranslationBlock = ({
           const renderListItemContent = (
             item: StrapiBlock
           ): React.ReactNode => {
-            if (!item || !Array.isArray(item.children)) return null
-            return item.children.map((subChild, subChildIndex) => {
+            if (!item) return null
+            const children = getBlockChildren(item)
+            if (!children.length) return null
+
+            return children.map((subChild, subChildIndex) => {
               if (
                 subChild.type === 'text' ||
                 subChild.type === 'hardBreak' ||
@@ -307,10 +317,7 @@ const TranslationBlock = ({
                 subChild.type === 'break' ||
                 subChild.type === 'hard_break'
               ) {
-                return renderInlineTextNode(
-                  subChild as StrapiTextNode,
-                  subChildIndex
-                )
+                return renderInlineTextNode(subChild, subChildIndex)
               }
 
               if (
@@ -326,8 +333,9 @@ const TranslationBlock = ({
                 )
               }
 
-              if (Array.isArray((subChild as StrapiBlock).children)) {
-                return renderListItemContent(subChild as StrapiBlock)
+              const nested = subChild as unknown as StrapiBlock
+              if (Array.isArray(nested.children) || Array.isArray(nested.content)) {
+                return renderListItemContent(nested)
               }
 
               return null
@@ -343,9 +351,9 @@ const TranslationBlock = ({
               onClick={enableInteractivity ? handleClick : undefined}
               className={`${listClass} ml-6 mb-4 ${textColor || 'text-gray-700'} ${isHighlighted ? 'bg-yellow-100 rounded px-1 py-1' : ''}`}
             >
-              {block.children?.map((child, childIndex) => (
+              {getBlockChildren(block).map((child, childIndex) => (
                 <li key={childIndex} className="mb-2">
-                  {renderListItemContent(child)}
+                  {renderListItemContent(child as StrapiBlock)}
                 </li>
               ))}
             </ListTag>
