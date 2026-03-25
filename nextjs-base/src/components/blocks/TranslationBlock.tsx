@@ -235,7 +235,10 @@ const TranslationBlock = ({
             >
               {block.children?.map((child, childIndex) => {
                 if (child.type === 'text')
-                  return renderInlineTextNode(child as StrapiTextNode, childIndex)
+                  return renderInlineTextNode(
+                    child as StrapiTextNode,
+                    childIndex
+                  )
                 return null
               })}
             </p>
@@ -263,7 +266,10 @@ const TranslationBlock = ({
             >
               {block.children?.map((child, childIndex) => {
                 if (child.type === 'text')
-                  return renderInlineTextNode(child as StrapiTextNode, childIndex)
+                  return renderInlineTextNode(
+                    child as StrapiTextNode,
+                    childIndex
+                  )
                 return null
               })}
             </HeadingTag>
