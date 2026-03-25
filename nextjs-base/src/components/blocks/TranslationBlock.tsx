@@ -325,7 +325,7 @@ const TranslationBlock = ({
                 subChild.type === 'heading'
               ) {
                 return renderBlocks(
-                  [subChild],
+                  [subChild as unknown as StrapiBlock],
                   ctx,
                   undefined,
                   false,
