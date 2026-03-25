@@ -221,6 +221,7 @@ export interface TranslationBlock {
   translationLanguage: string;
   showLanguageLabel?: boolean;
   showCreditImage?: boolean;
+  showSourceButton?: boolean;
   examples?: TranslationItem[];
 }
 
@@ -302,6 +303,9 @@ export interface TranslationItem {
   translation: StrapiBlock[];
   sourceLanguage: string;
   theme?: string;
+  originalTitle?: string;
+  translatedTitle?: string;
+  // Legacy field kept for backward compatibility with existing content.
   title?: string;
   author?: string;
   sourceText?: string;

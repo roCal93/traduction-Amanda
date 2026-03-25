@@ -9,45 +9,61 @@ type ExampleItem = {
   translation: StrapiBlock[]
   sourceLanguage?: 'en' | 'it'
   theme?: string | null
+  originalTitle?: string
+  translatedTitle?: string
   title?: string
   author?: string
   sourceText?: string
   description?: StrapiBlock[]
 }
 
-const renderSourceText = (text?: string) => {
+const renderSourceText = (text?: string, showSourceButton: boolean = true) => {
   if (!text) return null
   return text
     .split(/(https?:\/\/[^\s]+|www\.[^\s]+)/g)
     .filter(Boolean)
     .map((part, idx) =>
       /^(https?:\/\/|www\.)/.test(part) ? (
-        <a
-          key={idx}
-          href={part.startsWith('http') ? part : `https://${part}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          title={part}
-          aria-label={`Source: ${part}`}
-          className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#c5e1a599] text-gray-800 hover:bg-[#c5e1a5b3] shadow-md hover:shadow-lg transition-shadow"
-        >
-          <span>Source</span>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth={2}
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            aria-hidden="true"
-            className="w-3 h-3"
+        showSourceButton ? (
+          <a
+            key={idx}
+            href={part.startsWith('http') ? part : `https://${part}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            title={part}
+            aria-label={`Source: ${part}`}
+            className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#c5e1a599] text-gray-800 hover:bg-[#c5e1a5b3] shadow-md hover:shadow-lg transition-shadow"
           >
-            <path d="M14 3h7v7" />
-            <path d="M10 14L21 3" />
-            <path d="M21 14v7H3V3h7" />
-          </svg>
-        </a>
+            <span>Source</span>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={2}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+              className="w-3 h-3"
+            >
+              <path d="M14 3h7v7" />
+              <path d="M10 14L21 3" />
+              <path d="M21 14v7H3V3h7" />
+            </svg>
+          </a>
+        ) : (
+          <a
+            key={idx}
+            href={part.startsWith('http') ? part : `https://${part}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            title={part}
+            aria-label={`Source: ${part}`}
+            className="underline decoration-[#F88379] underline-offset-2"
+          >
+            {part}
+          </a>
+        )
       ) : (
         <span key={idx}>{part}</span>
       )
@@ -72,6 +88,7 @@ type TranslationBlockProps = {
   translationLanguage: 'fr'
   showLanguageLabel?: boolean
   showCreditImage?: boolean
+  showSourceButton?: boolean
   examples?: ExampleItem[]
   alignmentMapping?: Record<string, unknown>
   marginTopClass?: string
@@ -92,6 +109,7 @@ const TranslationBlock = ({
   translationLanguage = 'fr',
   showLanguageLabel = true,
   showCreditImage = false,
+  showSourceButton = true,
   examples,
   marginTopClass = 'mt-16',
 }: TranslationBlockProps) => {
@@ -241,6 +259,8 @@ const TranslationBlock = ({
   }, [examples, source, translation, sourceLanguage])
 
   const active = examplesToUse[activeIndex] || {}
+  const originalTitle = active.originalTitle || active.title
+  const translatedTitle = active.translatedTitle
 
   // Fonction pour rendre les blocs de manière imbriquée (mobile)
   const renderInterleavedBlocks = () => {
@@ -357,17 +377,26 @@ const TranslationBlock = ({
             </div>
           )}
 
-          {(active.title ||
+          {(originalTitle ||
+            translatedTitle ||
             active.author ||
             active.sourceText ||
             (active.description && active.description.length > 0)) && (
             <div className="mx-auto rounded-xl bg-[#FADCA3]/40 p-6 mb-6 text-center">
-              {(active.title || active.author || active.sourceText) && (
+              {(originalTitle ||
+                translatedTitle ||
+                active.author ||
+                active.sourceText) && (
                 <div className="mb-4">
-                  {active.title && (
+                  {originalTitle && (
                     <h3 className="text-2xl font-semibold mb-2">
-                      {active.title}
+                      {originalTitle}
                     </h3>
+                  )}
+                  {translatedTitle && (
+                    <div className="text-lg font-medium text-gray-700 mb-2">
+                      {translatedTitle}
+                    </div>
                   )}
                   {active.author && (
                     <div className="text-sm text-gray-600 mb-4">
@@ -376,7 +405,7 @@ const TranslationBlock = ({
                   )}
                   {active.sourceText && (
                     <div className="text-sm text-gray-700 mb-4">
-                      {renderSourceText(active.sourceText)}
+                      {renderSourceText(active.sourceText, showSourceButton)}
                     </div>
                   )}
                 </div>

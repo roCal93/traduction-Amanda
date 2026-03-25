@@ -364,6 +364,8 @@ export interface BlocksTranslationBlock extends Struct.ComponentSchema {
       Schema.Attribute.DefaultTo<false>;
     showLanguageLabel: Schema.Attribute.Boolean &
       Schema.Attribute.DefaultTo<true>;
+    showSourceButton: Schema.Attribute.Boolean &
+      Schema.Attribute.DefaultTo<true>;
     title: Schema.Attribute.String;
     translationLanguage: Schema.Attribute.Enumeration<['fr']> &
       Schema.Attribute.Required &
@@ -493,13 +495,14 @@ export interface SharedTranslationItem extends Struct.ComponentSchema {
   attributes: {
     author: Schema.Attribute.String;
     description: Schema.Attribute.Blocks;
+    originalTitle: Schema.Attribute.String;
     source: Schema.Attribute.Blocks & Schema.Attribute.Required;
     sourceLanguage: Schema.Attribute.Enumeration<['en', 'it']> &
       Schema.Attribute.Required &
       Schema.Attribute.DefaultTo<'en'>;
     sourceText: Schema.Attribute.String;
     theme: Schema.Attribute.String;
-    title: Schema.Attribute.String;
+    translatedTitle: Schema.Attribute.String;
     translation: Schema.Attribute.Blocks & Schema.Attribute.Required;
   };
 }

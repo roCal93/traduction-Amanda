@@ -25,6 +25,11 @@
       "default": false,
       "required": false
     },
+    "showSourceButton": {
+      "type": "boolean",
+      "default": true,
+      "required": false
+    },
     "examples": {
       "type": "component",
       "repeatable": true,
