@@ -108,7 +108,10 @@ export const Card = ({ title, subtitle, content, image }: CardProps) => {
                 subChild.type === 'break' ||
                 subChild.type === 'hard_break'
               ) {
-                return renderInlineTextNode(subChild as StrapiTextNode, subChildIndex)
+                return renderInlineTextNode(
+                  subChild as StrapiTextNode,
+                  subChildIndex
+                )
               }
 
               if (Array.isArray((subChild as StrapiBlock).children)) {

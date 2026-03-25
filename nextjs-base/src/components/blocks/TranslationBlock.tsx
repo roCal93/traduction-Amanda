@@ -305,10 +305,16 @@ const TranslationBlock = ({
                 subChild.type === 'break' ||
                 subChild.type === 'hard_break'
               ) {
-                return renderInlineTextNode(subChild as StrapiTextNode, subChildIndex)
+                return renderInlineTextNode(
+                  subChild as StrapiTextNode,
+                  subChildIndex
+                )
               }
 
-              if (subChild.type === 'paragraph' || subChild.type === 'heading') {
+              if (
+                subChild.type === 'paragraph' ||
+                subChild.type === 'heading'
+              ) {
                 return renderBlocks(
                   [subChild],
                   ctx,
