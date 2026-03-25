@@ -33,10 +33,16 @@ const TextImageBlock = ({
   roundedImage = false,
 }: TextImageBlockProps) => {
   const renderInlineTextNode = (node: StrapiTextNode, key: React.Key) => {
-    if (node.type === 'hardBreak') return <br key={key} />
+    if (
+      node.type === 'hardBreak' ||
+      node.type === 'lineBreak' ||
+      node.type === 'break' ||
+      node.type === 'hard_break'
+    )
+      return <br key={key} />
     if (node.type !== 'text') return null
 
-    const textWithBreaks = (node.text ?? '').split('\n').map((line, index) => (
+    const textWithBreaks = (node.text ?? '').split(/\r?\n/).map((line, index) => (
       <React.Fragment key={index}>
         {index > 0 && <br />}
         {line}
