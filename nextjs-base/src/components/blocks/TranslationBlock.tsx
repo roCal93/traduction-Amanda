@@ -334,7 +334,10 @@ const TranslationBlock = ({
               }
 
               const nested = subChild as unknown as StrapiBlock
-              if (Array.isArray(nested.children) || Array.isArray(nested.content)) {
+              if (
+                Array.isArray(nested.children) ||
+                Array.isArray(nested.content)
+              ) {
                 return renderListItemContent(nested)
               }
 

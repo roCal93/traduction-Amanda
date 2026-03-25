@@ -39,7 +39,6 @@ const getBlockChildren = (block: StrapiBlock): StrapiTextNode[] => {
 }
 
 const TextImageBlock = ({
-
   content,
   image,
   imagePosition,
@@ -60,14 +59,12 @@ const TextImageBlock = ({
     const text = getStrapiNodeText(node)
     if (!text) return null
 
-    const textWithBreaks = text
-      .split(/\r?\n/)
-      .map((line, index) => (
-        <React.Fragment key={index}>
-          {index > 0 && <br />}
-          {line}
-        </React.Fragment>
-      ))
+    const textWithBreaks = text.split(/\r?\n/).map((line, index) => (
+      <React.Fragment key={index}>
+        {index > 0 && <br />}
+        {line}
+      </React.Fragment>
+    ))
 
     let rendered: React.ReactNode = textWithBreaks
     if (node.code) {
@@ -191,7 +188,10 @@ const TextImageBlock = ({
               }
 
               const nested = subChild as unknown as StrapiBlock
-              if (Array.isArray(nested.children) || Array.isArray(nested.content)) {
+              if (
+                Array.isArray(nested.children) ||
+                Array.isArray(nested.content)
+              ) {
                 return renderListItemContent(nested)
               }
 
