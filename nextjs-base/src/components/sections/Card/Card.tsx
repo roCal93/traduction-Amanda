@@ -37,7 +37,8 @@ export const Card = ({ title, subtitle, content, image }: CardProps) => {
     if (node.bold) rendered = <strong>{rendered}</strong>
     if (node.italic) rendered = <em>{rendered}</em>
     if (node.underline) rendered = <span className="underline">{rendered}</span>
-    if (node.strikethrough) rendered = <span className="line-through">{rendered}</span>
+    if (node.strikethrough)
+      rendered = <span className="line-through">{rendered}</span>
 
     return <React.Fragment key={key}>{rendered}</React.Fragment>
   }
@@ -51,7 +52,10 @@ export const Card = ({ title, subtitle, content, image }: CardProps) => {
             <p key={index} className="text-gray-600 mb-2 whitespace-pre-line">
               {block.children?.map((child, childIndex) => {
                 if (child.type === 'text') {
-                  return renderInlineTextNode(child as StrapiTextNode, childIndex)
+                  return renderInlineTextNode(
+                    child as StrapiTextNode,
+                    childIndex
+                  )
                 }
                 return null
               })}
@@ -64,7 +68,10 @@ export const Card = ({ title, subtitle, content, image }: CardProps) => {
             <HeadingTag key={index} className="text-gray-600 mb-2">
               {block.children?.map((child, childIndex) => {
                 if (child.type === 'text') {
-                  return renderInlineTextNode(child as StrapiTextNode, childIndex)
+                  return renderInlineTextNode(
+                    child as StrapiTextNode,
+                    childIndex
+                  )
                 }
                 return null
               })}
@@ -76,7 +83,10 @@ export const Card = ({ title, subtitle, content, image }: CardProps) => {
             block.format === 'ordered' ? 'list-decimal' : 'list-disc'
 
           return (
-            <ListTag key={index} className={`${listClass} ml-6 mb-2 text-gray-600`}>
+            <ListTag
+              key={index}
+              className={`${listClass} ml-6 mb-2 text-gray-600`}
+            >
               {block.children?.map((child, childIndex) => (
                 <li key={childIndex} className="mb-1">
                   {Array.isArray(child.children) &&

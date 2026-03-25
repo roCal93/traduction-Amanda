@@ -18,11 +18,11 @@ type StrapiTextNode = {
   code?: boolean
 }
 
-const TextBlock = ({ 
-  content, 
+const TextBlock = ({
+  content,
   textAlignment = 'left',
   blockAlignment = 'full',
-  maxWidth = 'full'
+  maxWidth = 'full',
 }: TextBlockProps) => {
   const renderInlineTextNode = (node: StrapiTextNode, key: React.Key) => {
     if (node.type !== 'text') return null
@@ -38,7 +38,8 @@ const TextBlock = ({
     if (node.bold) rendered = <strong>{rendered}</strong>
     if (node.italic) rendered = <em>{rendered}</em>
     if (node.underline) rendered = <span className="underline">{rendered}</span>
-    if (node.strikethrough) rendered = <span className="line-through">{rendered}</span>
+    if (node.strikethrough)
+      rendered = <span className="line-through">{rendered}</span>
 
     return <React.Fragment key={key}>{rendered}</React.Fragment>
   }
@@ -69,10 +70,16 @@ const TextBlock = ({
       switch (block.type) {
         case 'paragraph':
           return (
-            <p key={index} className={`text-gray-700 mb-4 ${alignmentClasses[textAlignment]}`}>
+            <p
+              key={index}
+              className={`text-gray-700 mb-4 ${alignmentClasses[textAlignment]}`}
+            >
               {block.children?.map((child, childIndex) => {
                 if (child.type === 'text') {
-                  return renderInlineTextNode(child as StrapiTextNode, childIndex)
+                  return renderInlineTextNode(
+                    child as StrapiTextNode,
+                    childIndex
+                  )
                 }
                 return null
               })}
@@ -90,10 +97,16 @@ const TextBlock = ({
             6: 'text-base font-bold mb-2',
           }
           return (
-            <HeadingTag key={index} className={`${headingClasses[level as keyof typeof headingClasses]} ${alignmentClasses[textAlignment]}`}>
+            <HeadingTag
+              key={index}
+              className={`${headingClasses[level as keyof typeof headingClasses]} ${alignmentClasses[textAlignment]}`}
+            >
               {block.children?.map((child, childIndex) => {
                 if (child.type === 'text') {
-                  return renderInlineTextNode(child as StrapiTextNode, childIndex)
+                  return renderInlineTextNode(
+                    child as StrapiTextNode,
+                    childIndex
+                  )
                 }
                 return null
               })}
@@ -101,17 +114,27 @@ const TextBlock = ({
           )
         case 'list':
           const ListTag = block.format === 'ordered' ? 'ol' : 'ul'
-          const listClass = block.format === 'ordered' ? 'list-decimal' : 'list-disc'
+          const listClass =
+            block.format === 'ordered' ? 'list-decimal' : 'list-disc'
           return (
-            <ListTag key={index} className={`${listClass} ml-6 mb-4 text-gray-700 ${alignmentClasses[textAlignment]}`}>
+            <ListTag
+              key={index}
+              className={`${listClass} ml-6 mb-4 text-gray-700 ${alignmentClasses[textAlignment]}`}
+            >
               {block.children?.map((child, childIndex) => (
                 <li key={childIndex} className="mb-2">
-                  {Array.isArray(child.children) && child.children.map((grandChild: StrapiBlock, grandChildIndex: number) => {
-                    if (grandChild.type === 'text') {
-                      return renderInlineTextNode(grandChild as StrapiTextNode, grandChildIndex)
-                    }
-                    return null
-                  })}
+                  {Array.isArray(child.children) &&
+                    child.children.map(
+                      (grandChild: StrapiBlock, grandChildIndex: number) => {
+                        if (grandChild.type === 'text') {
+                          return renderInlineTextNode(
+                            grandChild as StrapiTextNode,
+                            grandChildIndex
+                          )
+                        }
+                        return null
+                      }
+                    )}
                 </li>
               ))}
             </ListTag>
@@ -123,7 +146,9 @@ const TextBlock = ({
   }
 
   return (
-    <div className={`${blockAlignmentClasses[blockAlignment]} ${maxWidthClasses[maxWidth]}`}>
+    <div
+      className={`${blockAlignmentClasses[blockAlignment]} ${maxWidthClasses[maxWidth]}`}
+    >
       <div className="prose max-w-none">{renderBlocks(content)}</div>
     </div>
   )

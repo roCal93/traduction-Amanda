@@ -23,14 +23,14 @@ type StrapiTextNode = {
   code?: boolean
 }
 
-const TextImageBlock = ({ 
-  content, 
-  image, 
-  imagePosition, 
+const TextImageBlock = ({
+  content,
+  image,
+  imagePosition,
   imageSize,
   verticalAlignment,
   textAlignment = 'left',
-  roundedImage = false
+  roundedImage = false,
 }: TextImageBlockProps) => {
   const renderInlineTextNode = (node: StrapiTextNode, key: React.Key) => {
     if (node.type !== 'text') return null
@@ -46,15 +46,17 @@ const TextImageBlock = ({
     if (node.bold) rendered = <strong>{rendered}</strong>
     if (node.italic) rendered = <em>{rendered}</em>
     if (node.underline) rendered = <span className="underline">{rendered}</span>
-    if (node.strikethrough) rendered = <span className="line-through">{rendered}</span>
+    if (node.strikethrough)
+      rendered = <span className="line-through">{rendered}</span>
 
     return <React.Fragment key={key}>{rendered}</React.Fragment>
   }
 
   const imageSrc = cleanImageUrl(image.url)
-  const finalImageSrc = imageSrc && imageSrc.startsWith('/') 
-    ? `${process.env.NEXT_PUBLIC_STRAPI_URL}${imageSrc}` 
-    : imageSrc
+  const finalImageSrc =
+    imageSrc && imageSrc.startsWith('/')
+      ? `${process.env.NEXT_PUBLIC_STRAPI_URL}${imageSrc}`
+      : imageSrc
 
   const imageSizeClasses = {
     small: 'md:w-1/3',
@@ -63,9 +65,12 @@ const TextImageBlock = ({
   }
 
   const roundedImageSizeClasses = {
-    small: 'w-64 h-64 sm:w-80 sm:h-80 md:w-96 md:h-96 lg:w-[468px] lg:h-[468px]',
-    medium: 'w-80 h-80 sm:w-96 sm:h-96 md:w-[468px] md:h-[468px] lg:w-[600px] lg:h-[600px]',
-    large: 'w-96 h-96 sm:w-[468px] sm:h-[468px] md:w-[600px] md:h-[600px] lg:w-[800px] lg:h-[800px]',
+    small:
+      'w-64 h-64 sm:w-80 sm:h-80 md:w-96 md:h-96 lg:w-[468px] lg:h-[468px]',
+    medium:
+      'w-80 h-80 sm:w-96 sm:h-96 md:w-[468px] md:h-[468px] lg:w-[600px] lg:h-[600px]',
+    large:
+      'w-96 h-96 sm:w-[468px] sm:h-[468px] md:w-[600px] md:h-[600px] lg:w-[800px] lg:h-[800px]',
   }
 
   const alignmentClasses = {
@@ -86,10 +91,16 @@ const TextImageBlock = ({
       switch (block.type) {
         case 'paragraph':
           return (
-            <p key={index} className={`text-gray-700 mb-4 ${textAlignmentClasses[textAlignment]}`}>
+            <p
+              key={index}
+              className={`text-gray-700 mb-4 ${textAlignmentClasses[textAlignment]}`}
+            >
               {block.children?.map((child, childIndex) => {
                 if (child.type === 'text') {
-                  return renderInlineTextNode(child as StrapiTextNode, childIndex)
+                  return renderInlineTextNode(
+                    child as StrapiTextNode,
+                    childIndex
+                  )
                 }
                 return null
               })}
@@ -107,10 +118,16 @@ const TextImageBlock = ({
             6: 'text-base font-bold mb-2',
           }
           return (
-            <HeadingTag key={index} className={`${headingClasses[level as keyof typeof headingClasses]} ${textAlignmentClasses[textAlignment]}`}>
+            <HeadingTag
+              key={index}
+              className={`${headingClasses[level as keyof typeof headingClasses]} ${textAlignmentClasses[textAlignment]}`}
+            >
               {block.children?.map((child, childIndex) => {
                 if (child.type === 'text') {
-                  return renderInlineTextNode(child as StrapiTextNode, childIndex)
+                  return renderInlineTextNode(
+                    child as StrapiTextNode,
+                    childIndex
+                  )
                 }
                 return null
               })}
@@ -118,17 +135,27 @@ const TextImageBlock = ({
           )
         case 'list':
           const ListTag = block.format === 'ordered' ? 'ol' : 'ul'
-          const listClass = block.format === 'ordered' ? 'list-decimal' : 'list-disc'
+          const listClass =
+            block.format === 'ordered' ? 'list-decimal' : 'list-disc'
           return (
-            <ListTag key={index} className={`${listClass} ml-6 mb-4 text-gray-700 ${textAlignmentClasses[textAlignment]}`}>
+            <ListTag
+              key={index}
+              className={`${listClass} ml-6 mb-4 text-gray-700 ${textAlignmentClasses[textAlignment]}`}
+            >
               {block.children?.map((child, childIndex) => (
                 <li key={childIndex} className="mb-2">
-                  {Array.isArray(child.children) && child.children.map((grandChild: StrapiBlock, grandChildIndex: number) => {
-                    if (grandChild.type === 'text') {
-                      return renderInlineTextNode(grandChild as StrapiTextNode, grandChildIndex)
-                    }
-                    return null
-                  })}
+                  {Array.isArray(child.children) &&
+                    child.children.map(
+                      (grandChild: StrapiBlock, grandChildIndex: number) => {
+                        if (grandChild.type === 'text') {
+                          return renderInlineTextNode(
+                            grandChild as StrapiTextNode,
+                            grandChildIndex
+                          )
+                        }
+                        return null
+                      }
+                    )}
                 </li>
               ))}
             </ListTag>
@@ -140,12 +167,14 @@ const TextImageBlock = ({
   }
 
   const imageElement = (
-    <div className={`${roundedImage ? roundedImageSizeClasses[imageSize] : `w-full ${imageSizeClasses[imageSize]}`} flex-shrink-0 mx-auto`}>
+    <div
+      className={`${roundedImage ? roundedImageSizeClasses[imageSize] : `w-full ${imageSizeClasses[imageSize]}`} flex-shrink-0 mx-auto`}
+    >
       <Image
         src={finalImageSrc || '/placeholder.jpg'}
         alt={image.alternativeText || 'Image'}
-        width={roundedImage ? 800 : (image.width || 800)}
-        height={roundedImage ? 800 : (image.height || 600)}
+        width={roundedImage ? 800 : image.width || 800}
+        height={roundedImage ? 800 : image.height || 600}
         className={`${roundedImage ? 'w-full h-full object-cover rounded-full' : 'w-full h-auto object-cover rounded-lg'}`}
         sizes="(max-width: 768px) 100vw, 50vw"
         unoptimized={true}
@@ -153,14 +182,12 @@ const TextImageBlock = ({
     </div>
   )
 
-  const textElement = (
-    <div className="flex-1">
-      {renderBlocks(content)}
-    </div>
-  )
+  const textElement = <div className="flex-1">{renderBlocks(content)}</div>
 
   return (
-    <div className={`flex flex-col md:flex-row gap-8 my-8 ${alignmentClasses[verticalAlignment]}`}>
+    <div
+      className={`flex flex-col md:flex-row gap-8 my-8 ${alignmentClasses[verticalAlignment]}`}
+    >
       {imagePosition === 'left' ? (
         <>
           {imageElement}
