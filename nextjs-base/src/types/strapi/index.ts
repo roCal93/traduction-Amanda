@@ -221,7 +221,6 @@ export interface TranslationBlock {
   translationLanguage: string
   showLanguageLabel?: boolean
   showCreditImage?: boolean
-  showSourceButton?: boolean
   examples?: TranslationItem[]
 }
 

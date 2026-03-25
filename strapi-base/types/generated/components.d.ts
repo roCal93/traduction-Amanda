@@ -364,8 +364,6 @@ export interface BlocksTranslationBlock extends Struct.ComponentSchema {
       Schema.Attribute.DefaultTo<false>;
     showLanguageLabel: Schema.Attribute.Boolean &
       Schema.Attribute.DefaultTo<true>;
-    showSourceButton: Schema.Attribute.Boolean &
-      Schema.Attribute.DefaultTo<true>;
     title: Schema.Attribute.String;
     translationLanguage: Schema.Attribute.Enumeration<['fr']> &
       Schema.Attribute.Required &

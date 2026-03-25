@@ -1,16 +1,16 @@
 /**
  * Types personnalisés pour l'application
- * 
+ *
  * Ce fichier contient les types qui étendent ou complètent les types auto-générés de Strapi
  */
 
-import type { 
-  ButtonBlock, 
-  CardsBlock, 
-  ImageBlock, 
-  TextBlock, 
+import type {
+  ButtonBlock,
+  CardsBlock,
+  ImageBlock,
+  TextBlock,
   TextImageBlock,
-  TimelineBlock
+  TimelineBlock,
 } from './strapi'
 
 /**

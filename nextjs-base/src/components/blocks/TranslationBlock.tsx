@@ -2,6 +2,7 @@
 
 import React from 'react'
 import Image from 'next/image'
+import { usePathname } from 'next/navigation'
 import { StrapiBlock } from '@/types/strapi'
 
 type ExampleItem = {
@@ -17,66 +18,75 @@ type ExampleItem = {
   description?: StrapiBlock[]
 }
 
-const renderSourceText = (text?: string, showSourceButton: boolean = true) => {
+const renderSourceText = (text?: string) => {
   if (!text) return null
   return text
     .split(/(https?:\/\/[^\s]+|www\.[^\s]+)/g)
     .filter(Boolean)
     .map((part, idx) =>
       /^(https?:\/\/|www\.)/.test(part) ? (
-        showSourceButton ? (
-          <a
-            key={idx}
-            href={part.startsWith('http') ? part : `https://${part}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            title={part}
-            aria-label={`Source: ${part}`}
-            className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#c5e1a599] text-gray-800 hover:bg-[#c5e1a5b3] shadow-md hover:shadow-lg transition-shadow"
+        <a
+          key={idx}
+          href={part.startsWith('http') ? part : `https://${part}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          title={part}
+          aria-label={`Source: ${part}`}
+          className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#c5e1a599] text-gray-800 hover:bg-[#c5e1a5b3] shadow-md hover:shadow-lg transition-shadow"
+        >
+          <span>Source</span>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={2}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+            className="w-3 h-3"
           >
-            <span>Source</span>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth={2}
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              aria-hidden="true"
-              className="w-3 h-3"
-            >
-              <path d="M14 3h7v7" />
-              <path d="M10 14L21 3" />
-              <path d="M21 14v7H3V3h7" />
-            </svg>
-          </a>
-        ) : (
-          <a
-            key={idx}
-            href={part.startsWith('http') ? part : `https://${part}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            title={part}
-            aria-label={`Source: ${part}`}
-            className="underline decoration-[#F88379] underline-offset-2"
-          >
-            {part}
-          </a>
-        )
+            <path d="M14 3h7v7" />
+            <path d="M10 14L21 3" />
+            <path d="M21 14v7H3V3h7" />
+          </svg>
+        </a>
       ) : (
         <span key={idx}>{part}</span>
       )
     )
 }
 
-const filterNonEmptyParagraphs = (blocks: StrapiBlock[] | undefined) => {
+const hasTextContent = (block: StrapiBlock) => {
+  if (block.type === 'paragraph' || block.type === 'heading') {
+    return block.children?.some(
+      (child) => child.type === 'text' && child.text?.trim()
+    )
+  }
+
+  if (block.type === 'list') {
+    return block.children?.some(
+      (child) =>
+        Array.isArray(child.children) &&
+        child.children.some(
+          (grandChild: StrapiBlock) =>
+            grandChild.type === 'text' &&
+            typeof grandChild.text === 'string' &&
+            grandChild.text.trim()
+        )
+    )
+  }
+
+  return false
+}
+
+const filterTranslatableBlocks = (blocks: StrapiBlock[] | undefined) => {
   if (!blocks) return []
   return blocks
-    .filter((b) => b.type === 'paragraph')
-    .filter((b) =>
-      b.children?.some((child) => child.type === 'text' && child.text?.trim())
+    .filter(
+      (b) => b.type === 'paragraph' || b.type === 'heading' || b.type === 'list'
     )
+    .filter((b) => hasTextContent(b))
 }
 
 type TranslationBlockProps = {
@@ -88,17 +98,41 @@ type TranslationBlockProps = {
   translationLanguage: 'fr'
   showLanguageLabel?: boolean
   showCreditImage?: boolean
-  showSourceButton?: boolean
   examples?: ExampleItem[]
   alignmentMapping?: Record<string, unknown>
   marginTopClass?: string
 }
 
-const languageName = (lang: string) => {
-  if (lang === 'en') return 'English'
-  if (lang === 'it') return 'Italian'
-  if (lang === 'fr') return 'Français'
-  return lang
+type SiteLocale = 'fr' | 'en' | 'it'
+
+const getSiteLocale = (pathname: string | null): SiteLocale => {
+  const segment = pathname?.split('/').filter(Boolean)[0]
+  if (segment === 'en' || segment === 'it' || segment === 'fr') {
+    return segment
+  }
+  return 'fr'
+}
+
+const languageName = (lang: string, siteLocale: SiteLocale) => {
+  const names: Record<SiteLocale, Record<string, string>> = {
+    fr: {
+      en: 'Anglais',
+      it: 'Italien',
+      fr: 'Français',
+    },
+    en: {
+      en: 'English',
+      it: 'Italian',
+      fr: 'French',
+    },
+    it: {
+      en: 'Inglese',
+      it: 'Italiano',
+      fr: 'Francese',
+    },
+  }
+
+  return names[siteLocale][lang] || lang
 }
 
 const TranslationBlock = ({
@@ -109,10 +143,12 @@ const TranslationBlock = ({
   translationLanguage = 'fr',
   showLanguageLabel = true,
   showCreditImage = false,
-  showSourceButton = true,
   examples,
   marginTopClass = 'mt-16',
 }: TranslationBlockProps) => {
+  const pathname = usePathname()
+  const siteLocale = getSiteLocale(pathname)
+
   const textAlignmentClasses = {
     left: 'text-left',
     center: 'text-center',
@@ -131,28 +167,32 @@ const TranslationBlock = ({
     const alignment = ctx === 'description' ? 'center' : 'left'
     return blocks.map((block, index) => {
       const currentIndex = paragraphIndex !== undefined ? paragraphIndex : index
+      const id = `${ctx === 'source' ? 's' : ctx === 'target' ? 't' : 'd'}-${activeIndex}-${currentIndex}`
+      const isSource = ctx === 'source'
+      const isDescription = ctx === 'description'
+      const showHighlight = enableInteractivity && !isDescription
+      const isHighlighted =
+        showHighlight &&
+        ((isSource && highlightedSources.has(currentIndex)) ||
+          (!isSource && highlightedTargets.has(currentIndex)))
+      const handleMouseEnter = () => {
+        if (!enableInteractivity || isDescription) return
+        setHighlightedSources(new Set([currentIndex]))
+        setHighlightedTargets(new Set([currentIndex]))
+      }
+      const handleMouseLeave = () => {
+        if (!enableInteractivity || isDescription) return
+        setHighlightedSources(new Set())
+        setHighlightedTargets(new Set())
+      }
+      const handleClick = () => {
+        if (!enableInteractivity || isDescription) return
+        setHighlightedSources(new Set([currentIndex]))
+        setHighlightedTargets(new Set([currentIndex]))
+      }
+
       switch (block.type) {
         case 'paragraph': {
-          const id = `${ctx === 'source' ? 's' : ctx === 'target' ? 't' : 'd'}-${activeIndex}-${currentIndex}`
-          const isSource = ctx === 'source'
-          const isDescription = ctx === 'description'
-          const showHighlight = enableInteractivity && !isDescription
-          const handleMouseEnter = () => {
-            if (!enableInteractivity || isDescription) return
-            setHighlightedSources(new Set([currentIndex]))
-            setHighlightedTargets(new Set([currentIndex]))
-          }
-          const handleMouseLeave = () => {
-            if (!enableInteractivity || isDescription) return
-            setHighlightedSources(new Set())
-            setHighlightedTargets(new Set())
-          }
-          const handleClick = () => {
-            if (!enableInteractivity || isDescription) return
-            setHighlightedSources(new Set([currentIndex]))
-            setHighlightedTargets(new Set([currentIndex]))
-          }
-
           return (
             <p
               key={index}
@@ -160,7 +200,7 @@ const TranslationBlock = ({
               onMouseEnter={enableInteractivity ? handleMouseEnter : undefined}
               onMouseLeave={enableInteractivity ? handleMouseLeave : undefined}
               onClick={enableInteractivity ? handleClick : undefined}
-              className={`${textColor || 'text-gray-700'} mb-4 ${textAlignmentClasses[alignment]} ${showHighlight && isSource && highlightedSources.has(currentIndex) ? 'bg-yellow-100' : ''} ${showHighlight && !isSource && highlightedTargets.has(currentIndex) ? 'bg-yellow-100' : ''}`}
+              className={`${textColor || 'text-gray-700'} mb-4 ${textAlignmentClasses[alignment]} ${isHighlighted ? 'bg-yellow-100' : ''}`}
             >
               {block.children?.map((child, childIndex) => {
                 if (child.type === 'text')
@@ -184,7 +224,11 @@ const TranslationBlock = ({
           return (
             <HeadingTag
               key={index}
-              className={`${headingClasses[level as keyof typeof headingClasses]} ${textAlignmentClasses.left}`}
+              id={id}
+              onMouseEnter={enableInteractivity ? handleMouseEnter : undefined}
+              onMouseLeave={enableInteractivity ? handleMouseLeave : undefined}
+              onClick={enableInteractivity ? handleClick : undefined}
+              className={`${headingClasses[level as keyof typeof headingClasses]} ${textAlignmentClasses.left} ${isHighlighted ? 'bg-yellow-100 rounded px-1' : ''}`}
             >
               {block.children?.map((child, childIndex) => {
                 if (child.type === 'text')
@@ -194,14 +238,18 @@ const TranslationBlock = ({
             </HeadingTag>
           )
         }
-        case 'list':
+        case 'list': {
           const ListTag = block.format === 'ordered' ? 'ol' : 'ul'
           const listClass =
             block.format === 'ordered' ? 'list-decimal' : 'list-disc'
           return (
             <ListTag
               key={index}
-              className={`${listClass} ml-6 mb-4 text-gray-700`}
+              id={id}
+              onMouseEnter={enableInteractivity ? handleMouseEnter : undefined}
+              onMouseLeave={enableInteractivity ? handleMouseLeave : undefined}
+              onClick={enableInteractivity ? handleClick : undefined}
+              className={`${listClass} ml-6 mb-4 ${textColor || 'text-gray-700'} ${isHighlighted ? 'bg-yellow-100 rounded px-1 py-1' : ''}`}
             >
               {block.children?.map((child, childIndex) => (
                 <li key={childIndex} className="mb-2">
@@ -221,6 +269,7 @@ const TranslationBlock = ({
               ))}
             </ListTag>
           )
+        }
         default:
           return null
       }
@@ -262,9 +311,9 @@ const TranslationBlock = ({
   const originalTitle = active.originalTitle || active.title
   const translatedTitle = active.translatedTitle
 
-  const pairedParagraphs = React.useMemo(() => {
-    const sourceBlocks = filterNonEmptyParagraphs(active.source || source)
-    const translationBlocks = filterNonEmptyParagraphs(
+  const pairedBlocks = React.useMemo(() => {
+    const sourceBlocks = filterTranslatableBlocks(active.source || source)
+    const translationBlocks = filterTranslatableBlocks(
       active.translation || translation
     )
     const maxLength = Math.max(sourceBlocks.length, translationBlocks.length)
@@ -280,7 +329,7 @@ const TranslationBlock = ({
   const renderInterleavedBlocks = () => {
     return (
       <div className="space-y-4">
-        {pairedParagraphs.map(({ idx, sourceBlock, translationBlock }) => (
+        {pairedBlocks.map(({ idx, sourceBlock, translationBlock }) => (
           <div
             key={idx}
             className="border-b border-[#F88379] pb-4 last:border-b-0"
@@ -289,7 +338,10 @@ const TranslationBlock = ({
               <div className="mb-4">
                 {showLanguageLabel && idx === 0 && (
                   <div className="text-sm font-semibold text-gray-500 mb-1">
-                    {languageName(active.sourceLanguage || sourceLanguage)}
+                    {languageName(
+                      active.sourceLanguage || sourceLanguage,
+                      siteLocale
+                    )}
                   </div>
                 )}
                 <div className="prose max-w-none whitespace-pre-line">
@@ -307,7 +359,7 @@ const TranslationBlock = ({
               <div>
                 {showLanguageLabel && idx === 0 && (
                   <div className="text-sm font-semibold text-gray-500 mb-1">
-                    {languageName(translationLanguage)}
+                    {languageName(translationLanguage, siteLocale)}
                   </div>
                 )}
                 <div className="prose max-w-none whitespace-pre-line">
@@ -374,7 +426,10 @@ const TranslationBlock = ({
                 >
                   {ex.theme
                     ? ex.theme
-                    : `Exemple ${idx + 1} — ${languageName(ex.sourceLanguage || sourceLanguage)}`}
+                    : `Exemple ${idx + 1} — ${languageName(
+                        ex.sourceLanguage || sourceLanguage,
+                        siteLocale
+                      )}`}
                 </button>
               ))}
             </div>
@@ -408,7 +463,7 @@ const TranslationBlock = ({
                   )}
                   {active.sourceText && (
                     <div className="text-sm text-gray-700 mb-4">
-                      {renderSourceText(active.sourceText, showSourceButton)}
+                      {renderSourceText(active.sourceText)}
                     </div>
                   )}
                 </div>
@@ -438,9 +493,12 @@ const TranslationBlock = ({
                     {showLanguageLabel && (
                       <div
                         className="text-lg font-bold text-gray-600 mb-2 text-center"
-                        aria-label={`Source language: ${languageName(active.sourceLanguage || sourceLanguage)}`}
+                        aria-label={`Source language: ${languageName(active.sourceLanguage || sourceLanguage, siteLocale)}`}
                       >
-                        {languageName(active.sourceLanguage || sourceLanguage)}
+                        {languageName(
+                          active.sourceLanguage || sourceLanguage,
+                          siteLocale
+                        )}
                       </div>
                     )}
                   </div>
@@ -449,9 +507,9 @@ const TranslationBlock = ({
                     {showLanguageLabel && (
                       <div
                         className="text-lg font-bold text-gray-600 mb-2 text-center"
-                        aria-label={`Target language: ${languageName(translationLanguage)}`}
+                        aria-label={`Target language: ${languageName(translationLanguage, siteLocale)}`}
                       >
-                        {languageName(translationLanguage)}
+                        {languageName(translationLanguage, siteLocale)}
                       </div>
                     )}
                   </div>
@@ -462,10 +520,10 @@ const TranslationBlock = ({
                   style={scrollbarStyle}
                   tabIndex={0}
                   role="region"
-                  aria-label={`Translation content — ${languageName(active.sourceLanguage || sourceLanguage)} → ${languageName(translationLanguage)}`}
+                  aria-label={`Translation content — ${languageName(active.sourceLanguage || sourceLanguage, siteLocale)} → ${languageName(translationLanguage, siteLocale)}`}
                 >
                   <div className="space-y-4">
-                    {pairedParagraphs.map(
+                    {pairedBlocks.map(
                       ({ idx, sourceBlock, translationBlock }) => (
                         <div
                           key={idx}
