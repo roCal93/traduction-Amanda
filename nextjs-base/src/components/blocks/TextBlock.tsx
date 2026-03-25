@@ -128,10 +128,32 @@ const TextBlock = ({
               })}
             </HeadingTag>
           )
-        case 'list':
+        case 'list': {
           const ListTag = block.format === 'ordered' ? 'ol' : 'ul'
           const listClass =
             block.format === 'ordered' ? 'list-decimal' : 'list-disc'
+
+          const renderListItemContent = (item: StrapiBlock) => {
+            if (!item || !Array.isArray(item.children)) return null
+            return item.children.map((subChild, subChildIndex) => {
+              if (
+                subChild.type === 'text' ||
+                subChild.type === 'hardBreak' ||
+                subChild.type === 'lineBreak' ||
+                subChild.type === 'break' ||
+                subChild.type === 'hard_break'
+              ) {
+                return renderInlineTextNode(subChild as StrapiTextNode, subChildIndex)
+              }
+
+              if (Array.isArray((subChild as StrapiBlock).children)) {
+                return renderListItemContent(subChild as StrapiBlock)
+              }
+
+              return null
+            })
+          }
+
           return (
             <ListTag
               key={index}
@@ -139,25 +161,12 @@ const TextBlock = ({
             >
               {block.children?.map((child, childIndex) => (
                 <li key={childIndex} className="mb-2">
-                  {Array.isArray(child.children) &&
-                    child.children.map(
-                      (grandChild: StrapiBlock, grandChildIndex: number) => {
-                        if (
-                          grandChild.type === 'text' ||
-                          grandChild.type === 'hardBreak'
-                        ) {
-                          return renderInlineTextNode(
-                            grandChild as StrapiTextNode,
-                            grandChildIndex
-                          )
-                        }
-                        return null
-                      }
-                    )}
+                  {renderListItemContent(child)}
                 </li>
               ))}
             </ListTag>
           )
+        }
         default:
           return null
       }

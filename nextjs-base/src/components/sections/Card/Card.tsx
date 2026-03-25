@@ -98,6 +98,27 @@ export const Card = ({ title, subtitle, content, image }: CardProps) => {
           const listClass =
             block.format === 'ordered' ? 'list-decimal' : 'list-disc'
 
+          const renderListItemContent = (item: StrapiBlock) => {
+            if (!item || !Array.isArray(item.children)) return null
+            return item.children.map((subChild, subChildIndex) => {
+              if (
+                subChild.type === 'text' ||
+                subChild.type === 'hardBreak' ||
+                subChild.type === 'lineBreak' ||
+                subChild.type === 'break' ||
+                subChild.type === 'hard_break'
+              ) {
+                return renderInlineTextNode(subChild as StrapiTextNode, subChildIndex)
+              }
+
+              if (Array.isArray((subChild as StrapiBlock).children)) {
+                return renderListItemContent(subChild as StrapiBlock)
+              }
+
+              return null
+            })
+          }
+
           return (
             <ListTag
               key={index}
@@ -105,16 +126,7 @@ export const Card = ({ title, subtitle, content, image }: CardProps) => {
             >
               {block.children?.map((child, childIndex) => (
                 <li key={childIndex} className="mb-1">
-                  {Array.isArray(child.children) &&
-                    child.children.map((grandChild, grandChildIndex) =>
-                      grandChild.type === 'text' ||
-                      grandChild.type === 'hardBreak'
-                        ? renderInlineTextNode(
-                            grandChild as StrapiTextNode,
-                            grandChildIndex
-                          )
-                        : null
-                    )}
+                  {renderListItemContent(child)}
                 </li>
               ))}
             </ListTag>
