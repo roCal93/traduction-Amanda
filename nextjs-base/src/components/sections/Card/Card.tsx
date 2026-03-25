@@ -24,6 +24,7 @@ export const Card = ({ title, subtitle, content, image }: CardProps) => {
   const cleanImage = cleanImageUrl(image)
 
   const renderInlineTextNode = (node: StrapiTextNode, key: React.Key) => {
+    if (node.type === 'hardBreak') return <br key={key} />
     if (node.type !== 'text') return null
 
     const textWithBreaks = (node.text ?? '').split('\n').map((line, index) => (
@@ -58,7 +59,7 @@ export const Card = ({ title, subtitle, content, image }: CardProps) => {
           return (
             <p key={index} className="text-gray-600 mb-2 whitespace-pre-line">
               {block.children?.map((child, childIndex) => {
-                if (child.type === 'text') {
+                if (child.type === 'text' || child.type === 'hardBreak') {
                   return renderInlineTextNode(
                     child as StrapiTextNode,
                     childIndex
@@ -74,7 +75,7 @@ export const Card = ({ title, subtitle, content, image }: CardProps) => {
           return (
             <HeadingTag key={index} className="text-gray-600 mb-2">
               {block.children?.map((child, childIndex) => {
-                if (child.type === 'text') {
+                if (child.type === 'text' || child.type === 'hardBreak') {
                   return renderInlineTextNode(
                     child as StrapiTextNode,
                     childIndex
@@ -98,7 +99,8 @@ export const Card = ({ title, subtitle, content, image }: CardProps) => {
                 <li key={childIndex} className="mb-1">
                   {Array.isArray(child.children) &&
                     child.children.map((grandChild, grandChildIndex) =>
-                      grandChild.type === 'text'
+                      grandChild.type === 'text' ||
+                      grandChild.type === 'hardBreak'
                         ? renderInlineTextNode(
                             grandChild as StrapiTextNode,
                             grandChildIndex

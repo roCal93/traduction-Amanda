@@ -33,6 +33,7 @@ const TextImageBlock = ({
   roundedImage = false,
 }: TextImageBlockProps) => {
   const renderInlineTextNode = (node: StrapiTextNode, key: React.Key) => {
+    if (node.type === 'hardBreak') return <br key={key} />
     if (node.type !== 'text') return null
 
     const textWithBreaks = (node.text ?? '').split('\n').map((line, index) => (
@@ -103,7 +104,7 @@ const TextImageBlock = ({
               className={`text-gray-700 mb-4 ${textAlignmentClasses[textAlignment]}`}
             >
               {block.children?.map((child, childIndex) => {
-                if (child.type === 'text') {
+                if (child.type === 'text' || child.type === 'hardBreak') {
                   return renderInlineTextNode(
                     child as StrapiTextNode,
                     childIndex
@@ -130,7 +131,7 @@ const TextImageBlock = ({
               className={`${headingClasses[level as keyof typeof headingClasses]} ${textAlignmentClasses[textAlignment]}`}
             >
               {block.children?.map((child, childIndex) => {
-                if (child.type === 'text') {
+                if (child.type === 'text' || child.type === 'hardBreak') {
                   return renderInlineTextNode(
                     child as StrapiTextNode,
                     childIndex
@@ -154,7 +155,10 @@ const TextImageBlock = ({
                   {Array.isArray(child.children) &&
                     child.children.map(
                       (grandChild: StrapiBlock, grandChildIndex: number) => {
-                        if (grandChild.type === 'text') {
+                        if (
+                          grandChild.type === 'text' ||
+                          grandChild.type === 'hardBreak'
+                        ) {
                           return renderInlineTextNode(
                             grandChild as StrapiTextNode,
                             grandChildIndex

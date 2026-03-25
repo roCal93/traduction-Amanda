@@ -146,6 +146,9 @@ const languageName = (lang: string, siteLocale: SiteLocale) => {
 }
 
 const renderInlineTextNode = (node: StrapiTextNode, key: React.Key) => {
+  if (node.type === 'hardBreak') {
+    return <br key={key} />
+  }
   if (node.type !== 'text') return null
 
   const textWithBreaks = (node.text ?? '').split('\n').map((line, index) => (
@@ -241,7 +244,7 @@ const TranslationBlock = ({
               className={`${textColor || 'text-gray-700'} mb-4 ${textAlignmentClasses[alignment]} ${isHighlighted ? 'bg-yellow-100' : ''}`}
             >
               {block.children?.map((child, childIndex) => {
-                if (child.type === 'text')
+                if (child.type === 'text' || child.type === 'hardBreak')
                   return renderInlineTextNode(
                     child as StrapiTextNode,
                     childIndex
@@ -272,7 +275,7 @@ const TranslationBlock = ({
               className={`${headingClasses[level as keyof typeof headingClasses]} ${textAlignmentClasses.left} ${isHighlighted ? 'bg-yellow-100 rounded px-1' : ''}`}
             >
               {block.children?.map((child, childIndex) => {
-                if (child.type === 'text')
+                if (child.type === 'text' || child.type === 'hardBreak')
                   return renderInlineTextNode(
                     child as StrapiTextNode,
                     childIndex
@@ -300,7 +303,10 @@ const TranslationBlock = ({
                   {Array.isArray(child.children) &&
                     child.children.map(
                       (grandChild: StrapiBlock, grandChildIndex: number) => {
-                        if (grandChild.type === 'text')
+                        if (
+                          grandChild.type === 'text' ||
+                          grandChild.type === 'hardBreak'
+                        )
                           return renderInlineTextNode(
                             grandChild as StrapiTextNode,
                             grandChildIndex
