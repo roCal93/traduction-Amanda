@@ -42,12 +42,14 @@ const TextImageBlock = ({
       return <br key={key} />
     if (node.type !== 'text') return null
 
-    const textWithBreaks = (node.text ?? '').split(/\r?\n/).map((line, index) => (
-      <React.Fragment key={index}>
-        {index > 0 && <br />}
-        {line}
-      </React.Fragment>
-    ))
+    const textWithBreaks = (node.text ?? '')
+      .split(/\r?\n/)
+      .map((line, index) => (
+        <React.Fragment key={index}>
+          {index > 0 && <br />}
+          {line}
+        </React.Fragment>
+      ))
 
     let rendered: React.ReactNode = textWithBreaks
     if (node.code) {
