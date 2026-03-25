@@ -105,6 +105,16 @@ type TranslationBlockProps = {
 
 type SiteLocale = 'fr' | 'en' | 'it'
 
+type StrapiTextNode = {
+  type?: string
+  text?: string
+  bold?: boolean
+  italic?: boolean
+  underline?: boolean
+  strikethrough?: boolean
+  code?: boolean
+}
+
 const getSiteLocale = (pathname: string | null): SiteLocale => {
   const segment = pathname?.split('/').filter(Boolean)[0]
   if (segment === 'en' || segment === 'it' || segment === 'fr') {
@@ -133,6 +143,27 @@ const languageName = (lang: string, siteLocale: SiteLocale) => {
   }
 
   return names[siteLocale][lang] || lang
+}
+
+const renderInlineTextNode = (node: StrapiTextNode, key: React.Key) => {
+  if (node.type !== 'text') return null
+
+  let content: React.ReactNode = node.text ?? ''
+
+  if (node.code) {
+    content = (
+      <code className="px-1 py-0.5 rounded bg-black/5 font-mono text-[0.95em]">
+        {content}
+      </code>
+    )
+  }
+  if (node.bold) content = <strong>{content}</strong>
+  if (node.italic) content = <em>{content}</em>
+  if (node.underline) content = <span className="underline">{content}</span>
+  if (node.strikethrough)
+    content = <span className="line-through">{content}</span>
+
+  return <React.Fragment key={key}>{content}</React.Fragment>
 }
 
 const TranslationBlock = ({
@@ -204,7 +235,7 @@ const TranslationBlock = ({
             >
               {block.children?.map((child, childIndex) => {
                 if (child.type === 'text')
-                  return <span key={childIndex}>{child.text}</span>
+                  return renderInlineTextNode(child as StrapiTextNode, childIndex)
                 return null
               })}
             </p>
@@ -232,7 +263,7 @@ const TranslationBlock = ({
             >
               {block.children?.map((child, childIndex) => {
                 if (child.type === 'text')
-                  return <span key={childIndex}>{child.text}</span>
+                  return renderInlineTextNode(child as StrapiTextNode, childIndex)
                 return null
               })}
             </HeadingTag>
@@ -257,10 +288,9 @@ const TranslationBlock = ({
                     child.children.map(
                       (grandChild: StrapiBlock, grandChildIndex: number) => {
                         if (grandChild.type === 'text')
-                          return (
-                            <span key={grandChildIndex}>
-                              {String(grandChild.text ?? '')}
-                            </span>
+                          return renderInlineTextNode(
+                            grandChild as StrapiTextNode,
+                            grandChildIndex
                           )
                         return null
                       }
