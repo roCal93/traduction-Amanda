@@ -98,7 +98,7 @@ export const Card = ({ title, subtitle, content, image }: CardProps) => {
           const listClass =
             block.format === 'ordered' ? 'list-decimal' : 'list-disc'
 
-          const renderListItemContent = (item: StrapiBlock) => {
+          const renderListItemContent = (item: StrapiBlock): React.ReactNode => {
             if (!item || !Array.isArray(item.children)) return null
             return item.children.map((subChild, subChildIndex) => {
               if (
