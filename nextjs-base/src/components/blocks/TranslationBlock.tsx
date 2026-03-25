@@ -262,22 +262,30 @@ const TranslationBlock = ({
   const originalTitle = active.originalTitle || active.title
   const translatedTitle = active.translatedTitle
 
-  // Fonction pour rendre les blocs de manière imbriquée (mobile)
-  const renderInterleavedBlocks = () => {
+  const pairedParagraphs = React.useMemo(() => {
     const sourceBlocks = filterNonEmptyParagraphs(active.source || source)
     const translationBlocks = filterNonEmptyParagraphs(
       active.translation || translation
     )
     const maxLength = Math.max(sourceBlocks.length, translationBlocks.length)
 
+    return Array.from({ length: maxLength }).map((_, idx) => ({
+      idx,
+      sourceBlock: sourceBlocks[idx],
+      translationBlock: translationBlocks[idx],
+    }))
+  }, [active.source, active.translation, source, translation])
+
+  // Fonction pour rendre les blocs de manière imbriquée (mobile)
+  const renderInterleavedBlocks = () => {
     return (
       <div className="space-y-4">
-        {Array.from({ length: maxLength }).map((_, idx) => (
+        {pairedParagraphs.map(({ idx, sourceBlock, translationBlock }) => (
           <div
             key={idx}
             className="border-b border-[#F88379] pb-4 last:border-b-0"
           >
-            {sourceBlocks[idx] && (
+            {sourceBlock && (
               <div className="mb-4">
                 {showLanguageLabel && idx === 0 && (
                   <div className="text-sm font-semibold text-gray-500 mb-1">
@@ -286,7 +294,7 @@ const TranslationBlock = ({
                 )}
                 <div className="prose max-w-none whitespace-pre-line">
                   {renderBlocks(
-                    [sourceBlocks[idx]],
+                    [sourceBlock],
                     'source',
                     idx,
                     false,
@@ -295,7 +303,7 @@ const TranslationBlock = ({
                 </div>
               </div>
             )}
-            {translationBlocks[idx] && (
+            {translationBlock && (
               <div>
                 {showLanguageLabel && idx === 0 && (
                   <div className="text-sm font-semibold text-gray-500 mb-1">
@@ -304,12 +312,7 @@ const TranslationBlock = ({
                 )}
                 <div className="prose max-w-none whitespace-pre-line">
                   <div className="bg-[#FFFACD80] rounded-full px-3 min-[850px]:bg-transparent min-[850px]:p-0">
-                    {renderBlocks(
-                      [translationBlocks[idx]],
-                      'target',
-                      idx,
-                      false
-                    )}
+                    {renderBlocks([translationBlock], 'target', idx, false)}
                   </div>
                 </div>
               </div>
@@ -430,8 +433,8 @@ const TranslationBlock = ({
             {/* Vue desktop : colonnes côte-à-côte */}
             <div className="hidden min-[850px]:block">
               <div className="rounded-xl bg-[#FADCA3]/40 p-6">
-                <div className="flex flex-row gap-6">
-                  <div className="w-1/2 pr-6">
+                <div className="grid grid-cols-2 gap-6 mb-2">
+                  <div>
                     {showLanguageLabel && (
                       <div
                         className="text-lg font-bold text-gray-600 mb-2 text-center"
@@ -442,7 +445,7 @@ const TranslationBlock = ({
                     )}
                   </div>
 
-                  <div className="w-1/2 pl-6">
+                  <div>
                     {showLanguageLabel && (
                       <div
                         className="text-lg font-bold text-gray-600 mb-2 text-center"
@@ -461,21 +464,35 @@ const TranslationBlock = ({
                   role="region"
                   aria-label={`Translation content — ${languageName(active.sourceLanguage || sourceLanguage)} → ${languageName(translationLanguage)}`}
                 >
-                  <div className="flex flex-row gap-6 divide-x divide-[#F88379]">
-                    <div className="w-1/2 pr-6">
-                      <div className="prose max-w-none whitespace-pre-line">
-                        {renderBlocks(active.source || source)}
-                      </div>
-                    </div>
+                  <div className="space-y-4">
+                    {pairedParagraphs.map(
+                      ({ idx, sourceBlock, translationBlock }) => (
+                        <div
+                          key={idx}
+                          className="grid grid-cols-2 gap-6 border-b border-[#F88379]/60 pb-4 last:border-b-0"
+                        >
+                          <div className="pr-6">
+                            <div className="prose max-w-none whitespace-pre-line">
+                              {sourceBlock &&
+                                renderBlocks(
+                                  [sourceBlock],
+                                  'source',
+                                  idx,
+                                  true,
+                                  'text-gray-700'
+                                )}
+                            </div>
+                          </div>
 
-                    <div className="w-1/2 pl-6">
-                      <div className="prose max-w-none whitespace-pre-line">
-                        {renderBlocks(
-                          active.translation || translation,
-                          'target'
-                        )}
-                      </div>
-                    </div>
+                          <div className="pl-6 border-l border-[#F88379]">
+                            <div className="prose max-w-none whitespace-pre-line">
+                              {translationBlock &&
+                                renderBlocks([translationBlock], 'target', idx)}
+                            </div>
+                          </div>
+                        </div>
+                      )
+                    )}
                   </div>
                 </div>
               </div>
