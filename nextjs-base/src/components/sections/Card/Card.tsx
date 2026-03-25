@@ -10,8 +10,37 @@ type CardProps = {
   image?: string
 }
 
+type StrapiTextNode = {
+  type?: string
+  text?: string
+  bold?: boolean
+  italic?: boolean
+  underline?: boolean
+  strikethrough?: boolean
+  code?: boolean
+}
+
 export const Card = ({ title, subtitle, content, image }: CardProps) => {
   const cleanImage = cleanImageUrl(image)
+
+  const renderInlineTextNode = (node: StrapiTextNode, key: React.Key) => {
+    if (node.type !== 'text') return null
+
+    let rendered: React.ReactNode = node.text ?? ''
+    if (node.code) {
+      rendered = (
+        <code className="px-1 py-0.5 rounded bg-black/5 font-mono text-[0.95em]">
+          {rendered}
+        </code>
+      )
+    }
+    if (node.bold) rendered = <strong>{rendered}</strong>
+    if (node.italic) rendered = <em>{rendered}</em>
+    if (node.underline) rendered = <span className="underline">{rendered}</span>
+    if (node.strikethrough) rendered = <span className="line-through">{rendered}</span>
+
+    return <React.Fragment key={key}>{rendered}</React.Fragment>
+  }
 
   // Fonction pour rendre les blocs Strapi
   const renderBlocks = (blocks: StrapiBlock[]) => {
@@ -22,9 +51,8 @@ export const Card = ({ title, subtitle, content, image }: CardProps) => {
             <p key={index} className="text-gray-600 mb-2 whitespace-pre-line">
               {block.children?.map((child, childIndex) => {
                 if (child.type === 'text') {
-                  return <span key={childIndex}>{child.text}</span>
+                  return renderInlineTextNode(child as StrapiTextNode, childIndex)
                 }
-                // Gérer d'autres types d'enfants si nécessaire (bold, italic, etc.)
                 return null
               })}
             </p>
@@ -36,13 +64,35 @@ export const Card = ({ title, subtitle, content, image }: CardProps) => {
             <HeadingTag key={index} className="text-gray-600 mb-2">
               {block.children?.map((child, childIndex) => {
                 if (child.type === 'text') {
-                  return <span key={childIndex}>{child.text}</span>
+                  return renderInlineTextNode(child as StrapiTextNode, childIndex)
                 }
                 return null
               })}
             </HeadingTag>
           )
-        // Ajouter d'autres types de blocs si nécessaire
+        case 'list': {
+          const ListTag = block.format === 'ordered' ? 'ol' : 'ul'
+          const listClass =
+            block.format === 'ordered' ? 'list-decimal' : 'list-disc'
+
+          return (
+            <ListTag key={index} className={`${listClass} ml-6 mb-2 text-gray-600`}>
+              {block.children?.map((child, childIndex) => (
+                <li key={childIndex} className="mb-1">
+                  {Array.isArray(child.children) &&
+                    child.children.map((grandChild, grandChildIndex) =>
+                      grandChild.type === 'text'
+                        ? renderInlineTextNode(
+                            grandChild as StrapiTextNode,
+                            grandChildIndex
+                          )
+                        : null
+                    )}
+                </li>
+              ))}
+            </ListTag>
+          )
+        }
         default:
           return null
       }

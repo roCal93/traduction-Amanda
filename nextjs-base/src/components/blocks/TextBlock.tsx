@@ -8,12 +8,41 @@ type TextBlockProps = {
   maxWidth?: 'small' | 'medium' | 'large' | 'full'
 }
 
+type StrapiTextNode = {
+  type?: string
+  text?: string
+  bold?: boolean
+  italic?: boolean
+  underline?: boolean
+  strikethrough?: boolean
+  code?: boolean
+}
+
 const TextBlock = ({ 
   content, 
   textAlignment = 'left',
   blockAlignment = 'full',
   maxWidth = 'full'
 }: TextBlockProps) => {
+  const renderInlineTextNode = (node: StrapiTextNode, key: React.Key) => {
+    if (node.type !== 'text') return null
+
+    let rendered: React.ReactNode = node.text ?? ''
+    if (node.code) {
+      rendered = (
+        <code className="px-1 py-0.5 rounded bg-black/5 font-mono text-[0.95em]">
+          {rendered}
+        </code>
+      )
+    }
+    if (node.bold) rendered = <strong>{rendered}</strong>
+    if (node.italic) rendered = <em>{rendered}</em>
+    if (node.underline) rendered = <span className="underline">{rendered}</span>
+    if (node.strikethrough) rendered = <span className="line-through">{rendered}</span>
+
+    return <React.Fragment key={key}>{rendered}</React.Fragment>
+  }
+
   const alignmentClasses = {
     left: 'text-left',
     center: 'text-center',
@@ -43,11 +72,7 @@ const TextBlock = ({
             <p key={index} className={`text-gray-700 mb-4 ${alignmentClasses[textAlignment]}`}>
               {block.children?.map((child, childIndex) => {
                 if (child.type === 'text') {
-                  let text = <span key={childIndex}>{child.text}</span>
-                  if (child.bold) text = <strong key={childIndex}>{child.text}</strong>
-                  if (child.italic) text = <em key={childIndex}>{child.text}</em>
-                  if (child.underline) text = <u key={childIndex}>{child.text}</u>
-                  return text
+                  return renderInlineTextNode(child as StrapiTextNode, childIndex)
                 }
                 return null
               })}
@@ -68,7 +93,7 @@ const TextBlock = ({
             <HeadingTag key={index} className={`${headingClasses[level as keyof typeof headingClasses]} ${alignmentClasses[textAlignment]}`}>
               {block.children?.map((child, childIndex) => {
                 if (child.type === 'text') {
-                  return <span key={childIndex}>{child.text}</span>
+                  return renderInlineTextNode(child as StrapiTextNode, childIndex)
                 }
                 return null
               })}
@@ -83,7 +108,7 @@ const TextBlock = ({
                 <li key={childIndex} className="mb-2">
                   {Array.isArray(child.children) && child.children.map((grandChild: StrapiBlock, grandChildIndex: number) => {
                     if (grandChild.type === 'text') {
-                      return <span key={grandChildIndex}>{String(grandChild.text || '')}</span>
+                      return renderInlineTextNode(grandChild as StrapiTextNode, grandChildIndex)
                     }
                     return null
                   })}

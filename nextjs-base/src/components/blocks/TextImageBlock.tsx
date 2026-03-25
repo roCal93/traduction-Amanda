@@ -13,6 +13,16 @@ type TextImageBlockProps = {
   roundedImage?: boolean
 }
 
+type StrapiTextNode = {
+  type?: string
+  text?: string
+  bold?: boolean
+  italic?: boolean
+  underline?: boolean
+  strikethrough?: boolean
+  code?: boolean
+}
+
 const TextImageBlock = ({ 
   content, 
   image, 
@@ -22,6 +32,25 @@ const TextImageBlock = ({
   textAlignment = 'left',
   roundedImage = false
 }: TextImageBlockProps) => {
+  const renderInlineTextNode = (node: StrapiTextNode, key: React.Key) => {
+    if (node.type !== 'text') return null
+
+    let rendered: React.ReactNode = node.text ?? ''
+    if (node.code) {
+      rendered = (
+        <code className="px-1 py-0.5 rounded bg-black/5 font-mono text-[0.95em]">
+          {rendered}
+        </code>
+      )
+    }
+    if (node.bold) rendered = <strong>{rendered}</strong>
+    if (node.italic) rendered = <em>{rendered}</em>
+    if (node.underline) rendered = <span className="underline">{rendered}</span>
+    if (node.strikethrough) rendered = <span className="line-through">{rendered}</span>
+
+    return <React.Fragment key={key}>{rendered}</React.Fragment>
+  }
+
   const imageSrc = cleanImageUrl(image.url)
   const finalImageSrc = imageSrc && imageSrc.startsWith('/') 
     ? `${process.env.NEXT_PUBLIC_STRAPI_URL}${imageSrc}` 
@@ -60,11 +89,7 @@ const TextImageBlock = ({
             <p key={index} className={`text-gray-700 mb-4 ${textAlignmentClasses[textAlignment]}`}>
               {block.children?.map((child, childIndex) => {
                 if (child.type === 'text') {
-                  let text = <span key={childIndex}>{child.text}</span>
-                  if (child.bold) text = <strong key={childIndex}>{child.text}</strong>
-                  if (child.italic) text = <em key={childIndex}>{child.text}</em>
-                  if (child.underline) text = <u key={childIndex}>{child.text}</u>
-                  return text
+                  return renderInlineTextNode(child as StrapiTextNode, childIndex)
                 }
                 return null
               })}
@@ -85,7 +110,7 @@ const TextImageBlock = ({
             <HeadingTag key={index} className={`${headingClasses[level as keyof typeof headingClasses]} ${textAlignmentClasses[textAlignment]}`}>
               {block.children?.map((child, childIndex) => {
                 if (child.type === 'text') {
-                  return <span key={childIndex}>{child.text}</span>
+                  return renderInlineTextNode(child as StrapiTextNode, childIndex)
                 }
                 return null
               })}
@@ -98,9 +123,9 @@ const TextImageBlock = ({
             <ListTag key={index} className={`${listClass} ml-6 mb-4 text-gray-700 ${textAlignmentClasses[textAlignment]}`}>
               {block.children?.map((child, childIndex) => (
                 <li key={childIndex} className="mb-2">
-                  {Array.isArray(child.children) && child.children.map((grandChild: { type: string; text?: string }, grandChildIndex: number) => {
+                  {Array.isArray(child.children) && child.children.map((grandChild: StrapiBlock, grandChildIndex: number) => {
                     if (grandChild.type === 'text') {
-                      return <span key={grandChildIndex}>{grandChild.text}</span>
+                      return renderInlineTextNode(grandChild as StrapiTextNode, grandChildIndex)
                     }
                     return null
                   })}
