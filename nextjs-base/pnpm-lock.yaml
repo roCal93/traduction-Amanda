@@ -88,7 +88,7 @@ importers:
         version: 2.0.15
       tailwindcss:
         specifier: ^4
-        version: 4.2.1
+        version: 4.2.2
       typescript:
         specifier: ^5
         version: 5.9.3
@@ -3428,6 +3428,10 @@ packages:
     resolution: {integrity: sha512-QP88BAKvMam/3NxH6vj2o21R6MjxZUAd6nlwAS/pnGvN9IVLocLHxGYIzFhg6fUQ+5th6P4dv4eW9jX3DSIj7A==}
     engines: {node: '>=12'}
 
+  picomatch@4.0.4:
+    resolution: {integrity: sha512-QP88BAKvMam/3NxH6vj2o21R6MjxZUAd6nlwAS/pnGvN9IVLocLHxGYIzFhg6fUQ+5th6P4dv4eW9jX3DSIj7A==}
+    engines: {node: '>=12'}
+
   pip-requirements-js@1.0.3:
     resolution: {integrity: sha512-1O9Bx0mPOZht3tW4LuxOA46qkD8A1AGymWXz3UwIMqGQgiTiOaFptsCf+9IE67qcbBrg8KHG6l8ePF7CoFRW/A==}
 
@@ -3846,6 +3850,9 @@ packages:
 
   tailwindcss@4.2.1:
     resolution: {integrity: sha512-/tBrSQ36vCleJkAOsy9kbNTgaxvGbyOamC30PRePTQe/o1MFwEKHQk4Cn7BNGaPtjp+PuUrByJehM1hgxfq4sw==}
+
+  tailwindcss@4.2.2:
+    resolution: {integrity: sha512-KWBIxs1Xb6NoLdMVqhbhgwZf2PGBpPEiwOqgI4pFIYbNTfBXiKYyWoTsXgBQ9WFg/OlhnvHaY+AEpW7wSmFo2Q==}
 
   tapable@2.3.0:
     resolution: {integrity: sha512-g9ljZiwki/LfxmQADO3dEY1CbpmXT5Hm2fJ+QaGKwSXUylMybePR7/67YW7jOrrvjEgL1Fmz5kzyAjWVWLlucg==}
@@ -6584,6 +6591,10 @@ snapshots:
     optionalDependencies:
       picomatch: 4.0.4
 
+  fdir@6.5.0(picomatch@4.0.4):
+    optionalDependencies:
+      picomatch: 4.0.4
+
   file-entry-cache@8.0.0:
     dependencies:
       flat-cache: 4.0.1
@@ -7457,6 +7468,8 @@ snapshots:
 
   picomatch@4.0.4: {}
 
+  picomatch@4.0.4: {}
+
   pip-requirements-js@1.0.3:
     dependencies:
       ohm-js: 17.5.0
@@ -7979,6 +7992,8 @@ snapshots:
       wordwrapjs: 3.0.0
 
   tailwindcss@4.2.1: {}
+
+  tailwindcss@4.2.2: {}
 
   tapable@2.3.0: {}
 
