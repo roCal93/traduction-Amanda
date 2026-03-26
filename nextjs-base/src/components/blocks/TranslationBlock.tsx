@@ -4,6 +4,12 @@ import React from 'react'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { StrapiBlock } from '@/types/strapi'
+import {
+  getStrapiNodeChildren,
+  hasRenderableRichText,
+  renderInlineNodes,
+  renderListBlock,
+} from '@/lib/strapi-rich-text'
 
 type ExampleItem = {
   source: StrapiBlock[]
@@ -58,35 +64,12 @@ const renderSourceText = (text?: string) => {
 }
 
 const hasTextContent = (block: StrapiBlock) => {
-  if (block.type === 'paragraph' || block.type === 'heading') {
-    return block.children?.some(
-      (child) => child.type === 'text' && child.text?.trim()
-    )
-  }
-
-  if (block.type === 'list') {
-    return block.children?.some(
-      (child) =>
-        Array.isArray(child.children) &&
-        child.children.some(
-          (grandChild: StrapiBlock) =>
-            grandChild.type === 'text' &&
-            typeof grandChild.text === 'string' &&
-            grandChild.text.trim()
-        )
-    )
-  }
-
-  return false
+  return hasRenderableRichText(block)
 }
 
 const filterTranslatableBlocks = (blocks: StrapiBlock[] | undefined) => {
   if (!blocks) return []
-  return blocks
-    .filter(
-      (b) => b.type === 'paragraph' || b.type === 'heading' || b.type === 'list'
-    )
-    .filter((b) => hasTextContent(b))
+  return blocks.filter((b) => hasTextContent(b))
 }
 
 type TranslationBlockProps = {
@@ -104,31 +87,6 @@ type TranslationBlockProps = {
 }
 
 type SiteLocale = 'fr' | 'en' | 'it'
-
-type StrapiTextNode = {
-  type: string
-  text?: string
-  value?: string
-  bold?: boolean
-  italic?: boolean
-  underline?: boolean
-  strikethrough?: boolean
-  code?: boolean
-  children?: StrapiTextNode[]
-  content?: StrapiTextNode[]
-}
-
-const getStrapiNodeText = (node: StrapiTextNode): string => {
-  if (typeof node.text === 'string') return node.text
-  if (typeof node.value === 'string') return node.value
-  return ''
-}
-
-const getBlockChildren = (block: StrapiBlock): StrapiTextNode[] => {
-  if (Array.isArray(block.children)) return block.children as StrapiTextNode[]
-  if (Array.isArray(block.content)) return block.content as StrapiTextNode[]
-  return []
-}
 
 const getSiteLocale = (pathname: string | null): SiteLocale => {
   const segment = pathname?.split('/').filter(Boolean)[0]
@@ -158,44 +116,6 @@ const languageName = (lang: string, siteLocale: SiteLocale) => {
   }
 
   return names[siteLocale][lang] || lang
-}
-
-const renderInlineTextNode = (node: StrapiTextNode, key: React.Key) => {
-  if (
-    node.type === 'hardBreak' ||
-    node.type === 'lineBreak' ||
-    node.type === 'break' ||
-    node.type === 'hard_break'
-  ) {
-    return <br key={key} />
-  }
-
-  const text = getStrapiNodeText(node)
-  if (!text) return null
-
-  const textWithBreaks = text.split(/\r?\n/).map((line, index) => (
-    <React.Fragment key={index}>
-      {index > 0 && <br />}
-      {line}
-    </React.Fragment>
-  ))
-
-  let content: React.ReactNode = textWithBreaks
-
-  if (node.code) {
-    content = (
-      <code className="px-1 py-0.5 rounded bg-black/5 font-mono text-[0.95em]">
-        {content}
-      </code>
-    )
-  }
-  if (node.bold) content = <strong>{content}</strong>
-  if (node.italic) content = <em>{content}</em>
-  if (node.underline) content = <span className="underline">{content}</span>
-  if (node.strikethrough)
-    content = <span className="line-through">{content}</span>
-
-  return <React.Fragment key={key}>{content}</React.Fragment>
 }
 
 const TranslationBlock = ({
@@ -265,9 +185,7 @@ const TranslationBlock = ({
               onClick={enableInteractivity ? handleClick : undefined}
               className={`${textColor || 'text-gray-700'} mb-4 ${textAlignmentClasses[alignment]} ${isHighlighted ? 'bg-yellow-100' : ''}`}
             >
-              {getBlockChildren(block).map((child, childIndex) =>
-                renderInlineTextNode(child, childIndex)
-              )}
+              {renderInlineNodes(getStrapiNodeChildren(block), `p-${index}`)}
             </p>
           )
         }
@@ -291,92 +209,63 @@ const TranslationBlock = ({
               onClick={enableInteractivity ? handleClick : undefined}
               className={`${headingClasses[level as keyof typeof headingClasses]} ${textAlignmentClasses.left} ${isHighlighted ? 'bg-yellow-100 rounded px-1' : ''}`}
             >
-              {getBlockChildren(block).map((child, childIndex) =>
-                renderInlineTextNode(child, childIndex)
-              )}
+              {renderInlineNodes(getStrapiNodeChildren(block), `h-${index}`)}
             </HeadingTag>
           )
         }
         case 'list': {
-          const ListTag = block.format === 'ordered' ? 'ol' : 'ul'
-          const listClass =
-            block.format === 'ordered' ? 'list-decimal' : 'list-disc'
-
-          const renderListItemContent = (
-            item: StrapiBlock
-          ): React.ReactNode => {
-            if (!item) return null
-            const children = getBlockChildren(item)
-            if (!children.length) return null
-
-            return children.map((subChild, subChildIndex) => {
-              if (
-                subChild.type === 'text' ||
-                subChild.type === 'hardBreak' ||
-                subChild.type === 'lineBreak' ||
-                subChild.type === 'break' ||
-                subChild.type === 'hard_break'
-              ) {
-                return renderInlineTextNode(subChild, subChildIndex)
-              }
-
-              if (
-                subChild.type === 'paragraph' ||
-                subChild.type === 'heading' ||
-                subChild.type === 'list' ||
-                subChild.type === 'list-item'
-              ) {
-                let listNode = subChild as StrapiBlock
-                if (subChild.type === 'list-item') {
-                  listNode = {
-                    type: 'paragraph',
-                    children: getBlockChildren(subChild as StrapiBlock),
-                  }
-                }
-                return renderBlocks(
-                  [listNode],
-                  ctx,
-                  undefined,
-                  false,
-                  textColor
-                )
-              }
-
-              const nested = subChild as unknown as StrapiBlock
-              if (
-                Array.isArray(nested.children) ||
-                Array.isArray(nested.content)
-              ) {
-                return renderListItemContent(nested)
-              }
-
-              return null
-            })
-          }
-
           return (
-            <ListTag
+            <div
               key={index}
               id={id}
               onMouseEnter={enableInteractivity ? handleMouseEnter : undefined}
               onMouseLeave={enableInteractivity ? handleMouseLeave : undefined}
               onClick={enableInteractivity ? handleClick : undefined}
-              className={`${listClass} ml-6 mb-4 ${textColor || 'text-gray-700'} ${isHighlighted ? 'bg-yellow-100 rounded px-1 py-1' : ''}`}
+              className={isHighlighted ? 'bg-yellow-100 rounded px-1 py-1' : ''}
             >
-              {getBlockChildren(block).map((child, childIndex) => (
-                <li key={childIndex} className="mb-2">
-                  {renderListItemContent(child as StrapiBlock)}
-                </li>
-              ))}
-            </ListTag>
+              {renderListBlock(block, index, 'mb-2', `mb-4 ${textColor || 'text-gray-700'}`)}
+            </div>
+          )
+        }
+        case 'quote':
+        case 'blockquote': {
+          return (
+            <blockquote
+              key={index}
+              id={id}
+              onMouseEnter={enableInteractivity ? handleMouseEnter : undefined}
+              onMouseLeave={enableInteractivity ? handleMouseLeave : undefined}
+              onClick={enableInteractivity ? handleClick : undefined}
+              className={`mb-4 border-l-4 border-stone-300 pl-4 italic ${textColor || 'text-gray-700'} ${textAlignmentClasses[alignment]} ${isHighlighted ? 'bg-yellow-100 rounded' : ''}`}
+            >
+              {renderInlineNodes(getStrapiNodeChildren(block), `q-${index}`)}
+            </blockquote>
+          )
+        }
+        case 'code':
+        case 'codeBlock':
+        case 'pre': {
+          return (
+            <pre
+              key={index}
+              id={id}
+              onMouseEnter={enableInteractivity ? handleMouseEnter : undefined}
+              onMouseLeave={enableInteractivity ? handleMouseLeave : undefined}
+              onClick={enableInteractivity ? handleClick : undefined}
+              className={`mb-4 overflow-x-auto rounded-lg bg-stone-900 p-4 text-sm text-stone-100 ${isHighlighted ? 'ring-2 ring-yellow-200' : ''}`}
+            >
+              <code>
+                {getStrapiNodeChildren(block)
+                  .map((child) => (typeof child.text === 'string' ? child.text : typeof child.value === 'string' ? child.value : ''))
+                  .join('')}
+              </code>
+            </pre>
           )
         }
         default:
           return (
             <div key={index} className={`${textColor || 'text-gray-700'} mb-4`}>
-              {getBlockChildren(block).map((child, childIndex) =>
-                renderInlineTextNode(child, childIndex)
-              )}
+              {renderInlineNodes(getStrapiNodeChildren(block), `u-${index}`)}
             </div>
           )
       }
