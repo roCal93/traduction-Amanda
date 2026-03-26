@@ -223,7 +223,12 @@ const TranslationBlock = ({
               onClick={enableInteractivity ? handleClick : undefined}
               className={isHighlighted ? 'bg-yellow-100 rounded px-1 py-1' : ''}
             >
-              {renderListBlock(block, index, 'mb-2', `mb-4 ${textColor || 'text-gray-700'}`)}
+              {renderListBlock(
+                block,
+                index,
+                'mb-2',
+                `mb-4 ${textColor || 'text-gray-700'}`
+              )}
             </div>
           )
         }
@@ -256,7 +261,13 @@ const TranslationBlock = ({
             >
               <code>
                 {getStrapiNodeChildren(block)
-                  .map((child) => (typeof child.text === 'string' ? child.text : typeof child.value === 'string' ? child.value : ''))
+                  .map((child) =>
+                    typeof child.text === 'string'
+                      ? child.text
+                      : typeof child.value === 'string'
+                        ? child.value
+                        : ''
+                  )
                   .join('')}
               </code>
             </pre>

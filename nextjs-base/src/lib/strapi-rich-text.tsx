@@ -65,6 +65,7 @@ export const renderInlineNode = (
   node: StrapiRichNode,
   key: React.Key
 ): React.ReactNode => {
+  const keyString = String(key)
   const type = node.type || 'text'
 
   if (BREAK_TYPES.has(type)) return <br key={key} />
@@ -79,18 +80,37 @@ export const renderInlineNode = (
 
     const href = hrefValue ? normalizeHref(hrefValue) : '#'
     const isExternal = /^https?:\/\//.test(href)
-    const children = renderInlineNodes(getStrapiNodeChildren(node), `${key}-link`)
+    const children = renderInlineNodes(
+      getStrapiNodeChildren(node),
+      `${keyString}-link`
+    )
     const content =
       children.length > 0
         ? children
-        : [<React.Fragment key={`${key}-txt`}>{hrefValue}</React.Fragment>]
+        : [
+            <React.Fragment key={`${keyString}-txt`}>
+              {hrefValue}
+            </React.Fragment>,
+          ]
 
     return (
       <a
         key={key}
         href={href}
-        target={typeof node.target === 'string' ? node.target : isExternal ? '_blank' : undefined}
-        rel={typeof node.rel === 'string' ? node.rel : isExternal ? 'noopener noreferrer' : undefined}
+        target={
+          typeof node.target === 'string'
+            ? node.target
+            : isExternal
+              ? '_blank'
+              : undefined
+        }
+        rel={
+          typeof node.rel === 'string'
+            ? node.rel
+            : isExternal
+              ? 'noopener noreferrer'
+              : undefined
+        }
         className="underline underline-offset-2 decoration-stone-500 hover:decoration-stone-800"
       >
         {content}
@@ -106,14 +126,18 @@ export const renderInlineNode = (
         {line}
       </React.Fragment>
     ))
-    return <React.Fragment key={key}>{withMarks(node, textWithBreaks)}</React.Fragment>
+    return (
+      <React.Fragment key={key}>
+        {withMarks(node, textWithBreaks)}
+      </React.Fragment>
+    )
   }
 
   const nestedChildren = getStrapiNodeChildren(node)
   if (nestedChildren.length > 0) {
     return (
       <React.Fragment key={key}>
-        {renderInlineNodes(nestedChildren, `${key}-nested`)}
+        {renderInlineNodes(nestedChildren, `${keyString}-nested`)}
       </React.Fragment>
     )
   }
@@ -152,12 +176,19 @@ const renderListItems = (
           if (childType === 'paragraph' || childType === 'heading') {
             return (
               <React.Fragment key={childKey}>
-                {renderInlineNodes(getStrapiNodeChildren(child), `${childKey}-inline`)}
+                {renderInlineNodes(
+                  getStrapiNodeChildren(child),
+                  `${childKey}-inline`
+                )}
               </React.Fragment>
             )
           }
 
-          return <React.Fragment key={childKey}>{renderInlineNode(child, childKey)}</React.Fragment>
+          return (
+            <React.Fragment key={childKey}>
+              {renderInlineNode(child, childKey)}
+            </React.Fragment>
+          )
         })}
       </li>
     )
@@ -170,12 +201,20 @@ export const renderListBlock = (
   listItemClassName = 'mb-2',
   extraClassName?: string
 ): React.ReactNode => {
+  const keyString = String(key)
   const ListTag = block.format === 'ordered' ? 'ol' : 'ul'
   const listClass = block.format === 'ordered' ? 'list-decimal' : 'list-disc'
 
   return (
-    <ListTag key={key} className={`${listClass} ml-6 ${extraClassName || ''}`.trim()}>
-      {renderListItems(getStrapiNodeChildren(block), `${key}-li`, listItemClassName)}
+    <ListTag
+      key={key}
+      className={`${listClass} ml-6 ${extraClassName || ''}`.trim()}
+    >
+      {renderListItems(
+        getStrapiNodeChildren(block),
+        `${keyString}-li`,
+        listItemClassName
+      )}
     </ListTag>
   )
 }
@@ -221,13 +260,22 @@ export const renderStrapiBlocks = (
     switch (type) {
       case 'paragraph':
         return (
-          <p key={index} className={`${textColor} mb-4 ${options.textAlignmentClass}`}>
+          <p
+            key={index}
+            className={`${textColor} mb-4 ${options.textAlignmentClass}`}
+          >
             {renderInlineNodes(getStrapiNodeChildren(block), `p-${index}`)}
           </p>
         )
       case 'heading': {
         const level = Number(block.level) || 2
-        const safeLevel = Math.max(1, Math.min(6, level)) as 1 | 2 | 3 | 4 | 5 | 6
+        const safeLevel = Math.max(1, Math.min(6, level)) as
+          | 1
+          | 2
+          | 3
+          | 4
+          | 5
+          | 6
         const HeadingTag = `h${safeLevel}` as keyof React.JSX.IntrinsicElements
         return (
           <HeadingTag
@@ -272,7 +320,10 @@ export const renderStrapiBlocks = (
       }
       default:
         return (
-          <div key={index} className={`${textColor} mb-4 ${options.textAlignmentClass}`}>
+          <div
+            key={index}
+            className={`${textColor} mb-4 ${options.textAlignmentClass}`}
+          >
             {renderInlineNodes(getStrapiNodeChildren(block), `u-${index}`)}
           </div>
         )
