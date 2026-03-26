@@ -1,92 +1,15 @@
 'use client'
 
 import React, { useState } from 'react'
-import type { JSX } from 'react'
 import Image from 'next/image'
-import { WorkItem, StrapiEntity } from '@/types/strapi'
+import { WorkItem, StrapiBlock, StrapiEntity } from '@/types/strapi'
 import { cleanImageUrl } from '@/lib/strapi'
+import { renderStrapiBlocks } from '@/lib/strapi-rich-text'
 
 type WorkCardProps = {
   item: WorkItem & StrapiEntity
   layout?: 'grid' | 'masonry' | 'list'
   showFilters?: boolean
-}
-
-// Helper pour render le rich text de Strapi
-type RichTextChild = {
-  text: string
-  bold?: boolean
-  italic?: boolean
-}
-
-type RichTextBlock = {
-  type: 'paragraph' | 'heading' | 'list'
-  level?: number
-  format?: 'ordered' | 'unordered'
-  children?: RichTextChild[] | RichTextBlock[]
-}
-
-const renderRichText = (content: RichTextBlock[] | undefined) => {
-  if (!content || !Array.isArray(content)) return null
-
-  return content.map((block: RichTextBlock, index: number) => {
-    if (block.type === 'paragraph') {
-      return (
-        <p key={index} className="mb-4 text-gray-700">
-          {Array.isArray(block.children) &&
-            block.children.every(
-              (child): child is RichTextChild =>
-                typeof (child as RichTextChild).text === 'string'
-            ) &&
-            (block.children as RichTextChild[]).map((child, childIndex) => {
-              if (child.bold)
-                return <strong key={childIndex}>{child.text}</strong>
-              if (child.italic) return <em key={childIndex}>{child.text}</em>
-              return <span key={childIndex}>{child.text}</span>
-            })}
-        </p>
-      )
-    }
-    if (block.type === 'heading') {
-      const level = block.level || 3
-      const Tag = `h${level}` as keyof JSX.IntrinsicElements
-      return (
-        <Tag key={index} className="font-bold mb-3 mt-6">
-          {Array.isArray(block.children) &&
-            block.children
-              .filter(
-                (child): child is RichTextChild =>
-                  typeof (child as RichTextChild).text === 'string'
-              )
-              .map((child) => child.text)
-              .join('')}
-        </Tag>
-      )
-    }
-    if (block.type === 'list') {
-      const ListTag = block.format === 'ordered' ? 'ol' : 'ul'
-      return (
-        <ListTag key={index} className="mb-4 ml-6 list-disc">
-          {Array.isArray(block.children) &&
-            block.children
-              .filter(
-                (item): item is RichTextBlock =>
-                  typeof (item as RichTextBlock).type === 'string'
-              )
-              .map((item, itemIndex) => (
-                <li key={itemIndex}>
-                  {Array.isArray(item.children)
-                    ? (item.children as RichTextChild[])
-                        .map((child) => child.text)
-                        .join('')
-                    : ''}
-                </li>
-              ))}
-        </ListTag>
-      )
-    }
-    return null
-  })
 }
 
 const WorkCard = ({
@@ -147,15 +70,10 @@ const WorkCard = ({
 
             {item.description && (
               <div className="prose max-w-none mb-6">
-                {renderRichText(
-                  (item.description as RichTextBlock[]).filter(
-                    (block): block is RichTextBlock =>
-                      block &&
-                      (block.type === 'paragraph' ||
-                        block.type === 'heading' ||
-                        block.type === 'list')
-                  )
-                )}
+                {renderStrapiBlocks(item.description as StrapiBlock[], {
+                  textAlignmentClass: 'text-left',
+                  textColorClass: 'text-gray-700',
+                })}
               </div>
             )}
 
