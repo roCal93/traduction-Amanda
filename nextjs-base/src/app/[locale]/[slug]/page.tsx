@@ -14,7 +14,7 @@ import { defaultLocale } from '@/lib/locales'
 import { isSupportedLocale } from '@/lib/supported-locales'
 import { draftMode } from 'next/headers'
 
-export const revalidate = 3600 // Revalidate every hour as fallback
+export const dynamic = 'force-dynamic'
 
 const fetchPageData = async (
   slug: string,

@@ -11,7 +11,7 @@ import { draftMode } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { defaultLocale } from '@/lib/locales'
 
-export const revalidate = 60 // Revalidate every minute for faster updates
+export const dynamic = 'force-dynamic'
 
 const fetchHomePageData = async (locale: string, isDraft: boolean) => {
   const apiToken = isDraft
