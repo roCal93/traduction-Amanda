@@ -18,6 +18,8 @@ overrides:
   vitest>picomatch: 4.0.4
   lint-staged>yaml: 2.8.3
   '@vercel/python-analysis>smol-toml': 1.6.1
+  srvx@<0.11.13: '>=0.11.13'
+  path-to-regexp@>=8.0.0 <8.4.0: '>=8.4.0'
 
 importers:
 
@@ -2108,9 +2110,6 @@ packages:
   convert-source-map@2.0.0:
     resolution: {integrity: sha512-Kvp459HrV2FEJ1CAsi1Ku+MY3kasH19TFykTz2xWmMeq6bk2NU3XXvfJ+Q61m0xktWwt+1HSYf3JZsTms3aRJg==}
 
-  cookie-es@2.0.0:
-    resolution: {integrity: sha512-RAj4E421UYRgqokKUmotqAwuplYw15qtdXfY+hGzgCJ/MBjCVZcSoHK/kH9kocfjRjcDME7IiDWR/1WX1TM2Pg==}
-
   cross-spawn@7.0.6:
     resolution: {integrity: sha512-uV2QOWP2nWzsy2aMp8aRibhi9dlzF5Hgh5SHaB9OiTGEyDTiJJyx0uy51QXdyWbtAHNua4XJzUKca3OzKUd3vA==}
     engines: {node: '>= 8'}
@@ -3390,12 +3389,11 @@ packages:
   path-to-regexp@6.3.0:
     resolution: {integrity: sha512-Yhpw4T9C6hPpgPeA28us07OJeqZ5EzQTkbfwuhsUg0c237RomFoETJgmp2sa3F/41gfLE6G5cqcYwznmeEeOlQ==}
 
-  path-to-regexp@8.2.0:
-    resolution: {integrity: sha512-TdrF7fW9Rphjq4RjrW0Kp2AW0Ahwu9sRGTkS6bvDi0SCwZlEZYmcfDbEsTz8RVk0EHIS/Vd1bv3JhG+1xZuAyQ==}
-    engines: {node: '>=16'}
-
   path-to-regexp@8.3.0:
     resolution: {integrity: sha512-7jdwVIRtsP8MYpdXSwOS0YdD0Du+qOoF/AEPIt88PcCFrZCzx41oxku1jD88hZBwbNUIEfpqvuhjFaMAqMTWnA==}
+
+  path-to-regexp@8.4.1:
+    resolution: {integrity: sha512-fvU78fIjZ+SBM9YwCknCvKOUKkLVqtWDVctl0s7xIqfmfb38t2TT4ZU2gHm+Z8xGwgW+QWEU3oQSAzIbo89Ggw==}
 
   pathe@2.0.3:
     resolution: {integrity: sha512-WUjGcAqP1gQacoQe+OBJsFA7Ld4DyXuUIjZ5cc75cLHvJ7dtNsTugphxIADwspS+AraAUePCKrSVtPLFj/F88w==}
@@ -3705,8 +3703,8 @@ packages:
     resolution: {integrity: sha512-UjgapumWlbMhkBgzT7Ykc5YXUT46F0iKu8SGXq0bcwP5dz/h0Plj6enJqjz1Zbq2l5WaqYnrVbwWOWMyF3F47g==}
     engines: {node: '>=0.10.0'}
 
-  srvx@0.8.9:
-    resolution: {integrity: sha512-wYc3VLZHRzwYrWJhkEqkhLb31TI0SOkfYZDkUhXdp3NoCnNS0FqajiQszZZjfow/VYEuc6Q5sZh9nM6kPy2NBQ==}
+  srvx@0.11.13:
+    resolution: {integrity: sha512-oknN6qduuMPafxKtHucUeG32Q963pjriA5g3/Bl05cwEsUe5VVbIU4qR9LrALHbipSCyBe+VmfDGGydqazDRkw==}
     engines: {node: '>=20.16.0'}
     hasBin: true
 
@@ -5322,10 +5320,10 @@ snapshots:
       execa: 3.2.0
       fs-extra: 11.1.0
       oxc-transform: 0.111.0
-      path-to-regexp: 8.3.0
+      path-to-regexp: 8.4.1
       resolve.exports: 2.0.3
       rolldown: 1.0.0-rc.1
-      srvx: 0.8.9
+      srvx: 0.11.13
       tsx: 4.21.0
       typescript: 5.9.3
       zod: 3.22.4
@@ -5375,7 +5373,7 @@ snapshots:
       '@vercel/node': 5.6.15(rollup@4.60.0)
       '@vercel/static-config': 3.2.0
       fs-extra: 11.1.0
-      path-to-regexp: 8.3.0
+      path-to-regexp: 8.4.1
       ts-morph: 12.0.0
       zod: 3.22.4
     transitivePeerDependencies:
@@ -5402,7 +5400,7 @@ snapshots:
       micro: 9.3.5-canary.3
       ms: 2.1.1
       node-fetch: 2.6.7
-      path-to-regexp: 8.2.0
+      path-to-regexp: 8.4.1
       promisepipe: 3.0.0
       semver: 7.5.4
       stat-mode: 0.3.0
@@ -5446,7 +5444,7 @@ snapshots:
       '@vercel/node': 5.6.15(rollup@4.60.0)
       '@vercel/static-config': 3.2.0
       fs-extra: 11.1.0
-      path-to-regexp: 8.3.0
+      path-to-regexp: 8.4.1
       ts-morph: 12.0.0
       zod: 3.22.4
     transitivePeerDependencies:
@@ -5952,8 +5950,6 @@ snapshots:
   convert-hrtime@3.0.0: {}
 
   convert-source-map@2.0.0: {}
-
-  cookie-es@2.0.0: {}
 
   cross-spawn@7.0.6:
     dependencies:
@@ -7409,9 +7405,9 @@ snapshots:
 
   path-to-regexp@6.3.0: {}
 
-  path-to-regexp@8.2.0: {}
-
   path-to-regexp@8.3.0: {}
+
+  path-to-regexp@8.4.1: {}
 
   pathe@2.0.3: {}
 
@@ -7798,9 +7794,7 @@ snapshots:
   source-map@0.6.1:
     optional: true
 
-  srvx@0.8.9:
-    dependencies:
-      cookie-es: 2.0.0
+  srvx@0.11.13: {}
 
   stable-hash@0.0.5: {}
 
