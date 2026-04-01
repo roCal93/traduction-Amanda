@@ -116,11 +116,7 @@ export async function generateMetadata({
 }) {
   const { slug, locale } = await params
 
-  // Detect Draft Mode at request time and use preview token when active
-  const { isEnabled } = await draftMode()
-  const apiToken = isEnabled
-    ? process.env.STRAPI_PREVIEW_TOKEN || process.env.STRAPI_API_TOKEN
-    : process.env.STRAPI_API_TOKEN
+  const apiToken = process.env.STRAPI_API_TOKEN
 
   const client = createStrapiClient({
     apiUrl: process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1337',
@@ -145,7 +141,7 @@ export async function generateMetadata({
       },
     },
     locale,
-    publicationState: isEnabled ? 'preview' : 'live',
+    publicationState: 'live',
   })
 
   const page = res?.data?.[0]
