@@ -15,7 +15,7 @@
       "type": "string"
     },
     "description": {
-      "type": "text"
+      "type": "blocks"
     },
     "images": {
       "type": "component",

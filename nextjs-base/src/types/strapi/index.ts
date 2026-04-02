@@ -290,7 +290,7 @@ export interface TimelineImage {
 export interface TimelineItem {
   title: string
   date?: string
-  description?: string
+  description?: StrapiBlock[]
   images?: TimelineImage[]
 }
 

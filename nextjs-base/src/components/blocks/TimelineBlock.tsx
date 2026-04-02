@@ -1,6 +1,11 @@
 import React from 'react'
 import Image from 'next/image'
 import { cleanImageUrl } from '@/lib/strapi'
+import { StrapiBlock } from '@/types/strapi'
+import {
+  hasRenderableRichText,
+  renderStrapiBlocks,
+} from '@/lib/strapi-rich-text'
 
 export interface TimelineImage {
   image: {
@@ -16,7 +21,7 @@ export type TimelineImageOrString = string | TimelineImage
 export interface TimelineItem {
   title: string
   date?: string
-  description?: string
+  description?: StrapiBlock[]
   images?: TimelineImageOrString[]
   links?: { url: string }[]
 }
@@ -52,8 +57,8 @@ const TimelineBlock: React.FC<TimelineBlockProps> = ({ items }) => {
             typeof rawImage === 'string'
               ? links && links[imgIdx]
               : rawImage.link
-              ? rawImage.link
-              : links && links[imgIdx]
+                ? rawImage.link
+                : links && links[imgIdx]
           const linkUrl = linkObj ? linkObj.url : undefined
 
           return imageSrc ? (
@@ -136,10 +141,10 @@ const TimelineBlock: React.FC<TimelineBlockProps> = ({ items }) => {
 
                     <h3 className="text-lg font-bold mb-3">{item.title}</h3>
 
-                    {item.description && (
-                      <p className="text-sm text-gray-700 mb-4">
-                        {item.description}
-                      </p>
+                    {hasRenderableRichText(item.description) && (
+                      <div className="text-sm text-gray-700 mb-4">
+                        {renderStrapiBlocks(item.description!)}
+                      </div>
                     )}
 
                     {/* Mobile: images inside card */}
@@ -179,10 +184,10 @@ const TimelineBlock: React.FC<TimelineBlockProps> = ({ items }) => {
 
                     <h3 className="text-lg font-bold mb-3">{item.title}</h3>
 
-                    {item.description && (
-                      <p className="text-sm text-gray-700 mb-4">
-                        {item.description}
-                      </p>
+                    {hasRenderableRichText(item.description) && (
+                      <div className="text-sm text-gray-700 mb-4">
+                        {renderStrapiBlocks(item.description!)}
+                      </div>
                     )}
 
                     {/* Mobile: images inside card */}
