@@ -85,6 +85,24 @@ const normalizeHref = (href: string) => {
   return href
 }
 
+const renderSupInText = (
+  text: string,
+  keyPrefix: string
+): React.ReactNode[] => {
+  const parts = text.split(/(<sup>.*?<\/sup>)/gi)
+
+  return parts.map((part, index) => {
+    const match = part.match(/^<sup>(.*?)<\/sup>$/i)
+    if (match) {
+      return <sup key={`${keyPrefix}-sup-${index}`}>{match[1]}</sup>
+    }
+
+    return (
+      <React.Fragment key={`${keyPrefix}-txt-${index}`}>{part}</React.Fragment>
+    )
+  })
+}
+
 export const renderInlineNode = (
   node: StrapiRichNode,
   key: React.Key
@@ -156,7 +174,7 @@ export const renderInlineNode = (
     const textWithBreaks = text.split(/\r?\n/).map((line, index) => (
       <React.Fragment key={index}>
         {index > 0 && <br />}
-        {line}
+        {renderSupInText(line, `${keyString}-line-${index}`)}
       </React.Fragment>
     ))
     return (

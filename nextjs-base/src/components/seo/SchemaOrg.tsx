@@ -27,19 +27,23 @@ export const SchemaOrg = ({
   type = 'ProfessionalService',
   name = 'Amanda Traduction',
   description = "Services de traduction professionnelle de l'anglais et de l'italien vers le français pour les entreprises et les particuliers.",
-  url,
+  url = 'https://www.amandatraduction.com',
   logo,
-  telephone,
-  email,
-  address,
+  email = 'contact@amandatraduction.com',
+  address = {
+    '@type': 'PostalAddress',
+    streetAddress: '21 Route de Tronchine',
+    addressLocality: 'Thônes',
+    postalCode: '74230',
+    addressRegion: 'Auvergne-Rhône-Alpes',
+    addressCountry: 'FR',
+  },
   areaServed = 'France, Suisse, Italie, Canada',
   priceRange,
-  sameAs,
+  sameAs = ['https://www.linkedin.com/in/amanda-fontannaz-57b820203/'],
 }: SchemaOrgProps) => {
-  const siteUrl =
-    url || process.env.NEXT_PUBLIC_SITE_URL || 'https://amandatraduction.com'
-  const contactEmail =
-    email || process.env.NEXT_PUBLIC_CONTACT_EMAIL || process.env.CONTACT_EMAIL
+  const siteUrl = url
+  const contactEmail = email
   const normalizedSiteUrl = siteUrl.replace(/\/$/, '')
   const siteOrigin = /^https?:\/\//.test(normalizedSiteUrl)
     ? new URL(normalizedSiteUrl).origin
@@ -68,7 +72,6 @@ export const SchemaOrg = ({
     availableLanguage: ['fr', 'en', 'it'],
   }
 
-  if (telephone) serviceSchema.telephone = telephone
   if (contactEmail) serviceSchema.email = contactEmail
   if (normalizedAddress) serviceSchema.address = normalizedAddress
   if (type === 'LocalBusiness' && priceRange)
