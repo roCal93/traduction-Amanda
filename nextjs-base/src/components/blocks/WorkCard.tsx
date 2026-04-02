@@ -12,22 +12,42 @@ type WorkCardProps = {
   showFilters?: boolean
 }
 
-/**
- * Coin replié : clip-path sur la card pour couper le coin bas-droit,
- * + triangle blanc positionné en absolu sur le wrapper pour remplir la découpe.
- * Le wrapper ne doit PAS avoir overflow:hidden pour que le triangle soit visible.
- */
+const FOLD_SIZE = 32
+
 const FoldedCorner = () => (
   <div
     className="pointer-events-none absolute bottom-0 right-0"
-    style={{
-      width: 0,
-      height: 0,
-      borderStyle: 'solid',
-      borderWidth: '28px 28px 0 0',
-      borderColor: '#fff4e2 transparent transparent transparent',
-    }}
-  />
+    style={{ width: `${FOLD_SIZE}px`, height: `${FOLD_SIZE}px` }}
+  >
+    <div
+      className="absolute inset-0"
+      style={{
+        clipPath: 'polygon(100% 0%, 0% 100%, 100% 100%)',
+        background:
+          'linear-gradient(135deg, rgba(255,255,255,0.92) 0%, #ffe8bf 45%, #f4cb8c 100%)',
+        boxShadow: '-3px -3px 8px rgba(0, 0, 0, 0.12)',
+      }}
+    />
+    <div
+      className="absolute"
+      style={{
+        left: '9px',
+        top: '9px',
+        width: '14px',
+        height: '14px',
+        borderRadius: '9999px',
+        backgroundColor: '#f88379',
+        color: '#ffffff',
+        fontSize: '12px',
+        fontWeight: 700,
+        lineHeight: '14px',
+        textAlign: 'center',
+        boxShadow: '0 1px 2px rgba(0,0,0,0.2)',
+      }}
+    >
+      +
+    </div>
+  </div>
 )
 
 const WorkCard = ({
@@ -254,7 +274,7 @@ const WorkCard = ({
       <>
         {/* Wrapper relatif sans overflow:hidden pour que le triangle soit visible */}
         <div
-          className="group relative cursor-pointer"
+          className="group relative cursor-pointer rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500"
           onClick={() => setIsModalOpen(true)}
           onKeyDown={handleKeyDown}
           tabIndex={0}
@@ -266,7 +286,7 @@ const WorkCard = ({
             className="flex gap-2 sm:gap-3 p-2 sm:p-3 rounded-lg shadow-lg group-hover:shadow-2xl group-hover:-translate-y-1 transition-all duration-300 bg-[#FEE7BC] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
             style={{
               clipPath:
-                'polygon(0% 0%, 100% 0%, 100% calc(100% - 28px), calc(100% - 28px) 100%, 0% 100%)',
+                'polygon(0% 0%, 100% 0%, 100% calc(100% - 32px), calc(100% - 32px) 100%, 0% 100%)',
             }}
           >
             {renderCardContent('list')}
@@ -283,7 +303,7 @@ const WorkCard = ({
     <>
       {/* Wrapper relatif sans overflow:hidden pour que le triangle soit visible */}
       <div
-        className="group relative cursor-pointer"
+        className="group relative cursor-pointer rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500"
         onClick={() => setIsModalOpen(true)}
         onKeyDown={handleKeyDown}
         tabIndex={0}
@@ -295,7 +315,7 @@ const WorkCard = ({
           className="rounded-lg shadow-lg group-hover:shadow-2xl group-hover:-translate-y-1 transition-all duration-300 bg-[#FEE7BC] focus:outline-none"
           style={{
             clipPath:
-              'polygon(0% 0%, 100% 0%, 100% calc(100% - 28px), calc(100% - 28px) 100%, 0% 100%)',
+              'polygon(0% 0%, 100% 0%, 100% calc(100% - 32px), calc(100% - 32px) 100%, 0% 100%)',
           }}
         >
           {renderCardContent('grid')}
