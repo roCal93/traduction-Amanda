@@ -51,6 +51,7 @@ export const SchemaOrg = ({
   const logoUrl = logo || `${siteOrigin}/images/logo.png`
   const serviceId = `${siteOrigin}/#service`
   const websiteId = `${siteOrigin}/#website`
+  const personId = `${siteOrigin}/#amanda-fontannaz`
 
   const normalizedAddress =
     typeof address === 'string'
@@ -67,9 +68,8 @@ export const SchemaOrg = ({
     url: siteUrl,
     logo: logoUrl,
     image: logoUrl,
-    serviceType: 'Translation Services',
     areaServed,
-    availableLanguage: ['fr', 'en', 'it'],
+    knowsLanguage: ['fr', 'en', 'it'],
   }
 
   if (contactEmail) serviceSchema.email = contactEmail
@@ -78,16 +78,18 @@ export const SchemaOrg = ({
     serviceSchema.priceRange = priceRange
   if (sameAs?.length) serviceSchema.sameAs = sameAs
 
-  // Add provider (Amanda as Person)
-  serviceSchema.provider = {
+  // Link founder to a dedicated Person node
+  serviceSchema.founder = {
+    '@id': personId,
+  }
+
+  const personSchema: Record<string, unknown> = {
     '@type': 'Person',
+    '@id': personId,
     name: 'Amanda Fontannaz',
     jobTitle: 'Professional Translator',
     email: contactEmail,
-  }
-  serviceSchema.founder = {
-    '@type': 'Person',
-    name: 'Amanda Fontannaz',
+    knowsLanguage: ['fr', 'en', 'it'],
   }
 
   // Build WebSite schema
@@ -117,6 +119,10 @@ export const SchemaOrg = ({
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(personSchema) }}
       />
     </>
   )

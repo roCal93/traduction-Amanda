@@ -23,9 +23,6 @@ export type StrapiRichNode = {
 
 const BREAK_TYPES = new Set(['hardBreak', 'lineBreak', 'break', 'hard_break'])
 
-/* --------------------------------------------- */
-/* 🔒 WHITELIST SÉCURISÉE POUR LES BALISES HTML  */
-/* --------------------------------------------- */
 const ALLOWED_TAGS = new Set([
   'sup',
   'sub',
@@ -112,14 +109,10 @@ export const renderInlineNode = (
 
   if (BREAK_TYPES.has(type)) return <br key={key} />
 
-  /* --------------------------------------------- */
-  /* 🔥 SUPPORT DES BALISES HTML INLINE SECURISÉES */
-  /* --------------------------------------------- */
   if (type === 'html' && typeof node.value === 'string') {
     const safe = sanitizeHtml(node.value)
     return <span key={key} dangerouslySetInnerHTML={{ __html: safe }} />
   }
-  /* --------------------------------------------- */
 
   if (type === 'link' || type === 'hyperlink') {
     const hrefValue =
