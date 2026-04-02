@@ -246,9 +246,12 @@ const WorkCard = ({
           tabIndex={0}
           role="button"
           aria-label={`Voir les détails de ${item.title}`}
-          className="group flex gap-2 sm:gap-3 p-2 sm:p-3 rounded-lg shadow-lg hover:shadow-2xl transition-all duration-300 bg-[#FFE5B3]/60 cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+          className="group relative flex gap-2 sm:gap-3 p-2 sm:p-3 rounded-lg shadow-lg hover:shadow-2xl transition-all duration-300 bg-[#FFE5B3]/60 cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
         >
           {renderCardContent('list')}
+          <span className="pointer-events-none absolute bottom-2 right-2 bg-[#F88379] text-white text-[9px] sm:text-[10px] font-semibold px-2 py-0.5 rounded-full">
+            Voir +
+          </span>
         </div>
         {renderModal()}
       </>
@@ -267,6 +270,9 @@ const WorkCard = ({
         className="group relative overflow-hidden rounded-lg shadow-lg hover:shadow-2xl transition-all duration-300 bg-[#FFE5B3]/60 cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
       >
         {renderCardContent('grid')}
+        <span className="pointer-events-none absolute bottom-2 right-2 bg-[#F88379] text-white text-[9px] sm:text-[10px] font-semibold px-2 py-0.5 rounded-full">
+          Voir +
+        </span>
       </div>
       {renderModal()}
     </>

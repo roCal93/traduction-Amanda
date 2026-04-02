@@ -141,7 +141,9 @@ const TimelineBlock: React.FC<TimelineBlockProps> = ({ items }) => {
 
                     <h3 className="text-lg font-bold mb-3">{item.title}</h3>
 
-                    {item.description?.some((b) => hasRenderableRichText(b)) && (
+                    {item.description?.some((b) =>
+                      hasRenderableRichText(b)
+                    ) && (
                       <div className="text-sm text-gray-700 mb-4">
                         {renderStrapiBlocks(item.description!, {
                           textAlignmentClass: '',
@@ -186,7 +188,9 @@ const TimelineBlock: React.FC<TimelineBlockProps> = ({ items }) => {
 
                     <h3 className="text-lg font-bold mb-3">{item.title}</h3>
 
-                    {item.description?.some((b) => hasRenderableRichText(b)) && (
+                    {item.description?.some((b) =>
+                      hasRenderableRichText(b)
+                    ) && (
                       <div className="text-sm text-gray-700 mb-4">
                         {renderStrapiBlocks(item.description!, {
                           textAlignmentClass: '',
