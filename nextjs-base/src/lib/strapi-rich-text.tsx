@@ -23,6 +23,30 @@ export type StrapiRichNode = {
 
 const BREAK_TYPES = new Set(['hardBreak', 'lineBreak', 'break', 'hard_break'])
 
+/* --------------------------------------------- */
+/* 🔒 WHITELIST SÉCURISÉE POUR LES BALISES HTML  */
+/* --------------------------------------------- */
+const ALLOWED_TAGS = new Set([
+  'sup',
+  'sub',
+  'br',
+  'span',
+  'strong',
+  'em',
+  'u',
+  'i',
+  'b',
+])
+
+// Sanitizer simple basé sur whitelist
+const sanitizeHtml = (html: string): string => {
+  return html.replace(/<([^>]+)>/g, (match, tagContent) => {
+    const tagName = tagContent.split(' ')[0].toLowerCase().replace('/', '')
+    return ALLOWED_TAGS.has(tagName) ? match : ''
+  })
+}
+/* --------------------------------------------- */
+
 export const getStrapiNodeText = (node: StrapiRichNode): string => {
   if (typeof node.text === 'string') return node.text
   if (typeof node.value === 'string') return node.value
@@ -69,6 +93,15 @@ export const renderInlineNode = (
   const type = node.type || 'text'
 
   if (BREAK_TYPES.has(type)) return <br key={key} />
+
+  /* --------------------------------------------- */
+  /* 🔥 SUPPORT DES BALISES HTML INLINE SECURISÉES */
+  /* --------------------------------------------- */
+  if (type === 'html' && typeof node.value === 'string') {
+    const safe = sanitizeHtml(node.value)
+    return <span key={key} dangerouslySetInnerHTML={{ __html: safe }} />
+  }
+  /* --------------------------------------------- */
 
   if (type === 'link' || type === 'hyperlink') {
     const hrefValue =
