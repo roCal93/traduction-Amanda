@@ -4,6 +4,7 @@ import './globals.css'
 import { cookies, headers } from 'next/headers'
 import { defaultLocale } from '@/lib/locales'
 import { isDisableDark } from '@/lib/theme'
+import CookieConsentBanner from '@/components/shared/CookieConsentBanner'
 import { Analytics } from '@vercel/analytics/react'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 
@@ -79,10 +80,15 @@ export default async function RootLayout({
   children: React.ReactNode
 }>) {
   let locale = defaultLocale
+  let cookieConsent: string | undefined
 
   try {
     const cookieStore = await cookies()
     const cookieLocale = cookieStore.get('locale')?.value
+    const consentValue = cookieStore.get('cookie_consent')?.value
+    if (consentValue === 'accepted' || consentValue === 'rejected') {
+      cookieConsent = consentValue
+    }
     if (
       cookieLocale === 'fr' ||
       cookieLocale === 'en' ||
@@ -97,6 +103,13 @@ export default async function RootLayout({
     try {
       const cookieHeader = (await headers()).get('cookie') ?? ''
       const match = cookieHeader.match(/(?:^|; )locale=([^;]+)/)
+      const consentMatch = cookieHeader.match(/(?:^|; )cookie_consent=([^;]+)/)
+      const parsedConsent = consentMatch
+        ? decodeURIComponent(consentMatch[1])
+        : undefined
+      if (parsedConsent === 'accepted' || parsedConsent === 'rejected') {
+        cookieConsent = parsedConsent
+      }
       const parsedLocale = match ? decodeURIComponent(match[1]) : defaultLocale
       locale =
         parsedLocale === 'fr' || parsedLocale === 'en' || parsedLocale === 'it'
@@ -123,6 +136,7 @@ export default async function RootLayout({
         {/* Dev-only protective wrapper to avoid dev tooling throwing on performance.measure */}
         <DevPerfProtector />
         {children}
+        {!cookieConsent && <CookieConsentBanner />}
         <Analytics />
         <SpeedInsights />
       </body>

@@ -68,11 +68,23 @@ export async function fetchAPI<T = unknown>(
     url += `${sep}locale=${encodeURIComponent(locale)}`
   }
 
-  const res = await fetch(url, {
-    headers,
-    next: draft ? undefined : (next ?? { revalidate: 60 }),
-    ...options,
-  })
+  let res: Response
+  try {
+    res = await fetch(url, {
+      headers,
+      next: draft ? undefined : (next ?? { revalidate: 60 }),
+      ...options,
+    })
+  } catch (error) {
+    const message =
+      error && typeof error === 'object' && 'message' in error
+        ? String((error as { message?: unknown }).message)
+        : String(error)
+    if (!(options as FetchOptions)?.suppressWarnings) {
+      console.warn(`Strapi fetch failed: ${message} — URL: ${url}`)
+    }
+    return {} as T
+  }
 
   const text = await res.text()
 

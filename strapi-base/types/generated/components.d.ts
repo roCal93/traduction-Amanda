@@ -478,7 +478,7 @@ export interface SharedTimelineItem extends Struct.ComponentSchema {
   };
   attributes: {
     date: Schema.Attribute.String;
-    description: Schema.Attribute.Text;
+    description: Schema.Attribute.Blocks;
     images: Schema.Attribute.Component<'shared.timeline-image', true>;
     title: Schema.Attribute.String & Schema.Attribute.Required;
   };
