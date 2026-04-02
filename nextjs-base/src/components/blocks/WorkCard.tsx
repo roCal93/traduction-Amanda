@@ -139,16 +139,7 @@ const WorkCard = ({
 
         {variant === 'grid' && (
           <>
-            {/* Gradient overlay au hover */}
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-
-            {/* Label "Voir l'extrait" qui slide depuis le bas */}
-            <div className="absolute bottom-0 left-0 right-0 flex items-center justify-center pb-2 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
-              <span className="text-white text-xs font-semibold tracking-wide drop-shadow">
-                Voir l&apos;extrait →
-              </span>
-            </div>
-
             {item.featured && (
               <div className="absolute top-3 right-3 bg-yellow-400 text-gray-900 px-3 py-1 rounded-full text-xs font-bold">
                 Featured
@@ -189,7 +180,13 @@ const WorkCard = ({
         )}
 
         {showFilters && item.categories && item.categories.length > 0 && (
-          <div className="flex flex-wrap gap-1.5 sm:gap-2 mb-3 sm:mb-4">
+          <div
+            className={
+              variant === 'list'
+                ? 'flex flex-wrap gap-1.5 sm:gap-2 mb-3 sm:mb-4'
+                : 'flex flex-wrap gap-1.5 sm:gap-2 mb-3 sm:mb-4'
+            }
+          >
             {item.categories.map((category) => (
               <span
                 key={category.id}
@@ -249,12 +246,10 @@ const WorkCard = ({
           tabIndex={0}
           role="button"
           aria-label={`Voir les détails de ${item.title}`}
-          className="group relative flex gap-2 sm:gap-3 p-2 sm:p-3 rounded-lg shadow-lg hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 bg-[#FFE5B3]/60 cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+          className="group relative flex gap-2 sm:gap-3 p-2 sm:p-3 rounded-lg shadow-lg hover:shadow-2xl transition-all duration-300 bg-[#FFE5B3]/60 cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
         >
           {renderCardContent('list')}
-
-          {/* Badge + visible sur mobile, apparaît au hover sur desktop */}
-          <span className="pointer-events-none absolute bottom-2 right-2 w-7 h-7 bg-[#F88379] text-white text-base font-bold rounded-full flex items-center justify-center leading-none sm:opacity-0 sm:scale-75 sm:group-hover:opacity-100 sm:group-hover:scale-100 transition-all duration-200">
+          <span className="pointer-events-none absolute bottom-2 right-2 w-7 h-7 bg-[#F88379] text-white text-base font-bold rounded-full flex items-center justify-center leading-none">
             +
           </span>
         </div>
@@ -272,12 +267,10 @@ const WorkCard = ({
         tabIndex={0}
         role="button"
         aria-label={`Voir les détails de ${item.title}`}
-        className="group relative overflow-hidden rounded-lg shadow-lg hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 bg-[#FFE5B3]/60 cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+        className="group relative overflow-hidden rounded-lg shadow-lg hover:shadow-2xl transition-all duration-300 bg-[#FFE5B3]/60 cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
       >
         {renderCardContent('grid')}
-
-        {/* Badge + visible sur mobile, apparaît au hover sur desktop */}
-        <span className="pointer-events-none absolute bottom-2 right-2 w-7 h-7 bg-[#F88379] text-white text-base font-bold rounded-full flex items-center justify-center leading-none sm:opacity-0 sm:scale-75 sm:group-hover:opacity-100 sm:group-hover:scale-100 transition-all duration-200">
+        <span className="pointer-events-none absolute bottom-2 right-2 w-7 h-7 bg-[#F88379] text-white text-base font-bold rounded-full flex items-center justify-center leading-none">
           +
         </span>
       </div>
