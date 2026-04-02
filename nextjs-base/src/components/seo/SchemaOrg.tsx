@@ -28,7 +28,11 @@ export const SchemaOrg = ({
   const siteUrl =
     url || process.env.NEXT_PUBLIC_SITE_URL || 'https://amandatraduction.com'
   const contactEmail = email || process.env.CONTACT_EMAIL
-  const logoUrl = logo || `${siteUrl}/logo.png`
+  const normalizedSiteUrl = siteUrl.replace(/\/$/, '')
+  const siteOrigin = /^https?:\/\//.test(normalizedSiteUrl)
+    ? new URL(normalizedSiteUrl).origin
+    : normalizedSiteUrl
+  const logoUrl = logo || `${siteOrigin}/images/logo.png`
 
   // Build ProfessionalService schema
   const serviceSchema: Record<string, unknown> = {
@@ -63,7 +67,7 @@ export const SchemaOrg = ({
     '@type': 'WebSite',
     name: 'Amanda Traduction',
     url: siteUrl,
-    inLanguage: ['fr', 'en'],
+    inLanguage: ['fr', 'en', 'it'],
     publisher: {
       '@type': type,
       name,
