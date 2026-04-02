@@ -141,9 +141,11 @@ const TimelineBlock: React.FC<TimelineBlockProps> = ({ items }) => {
 
                     <h3 className="text-lg font-bold mb-3">{item.title}</h3>
 
-                    {hasRenderableRichText(item.description) && (
+                    {item.description?.some((b) => hasRenderableRichText(b)) && (
                       <div className="text-sm text-gray-700 mb-4">
-                        {renderStrapiBlocks(item.description!, { textAlignmentClass: '' })}
+                        {renderStrapiBlocks(item.description!, {
+                          textAlignmentClass: '',
+                        })}
                       </div>
                     )}
 
@@ -156,7 +158,7 @@ const TimelineBlock: React.FC<TimelineBlockProps> = ({ items }) => {
                     )}
                   </div>
 
-                  {/* Desktop: images on the opposite side (right) */}
+                  {/* Desktop: images on the opposite side (right) */}}
                   {renderImages(
                     item.images,
                     item.links,
@@ -184,9 +186,11 @@ const TimelineBlock: React.FC<TimelineBlockProps> = ({ items }) => {
 
                     <h3 className="text-lg font-bold mb-3">{item.title}</h3>
 
-                    {hasRenderableRichText(item.description) && (
+                    {item.description?.some((b) => hasRenderableRichText(b)) && (
                       <div className="text-sm text-gray-700 mb-4">
-                        {renderStrapiBlocks(item.description!, { textAlignmentClass: '' })}
+                        {renderStrapiBlocks(item.description!, {
+                          textAlignmentClass: '',
+                        })}
                       </div>
                     )}
 
