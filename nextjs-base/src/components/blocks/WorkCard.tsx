@@ -12,6 +12,24 @@ type WorkCardProps = {
   showFilters?: boolean
 }
 
+/**
+ * Coin replié : clip-path sur la card pour couper le coin bas-droit,
+ * + triangle blanc positionné en absolu sur le wrapper pour remplir la découpe.
+ * Le wrapper ne doit PAS avoir overflow:hidden pour que le triangle soit visible.
+ */
+const FoldedCorner = () => (
+  <div
+    className="pointer-events-none absolute bottom-0 right-0"
+    style={{
+      width: 0,
+      height: 0,
+      borderStyle: 'solid',
+      borderWidth: '28px 28px 0 0',
+      borderColor: '#fff4e2 transparent transparent transparent',
+    }}
+  />
+)
+
 const WorkCard = ({
   item,
   layout = 'grid',
@@ -180,13 +198,7 @@ const WorkCard = ({
         )}
 
         {showFilters && item.categories && item.categories.length > 0 && (
-          <div
-            className={
-              variant === 'list'
-                ? 'flex flex-wrap gap-1.5 sm:gap-2 mb-3 sm:mb-4'
-                : 'flex flex-wrap gap-1.5 sm:gap-2 mb-3 sm:mb-4'
-            }
-          >
+          <div className="flex flex-wrap gap-1.5 sm:gap-2 mb-3 sm:mb-4">
             {item.categories.map((category) => (
               <span
                 key={category.id}
@@ -240,18 +252,26 @@ const WorkCard = ({
   if (layout === 'list') {
     return (
       <>
+        {/* Wrapper relatif sans overflow:hidden pour que le triangle soit visible */}
         <div
+          className="group relative cursor-pointer"
           onClick={() => setIsModalOpen(true)}
           onKeyDown={handleKeyDown}
           tabIndex={0}
           role="button"
           aria-label={`Voir les détails de ${item.title}`}
-          className="group relative flex gap-2 sm:gap-3 p-2 sm:p-3 rounded-lg shadow-lg hover:shadow-2xl transition-all duration-300 bg-[#FFE5B3]/60 cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
         >
-          {renderCardContent('list')}
-          <span className="pointer-events-none absolute bottom-2 right-2 w-7 h-7 bg-[#F88379] text-white text-base font-bold rounded-full flex items-center justify-center leading-none">
-            +
-          </span>
+          {/* Card avec coin coupé */}
+          <div
+            className="flex gap-2 sm:gap-3 p-2 sm:p-3 rounded-lg shadow-lg group-hover:shadow-2xl group-hover:-translate-y-1 transition-all duration-300 bg-[#FEE7BC] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+            style={{
+              clipPath:
+                'polygon(0% 0%, 100% 0%, 100% calc(100% - 28px), calc(100% - 28px) 100%, 0% 100%)',
+            }}
+          >
+            {renderCardContent('list')}
+          </div>
+          <FoldedCorner />
         </div>
         {renderModal()}
       </>
@@ -261,18 +281,26 @@ const WorkCard = ({
   // Grid/Masonry layout
   return (
     <>
+      {/* Wrapper relatif sans overflow:hidden pour que le triangle soit visible */}
       <div
+        className="group relative cursor-pointer"
         onClick={() => setIsModalOpen(true)}
         onKeyDown={handleKeyDown}
         tabIndex={0}
         role="button"
         aria-label={`Voir les détails de ${item.title}`}
-        className="group relative overflow-hidden rounded-lg shadow-lg hover:shadow-2xl transition-all duration-300 bg-[#FFE5B3]/60 cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
       >
-        {renderCardContent('grid')}
-        <span className="pointer-events-none absolute bottom-2 right-2 w-7 h-7 bg-[#F88379] text-white text-base font-bold rounded-full flex items-center justify-center leading-none">
-          +
-        </span>
+        {/* Card avec coin coupé */}
+        <div
+          className="rounded-lg shadow-lg group-hover:shadow-2xl group-hover:-translate-y-1 transition-all duration-300 bg-[#FEE7BC] focus:outline-none"
+          style={{
+            clipPath:
+              'polygon(0% 0%, 100% 0%, 100% calc(100% - 28px), calc(100% - 28px) 100%, 0% 100%)',
+          }}
+        >
+          {renderCardContent('grid')}
+        </div>
+        <FoldedCorner />
       </div>
       {renderModal()}
     </>
