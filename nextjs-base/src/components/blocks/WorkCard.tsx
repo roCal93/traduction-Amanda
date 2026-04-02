@@ -270,7 +270,7 @@ const WorkCard = ({
         className="group relative overflow-hidden rounded-lg shadow-lg hover:shadow-2xl transition-all duration-300 bg-[#FFE5B3]/60 cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
       >
         {renderCardContent('grid')}
-        <span className="pointer-events-none absolute bottom-2 right-2 w-7 h-7 bg-[#DDE8C4] text-white text-base font-bold rounded-full flex items-center justify-center leading-none">
+        <span className="pointer-events-none absolute bottom-2 right-2 w-7 h-7 bg-[#DDE8C4] text-[#FEE9CC] text-lg font-bold rounded-full flex items-center justify-center leading-none">
           +
         </span>
       </div>
