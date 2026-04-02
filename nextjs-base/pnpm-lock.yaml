@@ -17,7 +17,8 @@ overrides:
   lint-staged>picomatch: 4.0.4
   vitest>picomatch: 4.0.4
   lint-staged>yaml: 2.8.3
-  '@vercel/python-analysis>smol-toml': 1.6.1
+  smol-toml: 1.6.1
+  srvx: 0.11.14
 
 importers:
 
@@ -2106,9 +2107,6 @@ packages:
   convert-source-map@2.0.0:
     resolution: {integrity: sha512-Kvp459HrV2FEJ1CAsi1Ku+MY3kasH19TFykTz2xWmMeq6bk2NU3XXvfJ+Q61m0xktWwt+1HSYf3JZsTms3aRJg==}
 
-  cookie-es@2.0.0:
-    resolution: {integrity: sha512-RAj4E421UYRgqokKUmotqAwuplYw15qtdXfY+hGzgCJ/MBjCVZcSoHK/kH9kocfjRjcDME7IiDWR/1WX1TM2Pg==}
-
   cross-spawn@7.0.6:
     resolution: {integrity: sha512-uV2QOWP2nWzsy2aMp8aRibhi9dlzF5Hgh5SHaB9OiTGEyDTiJJyx0uy51QXdyWbtAHNua4XJzUKca3OzKUd3vA==}
     engines: {node: '>= 8'}
@@ -3675,10 +3673,6 @@ packages:
     resolution: {integrity: sha512-94hK0Hh8rPqQl2xXc3HsaBoOXKV20MToPkcXvwbISWLEs+64sBq5kFgn2kJDHb1Pry9yrP0dxrCI9RRci7RXKg==}
     engines: {node: '>= 6.0.0', npm: '>= 3.0.0'}
 
-  smol-toml@1.5.2:
-    resolution: {integrity: sha512-QlaZEqcAH3/RtNyet1IPIYPsEWAaYyXXv1Krsi+1L/QHppjX4Ifm8MQsBISz9vE8cHicIq3clogsheili5vhaQ==}
-    engines: {node: '>= 18'}
-
   smol-toml@1.6.1:
     resolution: {integrity: sha512-dWUG8F5sIIARXih1DTaQAX4SsiTXhInKf1buxdY9DIg4ZYPZK5nGM1VRIYmEbDbsHt7USo99xSLFu5Q1IqTmsg==}
     engines: {node: '>= 18'}
@@ -3699,8 +3693,8 @@ packages:
     resolution: {integrity: sha512-UjgapumWlbMhkBgzT7Ykc5YXUT46F0iKu8SGXq0bcwP5dz/h0Plj6enJqjz1Zbq2l5WaqYnrVbwWOWMyF3F47g==}
     engines: {node: '>=0.10.0'}
 
-  srvx@0.8.9:
-    resolution: {integrity: sha512-wYc3VLZHRzwYrWJhkEqkhLb31TI0SOkfYZDkUhXdp3NoCnNS0FqajiQszZZjfow/VYEuc6Q5sZh9nM6kPy2NBQ==}
+  srvx@0.11.14:
+    resolution: {integrity: sha512-mx+pKrWJCzo5m6uXqyB7n4VA81mpdFRroSWsVTQTYqCZE65hFJ+jtVIeyhtL2/kvtDMrHdbA0hWEUh/vu0+Viw==}
     engines: {node: '>=20.16.0'}
     hasBin: true
 
@@ -5327,7 +5321,7 @@ snapshots:
       path-to-regexp: 8.4.1
       resolve.exports: 2.0.3
       rolldown: 1.0.0-rc.1(@emnapi/core@1.9.0)(@emnapi/runtime@1.9.0)
-      srvx: 0.8.9
+      srvx: 0.11.14
       tsx: 4.21.0
       typescript: 5.9.3
       zod: 3.22.4
@@ -5588,7 +5582,7 @@ snapshots:
   '@vercel/rust@1.0.6':
     dependencies:
       execa: 5.1.1
-      smol-toml: 1.5.2
+      smol-toml: 1.6.1
 
   '@vercel/speed-insights@2.0.0(next@16.2.2(@babel/core@7.29.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@19.2.4)':
     optionalDependencies:
@@ -5944,8 +5938,6 @@ snapshots:
   convert-hrtime@3.0.0: {}
 
   convert-source-map@2.0.0: {}
-
-  cookie-es@2.0.0: {}
 
   cross-spawn@7.0.6:
     dependencies:
@@ -7772,8 +7764,6 @@ snapshots:
 
   smart-buffer@4.2.0: {}
 
-  smol-toml@1.5.2: {}
-
   smol-toml@1.6.1: {}
 
   socks-proxy-agent@8.0.5:
@@ -7794,9 +7784,7 @@ snapshots:
   source-map@0.6.1:
     optional: true
 
-  srvx@0.8.9:
-    dependencies:
-      cookie-es: 2.0.0
+  srvx@0.11.14: {}
 
   stable-hash@0.0.5: {}
 

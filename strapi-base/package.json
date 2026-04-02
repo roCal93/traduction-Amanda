@@ -54,7 +54,10 @@
       "tinyglobby>picomatch": "4.0.4",
       "anymatch>picomatch": "2.3.2",
       "readdirp>picomatch": "2.3.2",
-      "cosmiconfig>yaml": "1.10.3"
+      "cosmiconfig>yaml": "1.10.3",
+      "handlebars": "4.7.9",
+      "lodash": "4.18.1",
+      "lodash-es": "4.18.1"
     }
   },
   "strapi": {
