@@ -321,6 +321,7 @@ const ContactFormBlock = ({
         onClose={() => setIsPolicyModalOpen(false)}
         title={privacyPolicy?.title}
         content={privacyPolicy?.content}
+        lastUpdated={privacyPolicy?.lastUpdated}
         closeButtonText={privacyPolicy?.closeButtonText}
       />
     </div>
