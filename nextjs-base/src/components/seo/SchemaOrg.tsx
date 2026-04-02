@@ -78,12 +78,15 @@ export const SchemaOrg = ({
     serviceSchema.priceRange = priceRange
   if (sameAs?.length) serviceSchema.sameAs = sameAs
 
-  // Link founder to a dedicated Person node
+  // Use an explicit Person object to satisfy validators expecting founder target type.
   serviceSchema.founder = {
+    '@type': 'Person',
     '@id': personId,
+    name: 'Amanda Fontannaz',
   }
 
   const personSchema: Record<string, unknown> = {
+    '@context': 'https://schema.org',
     '@type': 'Person',
     '@id': personId,
     name: 'Amanda Fontannaz',
