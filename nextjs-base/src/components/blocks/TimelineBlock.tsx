@@ -156,7 +156,7 @@ const TimelineBlock: React.FC<TimelineBlockProps> = ({ items }) => {
                     )}
                   </div>
 
-                  {/* Desktop: images on the opposite side (right) */}}
+                  {/* Desktop: images on the opposite side (right) */}
                   {renderImages(
                     item.images,
                     item.links,
