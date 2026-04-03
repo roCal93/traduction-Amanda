@@ -84,7 +84,11 @@ export default async function PrivacyPolicyPage({
           {policy.lastUpdated && (
             <p className="mb-6 text-sm text-[#7A6A61]">
               {locale === 'en' ? 'Last updated:' : 'Dernière mise à jour :'}{' '}
-              {policy.lastUpdated}
+              {new Intl.DateTimeFormat(locale === 'en' ? 'en-GB' : 'fr-FR', {
+                day: '2-digit',
+                month: 'long',
+                year: 'numeric',
+              }).format(new Date(policy.lastUpdated))}
             </p>
           )}
           <article
