@@ -178,13 +178,16 @@ export const SectionGeneric = ({
   const hasHeroFirst =
     blocks?.[0]?.__component === 'blocks.hero-block-simple-text'
 
+  // Skip FadeIn for first section (above-the-fold content) or when first block is a hero
+  const skipFadeIn = isFirstSection || hasHeroFirst
+
   return (
     <section
       id={identifier}
       className={`${getTopSpacingClass(spacingTop)} ${getBottomSpacingClass(spacingBottom)} px-4`}
     >
-      {/* Skip FadeIn animation for first hero block to improve LCP */}
-      {hasHeroFirst ? (
+      {/* Skip FadeIn animation for above-the-fold content to improve LCP */}
+      {skipFadeIn ? (
         <div className={`${getContainerWidthClass(containerWidth)} mx-auto`}>
           {title && (
             <h2 className="text-3xl font-semibold mb-8 text-center">{title}</h2>

@@ -169,7 +169,7 @@ const CarouselBlock = ({
           </div>
         ))}
         {/* Copies visuelles pour la boucle infinie — masquées aux lecteurs d'écran et aux robots */}
-        <div aria-hidden="true" className="contents">
+        <div inert className="contents">
           {workItems.map((item, index) => (
             <div
               key={`clone-a-${item.id}-${index}`}
@@ -179,7 +179,7 @@ const CarouselBlock = ({
             </div>
           ))}
         </div>
-        <div aria-hidden="true" className="contents">
+        <div inert className="contents">
           {workItems.map((item, index) => (
             <div
               key={`clone-b-${item.id}-${index}`}
