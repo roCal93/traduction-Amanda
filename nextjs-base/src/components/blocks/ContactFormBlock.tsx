@@ -258,7 +258,7 @@ const ContactFormBlock = ({
                 <button
                   type="button"
                   onClick={() => setIsPolicyModalOpen(true)}
-                  className="text-[#F88379] underline hover:text-[#e67369] focus:outline-none focus:ring-2 focus:ring-[#F88379] focus:ring-offset-1 rounded"
+                  className="text-gray-700 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#F88379] focus:ring-offset-1 rounded"
                 >
                   {policyLinkText}
                 </button>

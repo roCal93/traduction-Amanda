@@ -40,7 +40,10 @@ export default function CookieConsentBanner() {
       <div className="mx-auto max-w-4xl rounded-xl border border-[#F5B5AE] bg-[#FFF8D9]/95 p-4 text-[#4B3A33] shadow-xl backdrop-blur-sm">
         <p className="text-sm leading-relaxed">
           {labels.text}{' '}
-          <a href={labels.learnMoreHref} className="underline hover:opacity-75 text-[#7A4E45]">
+          <a
+            href={labels.learnMoreHref}
+            className="underline hover:opacity-75 text-[#7A4E45]"
+          >
             {labels.learnMore}
           </a>
         </p>
@@ -62,7 +65,7 @@ export default function CookieConsentBanner() {
               setVisible(false)
               window.dispatchEvent(new Event('cookie-consent-accepted'))
             }}
-            className="rounded-full bg-[#F88379] px-5 py-2 text-sm font-medium text-white transition-colors hover:bg-[#e67369]"
+            className="rounded-full bg-[#F88379] px-5 py-2 text-sm font-medium text-black transition-colors hover:bg-[#e67369]"
           >
             {labels.accept}
           </button>

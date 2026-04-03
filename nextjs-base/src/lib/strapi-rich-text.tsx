@@ -1,4 +1,5 @@
 import React from 'react'
+import sanitize from 'sanitize-html'
 import { StrapiBlock } from '@/types/strapi'
 
 export type StrapiRichNode = {
@@ -23,25 +24,13 @@ export type StrapiRichNode = {
 
 const BREAK_TYPES = new Set(['hardBreak', 'lineBreak', 'break', 'hard_break'])
 
-const ALLOWED_TAGS = new Set([
-  'sup',
-  'sub',
-  'br',
-  'span',
-  'strong',
-  'em',
-  'u',
-  'i',
-  'b',
-])
-
-// Sanitizer simple basé sur whitelist
-const sanitizeHtml = (html: string): string => {
-  return html.replace(/<([^>]+)>/g, (match, tagContent) => {
-    const tagName = tagContent.split(' ')[0].toLowerCase().replace('/', '')
-    return ALLOWED_TAGS.has(tagName) ? match : ''
+// Allowlist-based sanitizer — strips unknown tags, event handlers, and dangerous URL schemes
+const sanitizeHtml = (html: string): string =>
+  sanitize(html, {
+    allowedTags: ['sup', 'sub', 'br', 'span', 'strong', 'em', 'u', 'i', 'b'],
+    allowedAttributes: { span: ['class'] },
+    disallowedTagsMode: 'discard',
   })
-}
 /* --------------------------------------------- */
 
 export const getStrapiNodeText = (node: StrapiRichNode): string => {
