@@ -247,7 +247,7 @@ const ContactFormBlock = ({
                 required
                 aria-required="true"
                 aria-describedby="consent-description"
-                className="mt-1 w-4 h-4 text-[#F88379] bg-[#FFFACD]/80 border-gray-300 rounded focus:ring-[#F88379] focus:ring-2"
+                className="mt-1 w-4 h-4 accent-[#F88379] bg-[#FFFACD]/80 border-gray-300 cursor-pointer rounded focus:ring-[#F88379] focus:ring-2"
               />
               <label
                 htmlFor="consent"
@@ -258,7 +258,7 @@ const ContactFormBlock = ({
                 <button
                   type="button"
                   onClick={() => setIsPolicyModalOpen(true)}
-                  className="text-gray-700 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#F88379] focus:ring-offset-1 rounded"
+                  className="text-gray-700 underline hover:text-gray-900 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#F88379] focus:ring-offset-1 rounded"
                 >
                   {policyLinkText}
                 </button>
