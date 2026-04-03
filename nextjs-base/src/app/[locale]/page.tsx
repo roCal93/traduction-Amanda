@@ -1,6 +1,5 @@
 import { createStrapiClient } from '@/lib/strapi-client'
 import { getPageSEO } from '@/lib/seo'
-import { cleanImageUrl } from '@/lib/strapi'
 import { getHreflangAlternates } from '@/lib/hreflang'
 import { Layout } from '@/components/layout'
 import { Hero } from '@/components/sections/Hero'
@@ -101,63 +100,12 @@ export async function generateMetadata({
 }) {
   const { locale } = await params
 
-  // Fetch home data to get the first image for preload
-  const res = await getHomePageData(locale)
-  const page = res?.data?.[0]
-  const firstBlock = page?.sections?.[0]?.blocks?.[0] as
-    | {
-        image?: { url: string }
-        workItems?: Array<{ image?: { url: string } }>
-      }
-    | undefined
-  const firstImage = firstBlock?.image
-
-  // Check for carousel workItems images
-  const firstWorkItemImage = firstBlock?.workItems?.[0]?.image
-
-  const links: {
-    rel: string
-    href: string
-    as?: string
-    fetchpriority?: string
-  }[] = []
-
-  // Preload main image
-  if (firstImage) {
-    const imageUrl = cleanImageUrl(firstImage.url)
-    if (imageUrl) {
-      const fullUrl = imageUrl.startsWith('/')
-        ? `${process.env.NEXT_PUBLIC_STRAPI_URL}${imageUrl}`
-        : imageUrl
-      links.push({
-        rel: 'preload',
-        href: fullUrl,
-        as: 'image',
-        fetchpriority: 'high',
-      })
-    }
-  }
-
-  // Preload first carousel image if exists
-  if (firstWorkItemImage) {
-    const imageUrl = cleanImageUrl(firstWorkItemImage.url)
-    if (imageUrl) {
-      const fullUrl = imageUrl.startsWith('/')
-        ? `${process.env.NEXT_PUBLIC_STRAPI_URL}${imageUrl}`
-        : imageUrl
-      links.push({
-        rel: 'preload',
-        href: fullUrl,
-        as: 'image',
-        fetchpriority: 'high',
-      })
-    }
-  }
-
   // SEO per-locale: fetch home metadata for the active locale
   const seo = await getPageSEO('home', false, locale)
 
   // Build hreflang alternate links for multilingual SEO
+  const res = await getHomePageData(locale)
+  const page = res?.data?.[0]
   const localizations = page?.localizations || []
   const allLocales = [
     { locale: page?.locale || locale, slug: 'home' },
@@ -171,7 +119,6 @@ export async function generateMetadata({
   return {
     ...seo,
     alternates,
-    other: links,
   }
 }
 
