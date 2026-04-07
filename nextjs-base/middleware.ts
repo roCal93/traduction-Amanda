@@ -45,9 +45,10 @@ function buildCsp(nonce: string): string {
 
   const directives = [
     "default-src 'self';",
-    `img-src 'self' data: https: ${strapiOrigin};`,
+    `img-src 'self' data: blob: https://res.cloudinary.com ${strapiOrigin};`,
     `script-src 'self' 'nonce-${nonce}' 'strict-dynamic' https://vercel.live${isProd ? '' : " 'unsafe-eval'"};`,
-    "style-src 'self' 'unsafe-inline';",
+    `style-src 'self' 'nonce-${nonce}';`,
+    "style-src-attr 'unsafe-inline';",
     `connect-src 'self' ${strapiOrigin} https://*.railway.app https://*.vercel.app;`,
     "font-src 'self' data:;",
     "object-src 'none';",
@@ -74,7 +75,7 @@ export function middleware(req: NextRequest) {
     // Ignore static assets, API and other non-page requests
     if (
       pathname.startsWith('/_next') ||
-      pathname.startsWith('/api') ||
+      pathname.startsWith('/api/') ||
       pathname.startsWith('/static') ||
       pathname.includes('.')
     ) {

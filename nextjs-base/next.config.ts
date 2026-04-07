@@ -49,6 +49,10 @@ const nextConfig: NextConfig = {
     // so that 'unsafe-inline' can be replaced by 'nonce-{nonce}' + 'strict-dynamic'.
     const securityHeaders: { key: string; value: string }[] = [
       {
+        key: 'X-Frame-Options',
+        value: 'SAMEORIGIN',
+      },
+      {
         key: 'X-Content-Type-Options',
         value: 'nosniff',
       },
@@ -73,6 +77,15 @@ const nextConfig: NextConfig = {
       {
         source: '/(.*)',
         headers: securityHeaders,
+      },
+      {
+        source: '/robots.txt',
+        headers: [
+          {
+            key: 'Access-Control-Allow-Origin',
+            value: 'https://www.amandatraduction.com',
+          },
+        ],
       },
     ]
   },
