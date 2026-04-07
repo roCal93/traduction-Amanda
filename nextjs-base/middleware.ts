@@ -169,5 +169,5 @@ export function middleware(req: NextRequest) {
 
 // Match all non-api and non-_next routes
 export const config = {
-  matcher: ['/((?!_next|api|static).*)'],
+  matcher: ['/((?!_next|api/|static).*)'],
 }
