@@ -9,7 +9,7 @@ import {
   Page as PageType,
 } from '@/types/strapi'
 import { DynamicBlock } from '@/types/custom'
-import { notFound, redirect } from 'next/navigation'
+import { notFound, redirect, permanentRedirect } from 'next/navigation'
 import { defaultLocale } from '@/lib/locales'
 import { isSupportedLocale } from '@/lib/supported-locales'
 
@@ -197,9 +197,9 @@ export default async function Page({
     notFound()
   }
 
-  // Redirige /[locale]/home vers /[locale]
+  // Redirige /[locale]/home vers /[locale] (308 permanent pour que Google mette à jour son index)
   if (slug === 'home') {
-    redirect(`/${locale}`)
+    permanentRedirect(`/${locale}`)
   }
 
   const sparams = searchParams ? await searchParams : undefined

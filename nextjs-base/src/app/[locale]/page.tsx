@@ -116,9 +116,18 @@ export async function generateMetadata({
   ]
   const alternates = getHreflangAlternates('home', allLocales)
 
+  const siteBase = (
+    process.env.NEXT_PUBLIC_SITE_URL ||
+    process.env.SITE_URL ||
+    'http://localhost:3000'
+  ).replace(/\/$/, '')
+
   return {
     ...seo,
-    alternates,
+    alternates: {
+      canonical: `${siteBase}/${locale}`,
+      ...alternates,
+    },
   }
 }
 
