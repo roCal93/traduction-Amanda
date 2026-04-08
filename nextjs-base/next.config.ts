@@ -11,7 +11,9 @@ function normalizeOrigin(input: string): string | null {
 
 function getSiteOrigin(): string {
   const siteUrl =
-    process.env.NEXT_PUBLIC_SITE_URL || process.env.SITE_URL || 'https://www.amandatraduction.com'
+    process.env.NEXT_PUBLIC_SITE_URL ||
+    process.env.SITE_URL ||
+    'https://www.amandatraduction.com'
   return normalizeOrigin(siteUrl) || 'https://www.amandatraduction.com'
 }
 
