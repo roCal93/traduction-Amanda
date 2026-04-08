@@ -40,16 +40,23 @@ function getAllowedFrameAncestors(): string[] {
 function buildCsp(nonce: string): string {
   const strapiOrigin =
     process.env.NEXT_PUBLIC_STRAPI_URL ?? 'http://localhost:1337'
+  const normalizedStrapiOrigin = (() => {
+    try {
+      return new URL(strapiOrigin).origin
+    } catch {
+      return strapiOrigin
+    }
+  })()
   const isProd = process.env.NODE_ENV === 'production'
   const frameAncestors = ["'self'", ...getAllowedFrameAncestors()].join(' ')
 
   const directives = [
     "default-src 'self';",
-    `img-src 'self' data: blob: https://res.cloudinary.com ${strapiOrigin};`,
-    `script-src 'self' 'nonce-${nonce}' 'strict-dynamic' https://vercel.live${isProd ? '' : " 'unsafe-eval'"};`,
+    `img-src 'self' data: blob: https://res.cloudinary.com ${normalizedStrapiOrigin};`,
+    `script-src 'self' 'nonce-${nonce}' 'strict-dynamic'${isProd ? '' : " 'unsafe-eval'"};`,
     `style-src 'self' 'nonce-${nonce}';`,
     "style-src-attr 'unsafe-inline';",
-    `connect-src 'self' ${strapiOrigin} https://*.railway.app https://*.vercel.app;`,
+    `connect-src 'self' ${normalizedStrapiOrigin};`,
     "font-src 'self' data:;",
     "object-src 'none';",
     "base-uri 'self';",

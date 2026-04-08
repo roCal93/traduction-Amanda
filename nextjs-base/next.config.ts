@@ -1,6 +1,20 @@
 import type { NextConfig } from 'next'
 import path from 'node:path'
 
+function normalizeOrigin(input: string): string | null {
+  try {
+    return new URL(input).origin
+  } catch {
+    return null
+  }
+}
+
+function getSiteOrigin(): string {
+  const siteUrl =
+    process.env.NEXT_PUBLIC_SITE_URL || process.env.SITE_URL || 'https://www.amandatraduction.com'
+  return normalizeOrigin(siteUrl) || 'https://www.amandatraduction.com'
+}
+
 const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
@@ -44,6 +58,26 @@ const nextConfig: NextConfig = {
   // Autoriser l'admin Strapi à intégrer le site en iframe pour la Preview
   async headers() {
     const isProd = process.env.NODE_ENV === 'production'
+    const strapiOrigin =
+      process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1337'
+    const normalizedStrapiOrigin = normalizeOrigin(strapiOrigin) || strapiOrigin
+    const siteOrigin = getSiteOrigin()
+
+    const metadataCsp = [
+      "default-src 'none';",
+      `connect-src 'self' ${normalizedStrapiOrigin};`,
+      "img-src 'self' data: https://res.cloudinary.com;",
+      "style-src 'self';",
+      "style-src-attr 'unsafe-inline';",
+      "font-src 'self' data:;",
+      "base-uri 'none';",
+      "form-action 'none';",
+      "frame-ancestors 'none';",
+      "object-src 'none';",
+    ]
+      .join(' ')
+      .replace(/\s{2,}/g, ' ')
+      .trim()
 
     // Note: Content-Security-Policy (with per-request nonce) is set in middleware.ts
     // so that 'unsafe-inline' can be replaced by 'nonce-{nonce}' + 'strict-dynamic'.
@@ -82,8 +116,33 @@ const nextConfig: NextConfig = {
         source: '/robots.txt',
         headers: [
           {
+            key: 'Content-Security-Policy',
+            value: metadataCsp,
+          },
+          {
             key: 'Access-Control-Allow-Origin',
-            value: 'https://www.amandatraduction.com',
+            value: siteOrigin,
+          },
+          {
+            key: 'Vary',
+            value: 'Origin',
+          },
+        ],
+      },
+      {
+        source: '/sitemap.xml',
+        headers: [
+          {
+            key: 'Content-Security-Policy',
+            value: metadataCsp,
+          },
+          {
+            key: 'Access-Control-Allow-Origin',
+            value: siteOrigin,
+          },
+          {
+            key: 'Vary',
+            value: 'Origin',
           },
         ],
       },
