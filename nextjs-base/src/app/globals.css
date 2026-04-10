@@ -70,3 +70,30 @@ body {
   transform: scale(1.1);
   transition: transform 160ms ease;
 }
+
+/* TranslationBlock scrollbar styles are global to avoid style-jsx scoping/order issues */
+.translation-scrollbar {
+  scrollbar-gutter: stable;
+  scrollbar-width: thin;
+  scrollbar-color: #f88379 #fffacd80;
+}
+
+.translation-scrollbar::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+.translation-scrollbar::-webkit-scrollbar-track {
+  background: #fffacd80;
+  border-radius: 999px;
+}
+
+.translation-scrollbar::-webkit-scrollbar-thumb {
+  background: #f88379;
+  border: 2px solid #fffacd80;
+  border-radius: 999px;
+}
+
+.translation-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #f56f64;
+}

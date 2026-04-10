@@ -382,32 +382,8 @@ const TranslationBlock = ({
     )
   }
 
-  const scrollbarStyle: React.CSSProperties & {
-    scrollbarGutter?: 'auto' | 'stable'
-  } = {
-    scrollbarGutter: 'stable',
-  }
-
   return (
     <>
-      <style jsx>{`
-        .custom-scrollbar::-webkit-scrollbar {
-          width: 12px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-track {
-          background: #fffacd80;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-          background: #f88379;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-          background: #f88379;
-        }
-        .custom-scrollbar {
-          scrollbar-color: #f88379 #fffacd80;
-          scrollbar-width: thin;
-        }
-      `}</style>
       <section className={`${marginTopClass} mb-8`}>
         <div className="w-full max-w-6xl mx-auto px-4">
           {title && (
@@ -523,8 +499,7 @@ const TranslationBlock = ({
                 </div>
 
                 <div
-                  className="max-h-[60vh] lg:max-h-[40vh] overflow-y-auto custom-scrollbar"
-                  style={scrollbarStyle}
+                  className="max-h-[60vh] lg:max-h-[40vh] overflow-y-auto translation-scrollbar"
                   tabIndex={0}
                   role="region"
                   aria-label={`Translation content — ${languageName(active.sourceLanguage || sourceLanguage, siteLocale)} → ${languageName(translationLanguage, siteLocale)}`}
