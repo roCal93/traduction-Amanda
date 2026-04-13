@@ -18,6 +18,16 @@ function getSiteOrigin(): string {
 }
 
 const nextConfig: NextConfig = {
+  async redirects() {
+    return [
+      {
+        source: '/:locale(fr|en)/home',
+        destination: '/:locale',
+        permanent: true,
+      },
+    ]
+  },
+
   images: {
     remotePatterns: [
       {

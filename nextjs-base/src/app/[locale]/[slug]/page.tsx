@@ -151,17 +151,18 @@ export async function generateMetadata({
     process.env.SITE_URL ??
     'https://example.com'
   ).replace(/\/$/, '')
+  const slugPath = slug === 'home' ? '' : `/${slug}`
 
   const pageLocalizations = page.localizations ?? []
 
   const alternates: Hreflang[] = [
     {
       hreflang: page.locale || 'fr',
-      href: `${siteBase}/${page.locale || 'fr'}/${slug}`,
+      href: `${siteBase}/${page.locale || 'fr'}${slugPath}`,
     },
     ...pageLocalizations.map((loc: PageType & StrapiEntity) => ({
       hreflang: loc.locale || 'fr',
-      href: `${siteBase}/${loc.locale || 'fr'}/${slug}`,
+      href: `${siteBase}/${loc.locale || 'fr'}${slugPath}`,
     })),
   ]
 
@@ -176,7 +177,7 @@ export async function generateMetadata({
     description,
     image: page.seoImage?.url,
     noIndex: page.noIndex,
-    url: `${siteBase}/${page.locale}/${slug}`,
+    url: `${siteBase}/${page.locale}${slugPath}`,
     alternates,
   })
 }

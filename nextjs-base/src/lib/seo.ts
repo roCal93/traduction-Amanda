@@ -143,17 +143,18 @@ export async function getPageSEO(
     }
 
     const pageLocale = page.locale ?? locale ?? 'fr'
-    const canonical = `${siteBase}/${pageLocale}/${slug}`
+    const slugPath = slug === 'home' ? '' : `/${slug}`
+    const canonical = `${siteBase}/${pageLocale}${slugPath}`
 
     const localizations = page.localizations ?? []
     const alternatesArr: Hreflang[] = [
       { hreflang: pageLocale, href: canonical },
       ...localizations.map((l: Page & StrapiEntity) => ({
         hreflang: l.locale || 'fr',
-        href: `${siteBase}/${l.locale || 'fr'}/${slug}`,
+        href: `${siteBase}/${l.locale || 'fr'}${slugPath}`,
       })),
       // x-default for unmatched locales
-      { hreflang: 'x-default', href: `${siteBase}/fr/${slug}` },
+      { hreflang: 'x-default', href: `${siteBase}/fr${slugPath}` },
     ]
 
     return buildMetadata({
