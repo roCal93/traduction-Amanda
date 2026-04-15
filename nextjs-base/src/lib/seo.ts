@@ -15,6 +15,7 @@ export function buildMetadata({
   description,
   image,
   noIndex,
+  noImageIndex,
   url,
   alternates,
 }: {
@@ -22,6 +23,7 @@ export function buildMetadata({
   description?: string
   image?: string
   noIndex?: boolean
+  noImageIndex?: boolean
   url?: string
   alternates?: Hreflang[]
 }): Metadata {
@@ -32,12 +34,17 @@ export function buildMetadata({
     'http://localhost:3000'
   ).replace(/\/$/, '')
   const ogImage = image || `${siteBase}/images/logo.png`
+  const robots = noIndex
+    ? 'noindex, nofollow'
+    : noImageIndex
+      ? 'index, follow, noimageindex'
+      : 'index, follow'
 
   return {
     title,
     description,
 
-    robots: noIndex ? 'noindex, nofollow' : 'index, follow',
+    robots,
 
     alternates: {
       canonical: url,

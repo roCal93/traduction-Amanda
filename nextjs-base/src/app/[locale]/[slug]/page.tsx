@@ -9,7 +9,7 @@ import {
   Page as PageType,
 } from '@/types/strapi'
 import { DynamicBlock } from '@/types/custom'
-import { notFound, redirect, permanentRedirect } from 'next/navigation'
+import { notFound, permanentRedirect } from 'next/navigation'
 import { defaultLocale } from '@/lib/locales'
 import { isSupportedLocale } from '@/lib/supported-locales'
 
@@ -114,6 +114,7 @@ export async function generateMetadata({
   params: Promise<{ locale: string; slug: string }>
 }) {
   const { slug, locale } = await params
+  const noImageIndex = slug === 'a-propos' || slug === 'portfolio'
 
   const apiToken = process.env.STRAPI_API_TOKEN
 
@@ -177,6 +178,7 @@ export async function generateMetadata({
     description,
     image: page.seoImage?.url,
     noIndex: page.noIndex,
+    noImageIndex,
     url: `${siteBase}/${page.locale}${slugPath}`,
     alternates,
   })

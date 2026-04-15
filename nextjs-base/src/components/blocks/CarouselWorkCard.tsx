@@ -15,6 +15,9 @@ const CarouselWorkCard = ({
   isPriority = false,
 }: CarouselWorkCardProps) => {
   const imageUrl = cleanImageUrl(item.image?.url)
+  const carouselImageUrl = imageUrl
+    ? `/api/carousel-image?url=${encodeURIComponent(imageUrl)}`
+    : undefined
 
   return (
     <div
@@ -25,9 +28,9 @@ const CarouselWorkCard = ({
     >
       {/* Image */}
       <div className="relative w-full aspect-[5/2] overflow-hidden flex items-center justify-center p-2">
-        {imageUrl ? (
+        {carouselImageUrl ? (
           <Image
-            src={imageUrl}
+            src={carouselImageUrl}
             alt={item.image?.alternativeText || item.title}
             width={260}
             height={104}
@@ -35,6 +38,7 @@ const CarouselWorkCard = ({
             fetchPriority={isPriority ? 'high' : 'low'}
             loading={isPriority ? undefined : 'lazy'}
             quality={85}
+            unoptimized
             className="w-full h-full object-contain select-none pointer-events-none"
             sizes="(max-width: 640px) 180px, (max-width: 1024px) 220px, 260px"
             draggable={false}

@@ -27,6 +27,15 @@ describe('buildMetadata', () => {
     expect(result.robots).toBe('noindex, nofollow')
   })
 
+  it('handles noImageIndex', () => {
+    const result = buildMetadata({
+      title: 'Test',
+      noImageIndex: true,
+    })
+
+    expect(result.robots).toBe('index, follow, noimageindex')
+  })
+
   it('handles alternates', () => {
     const result = buildMetadata({
       title: 'Test',
