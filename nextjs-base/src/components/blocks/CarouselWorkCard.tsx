@@ -15,9 +15,9 @@ const CarouselWorkCard = ({
   isPriority = false,
 }: CarouselWorkCardProps) => {
   const imageUrl = cleanImageUrl(item.image?.url)
-  const carouselImageUrl = imageUrl
-    ? `/api/carousel-image?url=${encodeURIComponent(imageUrl)}`
-    : undefined
+  const carouselImageUrl = item.documentId
+    ? `/api/carousel-image?documentId=${encodeURIComponent(item.documentId)}`
+    : imageUrl
 
   return (
     <div
