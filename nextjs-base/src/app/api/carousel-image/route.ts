@@ -20,6 +20,40 @@ function isAllowedImageUrl(url: URL): boolean {
   }
 }
 
+function getSanitizedAllowedImageUrl(rawUrl: string): string | null {
+  let parsed: URL
+  try {
+    parsed = new URL(rawUrl)
+  } catch {
+    return null
+  }
+
+  if (!isAllowedImageUrl(parsed)) return null
+
+  // Prevent path traversal-style endpoint manipulation.
+  let decodedPathname: string
+  try {
+    decodedPathname = decodeURIComponent(parsed.pathname)
+  } catch {
+    return null
+  }
+
+  if (
+    decodedPathname.includes('/../') ||
+    decodedPathname.endsWith('/..') ||
+    decodedPathname.startsWith('../') ||
+    decodedPathname === '..'
+  ) {
+    return null
+  }
+
+  const sanitized = new URL(parsed.origin)
+  sanitized.pathname = parsed.pathname
+  sanitized.search = parsed.search
+
+  return sanitized.toString()
+}
+
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url)
   const rawUrl = searchParams.get('url')
@@ -31,23 +65,14 @@ export async function GET(req: Request) {
     )
   }
 
-  let target: URL
-  try {
-    target = new URL(rawUrl)
-  } catch {
-    return NextResponse.json(
-      { error: 'Invalid url parameter' },
-      { status: 400 }
-    )
-  }
-
-  if (!isAllowedImageUrl(target)) {
+  const sanitizedUrl = getSanitizedAllowedImageUrl(rawUrl)
+  if (!sanitizedUrl) {
     return NextResponse.json({ error: 'URL not allowed' }, { status: 403 })
   }
 
   let upstream: Response
   try {
-    upstream = await fetch(target.href, {
+    upstream = await fetch(sanitizedUrl, {
       headers: { Accept: 'image/*,*/*' },
       cache: 'force-cache',
       redirect: 'error',
