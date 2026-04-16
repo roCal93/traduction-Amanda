@@ -48,6 +48,7 @@ export async function GET(req: Request) {
     upstream = await fetch(target.toString(), {
       headers: { Accept: 'image/*,*/*' },
       cache: 'force-cache',
+      redirect: 'error',
     })
   } catch {
     return NextResponse.json(
