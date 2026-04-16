@@ -4,15 +4,17 @@ export const runtime = 'nodejs'
 
 function isAllowedImageUrl(url: URL): boolean {
   if (url.protocol !== 'https:') return false
+  if (url.username || url.password) return false
 
-  if (url.hostname === 'res.cloudinary.com') return true
+  // Allow-list exact trusted origin(s), not arbitrary user-provided hosts.
+  if (url.origin === 'https://res.cloudinary.com') return true
 
   const strapiBase = process.env.NEXT_PUBLIC_STRAPI_URL
   if (!strapiBase) return false
 
   try {
     const strapiUrl = new URL(strapiBase)
-    return url.hostname === strapiUrl.hostname
+    return url.origin === strapiUrl.origin
   } catch {
     return false
   }
@@ -45,7 +47,7 @@ export async function GET(req: Request) {
 
   let upstream: Response
   try {
-    upstream = await fetch(target.toString(), {
+    upstream = await fetch(target.href, {
       headers: { Accept: 'image/*,*/*' },
       cache: 'force-cache',
       redirect: 'error',
