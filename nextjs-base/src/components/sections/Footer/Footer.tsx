@@ -40,7 +40,7 @@ export const Footer = ({
         <p className="text-sm text-black/25">
           Fait avec passion par{' '}
           <a
-            href="https://hakuna-mataweb.com"
+            href="https://hakunamataweb.com"
             target="_blank"
             rel="noopener noreferrer"
             className="text-black/25 hover:underline"
