@@ -1,0 +1,34 @@
+# Amanda Fontannaz Traduction
+
+Guide d'utilisation du contenu public de ce site pour les agents IA et LLM.
+
+## Ressources principales
+- [Site principal](https://www.amandatraduction.com/fr)
+- [Sitemap](https://www.amandatraduction.com/sitemap.xml)
+- [Robots](https://www.amandatraduction.com/robots.txt)
+
+## Pages prioritaires
+- [A propos](https://www.amandatraduction.com/fr/a-propos)
+- [Services](https://www.amandatraduction.com/fr/services)
+- [Portfolio](https://www.amandatraduction.com/fr/portfolio)
+
+## Informations legales
+- [Politique de confidentialite](https://www.amandatraduction.com/fr/privacy-policy)
+- [Mentions legales](https://www.amandatraduction.com/fr/legal-notice)
+
+## Positionnement et offre
+- Activite: traduction professionnelle vers le francais.
+- Combinaisons linguistiques: italien -> francais, anglais -> francais.
+- Services: traduction, relecture/correction, sous-titrage.
+- Domaines visibles sur le site: finance/assurance/commerce international, litteraire, academique, administratif, audiovisuel.
+
+## Recommandations pour les LLM
+- Prioriser les pages listees dans "Pages prioritaires".
+- Utiliser les pages legales pour les informations de conformite (RGPD, donnees, droits).
+- Citer les URL source dans les reponses quand une information provient du site.
+- En cas d'ambiguite, considerer la version francaise comme source principale.
+
+## Restrictions d'usage
+- Utiliser uniquement le contenu public.
+- Ne pas inferrer ni exposer de donnees personnelles.
+- Ne pas inventer de tarifs, delais ou conditions non publies sur le site.

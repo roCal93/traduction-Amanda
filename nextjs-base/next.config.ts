@@ -125,6 +125,27 @@ const nextConfig: NextConfig = {
         headers: securityHeaders,
       },
       {
+        source: '/llms.txt',
+        headers: [
+          {
+            key: 'Content-Type',
+            value: 'text/markdown; charset=utf-8',
+          },
+          {
+            key: 'Content-Security-Policy',
+            value: metadataCsp,
+          },
+          {
+            key: 'Access-Control-Allow-Origin',
+            value: siteOrigin,
+          },
+          {
+            key: 'Vary',
+            value: 'Origin',
+          },
+        ],
+      },
+      {
         source: '/robots.txt',
         headers: [
           {
