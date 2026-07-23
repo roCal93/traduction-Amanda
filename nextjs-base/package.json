@@ -52,7 +52,7 @@
   "packageManager": "pnpm@10.28.2+sha512.41872f037ad22f7348e3b1debbaf7e867cfd448f2726d9cf74c08f19507c31d2c8e7a11525b983febc2df640b5438dee6023ebb1f84ed43cc2d654d2bc326264",
   "pnpm": {
     "overrides": {
-      "tar": ">=7.5.11",
+      "tar": "7.5.19",
       "minimatch": ">=10.2.3",
       "undici": ">=8.5.0",
       "esbuild": ">=0.28.1",
@@ -71,8 +71,9 @@
       "srvx": "0.11.14",
       "vite": "7.3.5",
       "basic-ftp": "5.3.1",
-      "js-yaml": ">=4.2.0",
-      "brace-expansion@>=4": "5.0.6",
+      "js-yaml": ">=4.3.0",
+      "brace-expansion@>=4": "5.0.7",
+      "sharp": ">=0.35.0",
       "@babel/core": ">=7.29.6 <8.0.0"
     },
     "onlyBuiltDependencies": [
