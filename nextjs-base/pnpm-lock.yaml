@@ -35,10 +35,10 @@ importers:
     dependencies:
       '@vercel/analytics':
         specifier: ^2.0.1
-        version: 2.0.1(next@16.2.12(@babel/core@7.29.7)(@types/node@26.1.1)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react@19.2.8)
+        version: 2.0.1(next@16.2.12(@babel/core@7.29.7)(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react@19.2.8)
       '@vercel/speed-insights':
         specifier: ^2.0.0
-        version: 2.0.0(next@16.2.12(@babel/core@7.29.7)(@types/node@26.1.1)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react@19.2.8)
+        version: 2.0.0(next@16.2.12(@babel/core@7.29.7)(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react@19.2.8)
       framer-motion:
         specifier: ^12.43.0
         version: 12.43.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -47,7 +47,7 @@ importers:
         version: 3.0.8
       next:
         specifier: 16.2.12
-        version: 16.2.12(@babel/core@7.29.7)(@types/node@26.1.1)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        version: 16.2.12(@babel/core@7.29.7)(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       react:
         specifier: 19.2.8
         version: 19.2.8
@@ -5295,9 +5295,9 @@ snapshots:
   '@unrs/resolver-binding-win32-x64-msvc@1.12.2':
     optional: true
 
-  '@vercel/analytics@2.0.1(next@16.2.12(@babel/core@7.29.7)(@types/node@26.1.1)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react@19.2.8)':
+  '@vercel/analytics@2.0.1(next@16.2.12(@babel/core@7.29.7)(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react@19.2.8)':
     optionalDependencies:
-      next: 16.2.12(@babel/core@7.29.7)(@types/node@26.1.1)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      next: 16.2.12(@babel/core@7.29.7)(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       react: 19.2.8
 
   '@vercel/backends@0.8.27(@emnapi/core@1.10.0)(@emnapi/runtime@1.11.3)(rollup@4.62.0)':
@@ -5608,9 +5608,9 @@ snapshots:
       - bare-abort-controller
       - react-native-b4a
 
-  '@vercel/speed-insights@2.0.0(next@16.2.12(@babel/core@7.29.7)(@types/node@26.1.1)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react@19.2.8)':
+  '@vercel/speed-insights@2.0.0(next@16.2.12(@babel/core@7.29.7)(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react@19.2.8)':
     optionalDependencies:
-      next: 16.2.12(@babel/core@7.29.7)(@types/node@26.1.1)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      next: 16.2.12(@babel/core@7.29.7)(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       react: 19.2.8
 
   '@vercel/static-build@2.11.10':
@@ -7184,7 +7184,7 @@ snapshots:
 
   natural-compare@1.4.0: {}
 
-  next@16.2.12(@babel/core@7.29.7)(@types/node@26.1.1)(react-dom@19.2.8(react@19.2.8))(react@19.2.8):
+  next@16.2.12(@babel/core@7.29.7)(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8):
     dependencies:
       '@next/env': 16.2.12
       '@swc/helpers': 0.5.15
@@ -7203,7 +7203,7 @@ snapshots:
       '@next/swc-linux-x64-musl': 16.2.12
       '@next/swc-win32-arm64-msvc': 16.2.12
       '@next/swc-win32-x64-msvc': 16.2.12
-      sharp: 0.35.3(@types/node@26.1.1)
+      sharp: 0.35.3(@types/node@26.1.2)
     transitivePeerDependencies:
       - '@babel/core'
       - '@types/node'
