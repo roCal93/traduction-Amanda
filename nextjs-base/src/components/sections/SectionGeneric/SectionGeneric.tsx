@@ -13,6 +13,11 @@ import {
 } from '@/types/strapi'
 import * as Blocks from '@/components/blocks'
 import { FadeIn } from '@/components/animations'
+const kebabToPascal = (s: string): string =>
+  s
+    .split('-')
+    .map((p) => p.charAt(0).toUpperCase() + p.slice(1))
+    .join('')
 
 type BlocksMap = Record<string, React.ComponentType<Record<string, unknown>>>
 const TypedBlocks = Blocks as unknown as BlocksMap
@@ -48,18 +53,12 @@ export const SectionGeneric = ({
   containerWidth = 'medium',
   isFirstSection = false,
 }: SectionGenericProps) => {
-  const toPascalStatic = (s: string) =>
-    s
-      .split('-')
-      .map((p) => p.charAt(0).toUpperCase() + p.slice(1))
-      .join('')
-
   // Pre-compute the index of the first image-bearing block for LCP priority (only needed in first section)
   const firstImageBlockIndex = isFirstSection
     ? (blocks || []).findIndex((b) => {
         const raw = (b as { __component?: string }).__component ?? ''
         const key = raw.split('.').pop() || raw
-        const name = toPascalStatic(key)
+        const name = kebabToPascal(key)
         return name === 'ImageBlock' || name === 'TextImageBlock'
       })
     : -1
@@ -85,15 +84,9 @@ export const SectionGeneric = ({
     // Component names are generated from Strapi __component like 'blocks.cards-block' -> 'CardsBlock'
     const raw = (block as { __component?: string }).__component ?? ''
     const key = raw.split('.').pop() || raw
-    const toPascal = (s: string) =>
-      s
-        .split('-')
-        .map((p) => p.charAt(0).toUpperCase() + p.slice(1))
-        .join('')
-    const componentName = toPascal(key)
+    const componentName = kebabToPascal(key)
     const BlockComponent = TypedBlocks[componentName] as
-      | React.ComponentType<Record<string, unknown>>
-      | undefined
+      React.ComponentType<Record<string, unknown>> | undefined
 
     if (BlockComponent) {
       // Lazy load CarouselBlock if not first block (above-the-fold)
@@ -141,37 +134,22 @@ export const SectionGeneric = ({
     )
   }
 
-  const getTopSpacingClass = (
-    spacing: 'none' | 'small' | 'medium' | 'large'
+  const getSpacingClass = (
+    spacing: 'none' | 'small' | 'medium' | 'large',
+    side: 'top' | 'bottom'
   ) => {
+    const prefix = side === 'top' ? 'mt' : 'mb'
     switch (spacing) {
       case 'none':
         return ''
       case 'small':
-        return 'mt-6'
+        return `${prefix}-6`
       case 'medium':
-        return 'mt-12'
+        return `${prefix}-12`
       case 'large':
-        return 'mt-24'
+        return `${prefix}-24`
       default:
-        return 'mt-12'
-    }
-  }
-
-  const getBottomSpacingClass = (
-    spacing: 'none' | 'small' | 'medium' | 'large'
-  ) => {
-    switch (spacing) {
-      case 'none':
-        return ''
-      case 'small':
-        return 'mb-6'
-      case 'medium':
-        return 'mb-12'
-      case 'large':
-        return 'mb-24'
-      default:
-        return 'mb-12'
+        return `${prefix}-12`
     }
   }
 
@@ -185,7 +163,7 @@ export const SectionGeneric = ({
   return (
     <section
       id={identifier}
-      className={`${getTopSpacingClass(spacingTop)} ${getBottomSpacingClass(spacingBottom)} px-4`}
+      className={`${getSpacingClass(spacingTop, 'top')} ${getSpacingClass(spacingBottom, 'bottom')} px-4`}
     >
       {/* Skip FadeIn animation for above-the-fold content to improve LCP */}
       {skipFadeIn ? (
