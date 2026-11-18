@@ -64,8 +64,8 @@ importers:
         specifier: ^6.37.0
         version: 6.37.0
       sanitize-html:
-        specifier: ^2.18.1
-        version: 2.18.1
+        specifier: ^2.18.2
+        version: 2.18.2
     devDependencies:
       '@tailwindcss/postcss':
         specifier: ^4
@@ -3835,8 +3835,8 @@ packages:
     resolution: {integrity: sha512-TRjMwPjn7lKQculAXJ9rmv73jQ+9+5Hr2L5KMm1HfQiDhDXgO0pZACiy5ExtSzRW6mZgTGniWmWslhOu77DQdA==}
     hasBin: true
 
-  sanitize-html@2.18.1:
-    resolution: {integrity: sha512-2X5lC8fYla8YaT8g73Nj+HcLWXan5dLyCWLgVvaOmfw7JI78IRsyNtIDytTHdn7hBQbIkCah7Zbmd5jabzeDig==}
+  sanitize-html@2.18.2:
+    resolution: {integrity: sha512-LTQVNHBeKB5qIae9x2J2Fw68ORnES++8vzYaG7DFT8P4GVCJFeHffHnRUzf5Mrxfx+4GweIvMRqkBPHHodaVNg==}
     engines: {node: '>=22.12.0'}
 
   saxes@6.0.0:
@@ -8083,7 +8083,7 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  sanitize-html@2.18.1:
+  sanitize-html@2.18.2:
     dependencies:
       escape-string-regexp: 4.0.0
       htmlparser2: 12.0.0
