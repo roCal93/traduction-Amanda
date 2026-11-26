@@ -18,6 +18,18 @@ Template de base pour tous les projets frontend.
 La CI utilise `.nvmrc` ; configurez également Node.js 22 ou une version
 ultérieure pour le build sur Vercel.
 
+## CSS et rendu initial
+
+Le CSS est intégré au HTML en production avec l'option expérimentale
+`inlineCss` de Next.js afin de supprimer la requête CSS bloquante au premier
+chargement. Next.js ne recommande pas encore cette option pour la production :
+les styles sont répétés dans le HTML et ne bénéficient pas d'un cache séparé.
+Pour revenir aux feuilles de style externes, définissez `NEXT_INLINE_CSS=false`
+au moment du build et redéployez. Vérifiez le LCP et le rendu sur les pages
+concernées après chaque changement. Si une CSP est activée, elle doit autoriser
+les styles intégrés par un nonce transmis à Next.js dans les en-têtes de la
+requête.
+
 ## Déploiement
 
 - Prévu pour Vercel

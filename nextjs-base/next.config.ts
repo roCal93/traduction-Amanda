@@ -18,6 +18,10 @@ function getSiteOrigin(): string {
 }
 
 const nextConfig: NextConfig = {
+  experimental: {
+    inlineCss: process.env.NEXT_INLINE_CSS !== 'false',
+  },
+
   async redirects() {
     return [
       {
