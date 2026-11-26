@@ -2,12 +2,17 @@
 
 import React from 'react'
 import Image from 'next/image'
+import type { ImageLoaderProps } from 'next/image'
 import { WorkItem, StrapiEntity } from '@/types/strapi'
 import { cleanImageUrl } from '@/lib/strapi'
 
 type CarouselWorkCardProps = {
   item: WorkItem & StrapiEntity
   isPriority?: boolean
+}
+
+function carouselImageLoader({ src, width }: ImageLoaderProps) {
+  return `${src}&width=${width}`
 }
 
 const CarouselWorkCard = ({
@@ -38,9 +43,10 @@ const CarouselWorkCard = ({
             fetchPriority={isPriority ? 'high' : 'low'}
             loading={isPriority ? undefined : 'lazy'}
             quality={85}
-            unoptimized
+            loader={item.documentId ? carouselImageLoader : undefined}
+            unoptimized={!item.documentId}
             className="w-full h-full object-contain select-none pointer-events-none"
-            sizes="(max-width: 640px) 180px, (max-width: 1024px) 220px, 260px"
+            sizes="204px"
             draggable={false}
           />
         ) : (

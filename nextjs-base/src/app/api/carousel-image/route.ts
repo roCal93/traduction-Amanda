@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server'
+import { deviceSizes, imageSizes } from '../../../lib/image-sizes'
 
 export const runtime = 'nodejs'
+const allowedWidths = new Set([...deviceSizes, ...imageSizes])
 
 // Only allow Strapi document ID characters (alphanumeric + hyphen/underscore)
 function isSafeDocumentId(id: string): boolean {
@@ -10,9 +12,17 @@ function isSafeDocumentId(id: string): boolean {
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url)
   const documentId = searchParams.get('documentId')
+  const widthParam = searchParams.get('width')
 
   if (!documentId || !isSafeDocumentId(documentId)) {
     return NextResponse.json({ error: 'Invalid documentId' }, { status: 400 })
+  }
+
+  if (
+    widthParam !== null &&
+    (!/^\d+$/.test(widthParam) || !allowedWidths.has(Number(widthParam)))
+  ) {
+    return NextResponse.json({ error: 'Invalid width' }, { status: 400 })
   }
 
   const strapiBase = process.env.NEXT_PUBLIC_STRAPI_URL
@@ -44,10 +54,31 @@ export async function GET(req: Request) {
     )
   }
 
+  if (widthParam !== null) {
+    let url: URL
+    try {
+      url = new URL(imageUrl)
+    } catch {
+      return NextResponse.json(
+        { error: 'Invalid upstream image URL' },
+        { status: 502 }
+      )
+    }
+    if (url.hostname === 'res.cloudinary.com') {
+      const width = Number(widthParam)
+      const height = Math.ceil((width * 72) / 204)
+      url.pathname = url.pathname.replace(
+        /^(\/[^/]+\/image\/upload\/)/,
+        `$1c_limit,w_${width},h_${height},q_auto,f_auto/`
+      )
+      imageUrl = url.toString()
+    }
+  }
+
   let upstream: Response
   try {
     upstream = await fetch(imageUrl, {
-      headers: { Accept: 'image/*,*/*' },
+      headers: { Accept: req.headers.get('accept') || 'image/*,*/*' },
       cache: 'force-cache',
       redirect: 'error',
     })
@@ -70,11 +101,8 @@ export async function GET(req: Request) {
     'Content-Type',
     upstream.headers.get('Content-Type') || 'application/octet-stream'
   )
-  headers.set(
-    'Cache-Control',
-    upstream.headers.get('Cache-Control') ||
-      'public, max-age=31536000, immutable'
-  )
+  headers.set('Cache-Control', 'public, max-age=3600, s-maxage=3600')
+  headers.set('Vary', 'Accept')
   headers.set('X-Robots-Tag', 'noindex, noimageindex, noarchive')
 
   return new Response(upstream.body, {

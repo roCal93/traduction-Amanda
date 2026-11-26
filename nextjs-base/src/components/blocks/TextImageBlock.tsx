@@ -46,6 +46,21 @@ const TextImageBlock = ({
       'w-96 h-96 sm:w-[468px] sm:h-[468px] md:w-[600px] md:h-[600px] lg:w-[800px] lg:h-[800px]',
   }
 
+  const roundedImageSizes = {
+    small:
+      '(min-width: 1024px) 468px, (min-width: 768px) 384px, (min-width: 640px) 320px, 256px',
+    medium:
+      '(min-width: 1024px) 600px, (min-width: 768px) 468px, (min-width: 640px) 384px, 320px',
+    large:
+      '(min-width: 1024px) 800px, (min-width: 768px) 600px, (min-width: 640px) 468px, 384px',
+  }
+
+  const imageSizes = {
+    small: '(min-width: 768px) 33vw, 100vw',
+    medium: '(min-width: 768px) 50vw, 100vw',
+    large: '(min-width: 768px) 67vw, 100vw',
+  }
+
   const alignmentClasses = {
     top: 'items-start',
     center: 'items-center',
@@ -69,7 +84,9 @@ const TextImageBlock = ({
         width={roundedImage ? 800 : image.width || 800}
         height={roundedImage ? 800 : image.height || 600}
         className={`${roundedImage ? 'w-full h-full object-cover rounded-full' : 'w-full h-auto object-cover rounded-lg'}`}
-        sizes="(max-width: 768px) 100vw, 50vw"
+        sizes={
+          roundedImage ? roundedImageSizes[imageSize] : imageSizes[imageSize]
+        }
         priority={priority}
         loading={priority ? undefined : 'lazy'}
       />

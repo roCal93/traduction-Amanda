@@ -30,6 +30,11 @@ concernées après chaque changement. Si une CSP est activée, elle doit autoris
 les styles intégrés par un nonce transmis à Next.js dans les en-têtes de la
 requête.
 
+Les images de carrousel hébergées sur Cloudinary sont redimensionnées par le
+proxy `/api/carousel-image` selon la taille de la carte et la densité de
+l'écran. Les autres hébergements continuent de servir l'image d'origine. Le
+proxy conserve l'en-tête `X-Robots-Tag` pour éviter l'indexation des images.
+
 ## Déploiement
 
 - Prévu pour Vercel
