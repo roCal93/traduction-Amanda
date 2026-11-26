@@ -9,6 +9,15 @@ Template de base pour tous les projets frontend.
 - Tailwind CSS 4
 - React 19
 
+## Prérequis
+
+- Node.js 22.23.2 ou une version ultérieure. Utilisez `nvm install` puis
+  `nvm use` dans `nextjs-base` pour sélectionner la version de `.nvmrc`.
+- pnpm 10, conformément au champ `packageManager` de `package.json`.
+
+La CI utilise `.nvmrc` ; configurez également Node.js 22 ou une version
+ultérieure pour le build sur Vercel.
+
 ## Déploiement
 
 - Prévu pour Vercel
