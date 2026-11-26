@@ -23,6 +23,15 @@ ultérieure pour le build sur Vercel.
 - Prévu pour Vercel
 - Variables d'environnement via `.env.local`
 
+### Découverte des ressources agentiques
+
+Les manifestes publics `/.well-known/ard.json` et
+`/.well-known/ai-catalog.json` (ancien chemin) contiennent actuellement une
+liste `entries` vide : le site ne publie pas de service ou d'outil agentique.
+Si une telle ressource est ajoutée, renseignez les deux fichiers de façon
+identique selon la [spécification ARD](https://agenticresourcediscovery.org/spec/).
+Le contenu éditorial public reste décrit dans `/llms.txt` et le sitemap.
+
 **Contrôle du mode sombre**: Vous pouvez désactiver le mode sombre globalement pour ce projet en ajoutant dans `.env.local` :
 
 ```env
