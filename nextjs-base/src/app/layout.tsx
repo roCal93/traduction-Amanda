@@ -136,7 +136,7 @@ export default async function RootLayout({
         <DevPerfProtector />
         {children}
         {!cookieConsent && <CookieConsentBanner />}
-        <ConditionalAnalytics />
+        <ConditionalAnalytics initialAccepted={cookieConsent === 'accepted'} />
       </body>
     </html>
   )

@@ -4,15 +4,12 @@ import { useEffect, useState } from 'react'
 import { Analytics } from '@vercel/analytics/react'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 
-function hasConsent(): boolean {
-  if (typeof document === 'undefined') return false
-  return document.cookie
-    .split(';')
-    .some((c) => c.trim() === 'cookie_consent=accepted')
-}
-
-export default function ConditionalAnalytics() {
-  const [accepted, setAccepted] = useState(hasConsent)
+export default function ConditionalAnalytics({
+  initialAccepted,
+}: {
+  initialAccepted: boolean
+}) {
+  const [accepted, setAccepted] = useState(initialAccepted)
 
   useEffect(() => {
     const handler = () => setAccepted(true)

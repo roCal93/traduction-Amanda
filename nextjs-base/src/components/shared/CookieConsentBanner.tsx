@@ -1,6 +1,7 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
+import { usePathname } from 'next/navigation'
 
 const CONSENT_COOKIE_NAME = 'cookie_consent'
 const ONE_YEAR = 60 * 60 * 24 * 365
@@ -12,10 +13,8 @@ function setConsentCookie(value: 'accepted' | 'rejected') {
 export default function CookieConsentBanner() {
   const [visible, setVisible] = useState(true)
 
-  const isEn = useMemo(() => {
-    if (typeof document === 'undefined') return false
-    return document.documentElement.lang?.toLowerCase().startsWith('en')
-  }, [])
+  const pathname = usePathname()
+  const isEn = pathname === '/en' || pathname?.startsWith('/en/')
 
   const labels = isEn
     ? {
